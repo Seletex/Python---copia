@@ -1,0 +1,81 @@
+{
+    "usuarios": [
+        "admin",
+        "usuario1",
+        "usuario2",
+        "usuario3"
+    ],
+    "actividades": {
+        "admin": [
+            "Gestión de usuarios",
+            "Configuración del sistema",
+            "Reportes administrativos"
+        ],
+        "usuario1": [
+            "Capacitación a usuarios",
+            "Soporte especializado",
+            "Documentación técnica"
+        ],
+        "usuario2": [
+            "Mantenimiento de servidores",
+            "Backup de datos",
+            "Monitoreo de red"
+        ],
+        "usuario3": [
+            "Desarrollo de aplicaciones",
+            "Base de datos",
+            "Testing de software"
+        ]
+    },
+    "configuraciones": {
+        "admin": {
+            "tema": "oscuro",
+            "columnas_visibles": [
+                "TIPO DE ACTIVIDAD",
+                "FECHA",
+                "DEPENDENCIA",
+                "SOLICITANTE",
+                "DESCRIPCIÓN",
+                "CUMPLIDO"
+            ],
+            "orden_por": "FECHA",
+            "orden_direccion": "desc"
+        },
+        "usuario1": {
+            "tema": "claro",
+            "columnas_visibles": [
+                "TIPO DE ACTIVIDAD",
+                "FECHA",
+                "DEPENDENCIA",
+                "DESCRIPCIÓN",
+                "CUMPLIDO"
+            ],
+            "orden_por": "FECHA",
+            "orden_direccion": "asc"
+        },
+        "usuario2": {
+            "tema": "oscuro",
+            "columnas_visibles": [
+                "TIPO DE ACTIVIDAD",
+                "FECHA",
+                "SOLICITANTE",
+                "DESCRIPCIÓN",
+                "CUMPLIDO"
+            ],
+            "orden_por": "TIPO DE ACTIVIDAD",
+            "orden_direccion": "asc"
+        },
+        "usuario3": {
+            "tema": "claro",
+            "columnas_visibles": [
+                "TIPO DE ACTIVIDAD",
+                "FECHA",
+                "DEPENDENCIA",
+                "SOLICITANTE",
+                "CUMPLIDO"
+            ],
+            "orden_por": "FECHA",
+            "orden_direccion": "desc"
+        }
+    }
+}

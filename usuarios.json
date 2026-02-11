@@ -1,0 +1,11 @@
+{
+  "usuarios": [
+    "admin"
+  ],
+  "actividades": {
+    "admin": [],
+    "usuario1": [],
+    "usuario2": [],
+    "usuario3": []
+  }
+}
