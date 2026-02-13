@@ -605,7 +605,7 @@ EXPORTAR_TEMPLATE = """
                             </div>
                             <div class="text-center">
                                 <button type="submit" class="btn btn-primary">
-                                    <i class="fas fa-file-excel"></i> Generar Informe con Plantilla
+                                    <i class="fas fa-file-excel"></i> 🚀 Generar Informe (V2 ACTUALIZADO)
                                 </button>
                             </div>
                         </form>
