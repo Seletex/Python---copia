@@ -85,13 +85,32 @@ def obtener_configuracion_usuario(usuario):
     usuarios_data = cargar_usuarios()
     configuraciones = usuarios_data.get("configuraciones", {})
     if usuario in configuraciones:
-        return configuraciones[usuario]
+        config = configuraciones[usuario]
+        if "datos_contrato" not in config:
+            config["datos_contrato"] = {"objeto": "", "nro": "", "nombre": "", "cedula": "", "supervisor": ""}
+        elif "supervisor" not in config["datos_contrato"]:
+            config["datos_contrato"]["supervisor"] = ""
+        return config
     return {
         "tema": "claro",
         "columnas_visibles": ["TIPO DE ACTIVIDAD", "FECHA", "DEPENDENCIA", "SOLICITANTE", "DESCRIPCIÓN", "CUMPLIDO"],
         "orden_por": "FECHA",
-        "orden_direccion": "desc"
+        "orden_direccion": "desc",
+        "datos_contrato": {"objeto": "", "nro": "", "nombre": "", "cedula": "", "supervisor": ""}
     }
+
+@medir_tiempo
+def guardar_configuracion_usuario(usuario, config):
+    """Guarda la configuración personalizada de un usuario"""
+    try:
+        usuarios_data = cargar_usuarios()
+        if "configuraciones" not in usuarios_data:
+            usuarios_data["configuraciones"] = {}
+        usuarios_data["configuraciones"][usuario] = config
+        return guardar_usuarios(usuarios_data)
+    except Exception as e:
+        logger.error(f"Error guardando configuración de usuario {usuario}: {e}")
+        return False
 
 # =============================================================================
 # CARGA DE CONFIGURACIÓN (Listas de opciones)

@@ -1,11 +1,33 @@
 {
-  "usuarios": [
-    "admin"
-  ],
-  "actividades": {
-    "admin": [],
-    "usuario1": [],
-    "usuario2": [],
-    "usuario3": []
-  }
+    "usuarios": [
+        "admin"
+    ],
+    "actividades": {
+        "admin": [],
+        "usuario1": [],
+        "usuario2": [],
+        "usuario3": []
+    },
+    "configuraciones": {
+        "admin": {
+            "tema": "claro",
+            "columnas_visibles": [
+                "TIPO DE ACTIVIDAD",
+                "FECHA",
+                "DEPENDENCIA",
+                "SOLICITANTE",
+                "DESCRIPCIÓN",
+                "CUMPLIDO"
+            ],
+            "orden_por": "FECHA",
+            "orden_direccion": "desc",
+            "datos_contrato": {
+                "objeto": "1",
+                "nro": "1",
+                "nombre": "1",
+                "cedula": "1",
+                "supervisor": "Mario"
+            }
+        }
+    }
 }

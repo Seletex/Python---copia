@@ -81,23 +81,28 @@ def _format_fecha(df, func):
 
 
 @medir_tiempo
-def obtener_estadisticas_exportacion(usuario=None):
-    """Obtiene estadísticas generales y datos para gráficos"""
+def obtener_estadisticas_exportacion(usuario=None, fecha_inicio=None, fecha_fin=None):
+    """Obtiene estadísticas generales y datos para gráficos con soporte de filtros"""
     empty_result = {
         'fecha_min': 'N/A', 'fecha_max': 'N/A',
         'total_registros': 0, 'total_tipos_actividad': 0,
         'ultima_exportacion': 'Nunca',
         'chart_actividades': {'labels': [], 'data': []},
         'chart_cumplimiento': {'labels': [], 'data': []},
-        'chart_linea': {'labels': [], 'data': []}
+        'chart_linea': {'labels': [], 'data': []},
+        'usuarios': []
     }
     
     try:
-        df, _ = exportar_registros_filtrados(usuario=usuario)
+        df, _ = exportar_registros_filtrados(
+            fecha_inicio=fecha_inicio, 
+            fecha_fin=fecha_fin, 
+            usuario=usuario
+        )
         if df.empty:
             return empty_result
         
-        # Parseo de fechas
+        # Parseo de fechas (exportar_registros_filtrados ya hace parte del proceso)
         if 'FECHA' in df.columns:
             df['FECHA_DT'] = pd.to_datetime(df['FECHA'], errors='coerce')
             df = df.dropna(subset=['FECHA_DT'])
@@ -105,11 +110,11 @@ def obtener_estadisticas_exportacion(usuario=None):
         if df.empty:
             return empty_result
         
-        # Gráfico: Top actividades
-        top_act = df['TIPO DE ACTIVIDAD'].value_counts().head(10)
+        # Gráfico: Actividades (Todas, según petición del usuario)
+        counts_act = df['TIPO DE ACTIVIDAD'].value_counts()
         chart_actividades = {
-            'labels': top_act.index.tolist(),
-            'data': top_act.values.tolist()
+            'labels': counts_act.index.tolist(),
+            'data': counts_act.values.tolist()
         }
         
         # Gráfico: Cumplimiento
@@ -119,15 +124,19 @@ def obtener_estadisticas_exportacion(usuario=None):
             'data': cumplimiento.values.tolist()
         }
         
-        # Gráfico: Línea temporal (últimos 30 días)
+        # Gráfico: Línea temporal
         df_sorted = df.sort_values('FECHA_DT')
-        linea = df_sorted['FECHA_DT'].dt.date.value_counts().sort_index().tail(30)
+        linea = df_sorted['FECHA_DT'].dt.date.value_counts().sort_index()
+        # Si hay demasiados días, mostrar los últimos 90 para no saturar
+        if len(linea) > 90:
+            linea = linea.tail(90)
+            
         chart_linea = {
             'labels': [d.strftime('%d/%m') for d in linea.index],
             'data': linea.values.tolist()
         }
         
-        # Estadística por usuario (Nuevo)
+        # Estadística por usuario
         user_stats = []
         if 'USUARIO' in df.columns:
             for user, group in df.groupby('USUARIO'):
@@ -186,24 +195,43 @@ def generar_reporte_excel(df, estadisticas, output_path):
 
 
 @medir_tiempo
-def generar_informe_template(df, output_path):
+def generar_informe_template(df, output_path, contrato_data=None):
     """Genera informe usando la plantilla Excel institucional"""
     try:
         import openpyxl
-        
+        from config import TEMPLATE_EXCEL
+        logger.info(f"DEBUG: generar_informe_template usando plantilla IMPORTADA: {TEMPLATE_EXCEL}")
         if not os.path.exists(TEMPLATE_EXCEL):
             logger.error(f"Plantilla no encontrada: {TEMPLATE_EXCEL}")
             return False
+            
+        try:
+            wb = openpyxl.load_workbook(TEMPLATE_EXCEL)
+            ws = wb.active
+            logger.info("Plantilla cargada correctamente")
+        except Exception as e:
+            logger.error(f"Error al cargar el libro de Excel: {e}")
+            return False
         
-        wb = openpyxl.load_workbook(TEMPLATE_EXCEL)
-        ws = wb.active
-        
-        # Encabezados
-        usuarios = df['USUARIO'].unique() if 'USUARIO' in df.columns else []
-        nombre = usuarios[0].upper() if len(usuarios) == 1 else "VARIOS"
-        ws.cell(row=4, column=3, value=nombre)
-        
-        # Rango de fechas
+        # Encabezados: Datos del Contrato (Filas 2-5, Columna 3)
+        if contrato_data:
+            if contrato_data.get('nro'):
+                ws.cell(row=2, column=3, value=contrato_data['nro'].upper())
+            if contrato_data.get('objeto'):
+                ws.cell(row=3, column=3, value=contrato_data['objeto'].upper())
+            
+            # El nombre se pone en la fila 4 por defecto si no hay contrato_data['nombre']
+            nombre_contratista = contrato_data.get('nombre', '').upper()
+            if not nombre_contratista:
+                usuarios = df['USUARIO'].unique() if 'USUARIO' in df.columns else []
+                nombre_contratista = usuarios[0].upper() if len(usuarios) == 1 else "VARIOS"
+            
+            ws.cell(row=4, column=3, value=nombre_contratista)
+            
+            if contrato_data.get('cedula'):
+                ws.cell(row=5, column=3, value=contrato_data['cedula'])
+
+        # Rango de fechas (Fila 6)
         if not df.empty and 'FECHA' in df.columns:
             fechas_dt = pd.to_datetime(df['FECHA'], errors='coerce').dropna()
             if not fechas_dt.empty:
@@ -222,10 +250,26 @@ def generar_informe_template(df, output_path):
                 'number_format': cell.number_format
             })
         
-        # Limpiar filas 8-67
-        for row_idx in range(8, 68):
-            for col_idx in range(1, 10):
+        # Diccionario de meses en español
+        meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", 
+                 "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"]
+        ahora = datetime.now()
+        mes_actual = meses[ahora.month - 1]
+        anio_actual = ahora.year
+
+        # Limpiar filas 8 en adelante (hasta 200 para seguridad)
+        for row_idx in range(8, 200):
+            for col_idx in range(1, 11):
                 ws.cell(row=row_idx, column=col_idx, value=None)
+        
+        # Desenlazar celdas desde la fila 8 en adelante
+        merged_ranges = list(ws.merged_cells.ranges)
+        for merged_range in merged_ranges:
+            if merged_range.min_row >= 8:
+                try:
+                    ws.unmerge_cells(str(merged_range))
+                except Exception:
+                    pass
         
         # Escribir datos con cortes por actividad
         current_row = 8
@@ -241,10 +285,12 @@ def generar_informe_template(df, output_path):
         for _, row in df_reporte.iterrows():
             actividad_actual = row.get('TIPO DE ACTIVIDAD', '')
             
-            # Si cambia la actividad, mostrar subtotal de la anterior (excepto al inicio)
+            # Si cambia la actividad, mostrar subtotal de la anterior
             if ultima_actividad is not None and actividad_actual != ultima_actividad:
-                ws.cell(row=current_row, column=1, value=f"TOTAL {ultima_actividad}")
-                ws.cell(row=current_row, column=7, value=conteo_actividad).font = openpyxl.styles.Font(bold=True)
+                ws.cell(row=current_row, column=1, value="TOTAL")
+                ws.cell(row=current_row, column=2, value=conteo_actividad).font = openpyxl.styles.Font(bold=True)
+                for c in range(1, 10):
+                    ws.cell(row=current_row, column=c).border = copy.copy(base_styles[c-1]['border'])
                 current_row += 1
                 conteo_actividad = 0
             
@@ -279,19 +325,53 @@ def generar_informe_template(df, output_path):
             total_general += 1
             current_row += 1
             
-            if current_row > 1000: break # Limite de seguridad
+            if current_row > 2000: break # Limite de seguridad
             
         # Último subtotal y Gran Total
         if ultima_actividad:
-            ws.cell(row=current_row, column=1, value=f"TOTAL {ultima_actividad}")
-            ws.cell(row=current_row, column=7, value=conteo_actividad).font = openpyxl.styles.Font(bold=True)
+            ws.cell(row=current_row, column=1, value="ACTIVIDADES")
+            ws.cell(row=current_row, column=2, value=conteo_actividad).font = openpyxl.styles.Font(bold=True)
+            for c in range(1, 10):
+                ws.cell(row=current_row, column=c).border = copy.copy(base_styles[c-1]['border'])
+
             current_row += 1
             
-            ws.cell(row=current_row, column=1, value="TOTAL GENERAL").font = openpyxl.styles.Font(bold=True, size=12)
-            ws.cell(row=current_row, column=7, value=total_general).font = openpyxl.styles.Font(bold=True, size=12)
-        
-        wb.save(output_path)
-        return True
+            ws.cell(row=current_row, column=1, value="TOTAL GENERAL").font = openpyxl.styles.Font(bold=True, size=11)
+            ws.cell(row=current_row, column=2, value=total_general).font = openpyxl.styles.Font(bold=True, size=11)
+            for c in range(1, 10):
+                ws.cell(row=current_row, column=c).border = copy.copy(base_styles[c-1]['border'])
+
+            current_row += 1
+        # Fecha de informe
+        ws.cell(row=current_row, column=1, value="Fecha de informe:").font = openpyxl.styles.Font(bold=True)
+        ws.cell(row=current_row, column=2, value=f"{mes_actual} de {anio_actual}")
+        current_row += 1
+        # Sección de firmas / Datos finales
+
+        if contrato_data:
+            if contrato_data.get('nombre'):
+                ws.cell(row=current_row, column=1, value="Elaborado por:").font = openpyxl.styles.Font(bold=True)
+                ws.cell(row=current_row, column=2, value=contrato_data['nombre'].upper())
+                current_row += 1
+                ws.cell(row=current_row, column=1, value="CONTRATISTA:").font = openpyxl.styles.Font(bold=True)
+                current_row += 1                
+            if contrato_data.get('supervisor'):
+                ws.cell(row=current_row, column=1, value="Vo.Bo:").font = openpyxl.styles.Font(bold=True)
+                ws.cell(row=current_row, column=2, value=contrato_data['supervisor'].upper())
+                current_row += 1
+                ws.cell(row=current_row, column=1, value="SUPERVISOR:").font = openpyxl.styles.Font(bold=True)
+                current_row += 1
+            
+            current_row += 1
+
+
+        try:
+            wb.save(output_path)
+            logger.info(f"Informe guardado exitosamente en: {output_path}")
+            return True
+        except Exception as e:
+            logger.error(f"Error al guardar el archivo de salida {output_path}: {e}")
+            return False
     except Exception as e:
-        logger.error(f"Error generando informe con plantilla: {e}")
+        logger.exception(f"Excepción no controlada en generar_informe_template: {e}")
         return False

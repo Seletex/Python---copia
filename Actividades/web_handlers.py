@@ -199,15 +199,20 @@ class EstadisticasHandler(BaseRoute):
         if not self._require_auth():
             return
         
-        _, stats = obtener_estadisticas_exportacion(self.usuario_actual)
+        fecha_inicio = params.get('fecha_inicio', [''])[0].strip() or None
+        fecha_fin = params.get('fecha_fin', [''])[0].strip() or None
+
+        stats = obtener_estadisticas_exportacion(self.usuario_actual, fecha_inicio, fecha_fin)
         
         # Calcular promedio diario
         total = stats.get('total_registros', 0)
         fecha_min = stats.get('fecha_min', 'N/A')
         promedio = "0.0"
-        if total > 0 and fecha_min != 'N/A':
+        if total > 0 and (fecha_inicio or fecha_min != 'N/A'):
             try:
-                dias = (datetime.now() - datetime.strptime(fecha_min, "%Y-%m-%d")).days + 1
+                base_date = datetime.strptime(fecha_inicio, "%Y-%m-%d") if fecha_inicio else datetime.strptime(fecha_min, "%Y-%m-%d")
+                end_date = datetime.strptime(fecha_fin, "%Y-%m-%d") if fecha_fin else datetime.now()
+                dias = (end_date - base_date).days + 1
                 promedio = f"{total / max(1, dias):.1f}"
             except Exception:
                 promedio = "N/A"
@@ -232,13 +237,15 @@ class EstadisticasHandler(BaseRoute):
             usuario_actual=self.usuario_actual,
             total_registros=total,
             total_tipos_actividad=stats.get('total_tipos_actividad', 0),
-            fecha_min=fecha_min,
-            fecha_max=stats.get('fecha_max', 'N/A'),
+            fecha_min=fecha_inicio if fecha_inicio else fecha_min,
+            fecha_max=fecha_fin if fecha_fin else stats.get('fecha_max', 'N/A'),
             promedio_diario=promedio,
             data_actividades=json.dumps(stats.get('chart_actividades', {'labels': [], 'data': []})),
             data_cumplimiento=json.dumps(stats.get('chart_cumplimiento', {'labels': [], 'data': []})),
             data_linea=json.dumps(stats.get('chart_linea', {'labels': [], 'data': []})),
-            tabla_usuarios_stats=tabla_stats
+            tabla_usuarios_stats=tabla_stats,
+            val_fecha_inicio=fecha_inicio or "",
+            val_fecha_fin=fecha_fin or ""
         )
         self.render_html(html)
 
@@ -249,12 +256,17 @@ class ExportarHandler(BaseRoute):
         if not self._require_auth():
             return
         
-        _, stats = obtener_estadisticas_exportacion(self.usuario_actual)
+        stats = obtener_estadisticas_exportacion(self.usuario_actual)
         alertas = ""
         if 'error' in params:
             msg = params['error'][0] if isinstance(params.get('error'), list) else 'Error'
             alertas = f'<div class="alert alert-danger">{msg}</div>'
         
+        # Cargar datos de contrato persistidos
+        from database import obtener_configuracion_usuario
+        config = obtener_configuracion_usuario(self.usuario_actual)
+        dc = config.get("datos_contrato", {})
+
         # Filtro de usuario solo para admin
         filtro_usuario_html = ""
         if self.usuario_actual == "admin":
@@ -286,7 +298,12 @@ class ExportarHandler(BaseRoute):
             total_registros=stats.get('total_registros', 0),
             total_tipos_actividad=stats.get('total_tipos_actividad', 0),
             ultima_exportacion=stats.get('ultima_exportacion', 'Nunca'),
-            filtro_usuario_html=filtro_usuario_html
+            filtro_usuario_html=filtro_usuario_html,
+            val_contrato_objeto=dc.get('objeto', ''),
+            val_contrato_nro=dc.get('nro', ''),
+            val_contrato_nombre=dc.get('nombre', ''),
+            val_contrato_cedula=dc.get('cedula', ''),
+            val_contrato_supervisor=dc.get('supervisor', '')
         )
         self.render_html(html)
 
@@ -299,7 +316,25 @@ class ExportarHandler(BaseRoute):
         fecha_fin = data.get('fecha_fin', [''])[0].strip() or None
         actividad = data.get('actividad', [''])[0].strip() or None
         formato = data.get('formato', ['excel'])[0].strip()
+        tipo_reporte = data.get('tipo_reporte', ['detallado'])[0].strip()
+        from config import logger
+        logger.info(f"POST /exportar - tipo_reporte recibido: {tipo_reporte}")
         usuario_filtro = data.get('usuario_filtro', [self.usuario_actual])[0].strip()
+        
+        # Datos adicionales del contrato para el reporte
+        contrato_data = {
+            'objeto': data.get('contrato_objeto', [''])[0].strip(),
+            'nro': data.get('contrato_nro', [''])[0].strip(),
+            'nombre': data.get('contrato_nombre', [''])[0].strip(),
+            'cedula': data.get('contrato_cedula', [''])[0].strip(),
+            'supervisor': data.get('contrato_supervisor', [''])[0].strip()
+        }
+
+        # Guardar estos datos para la próxima vez
+        from database import obtener_configuracion_usuario, guardar_configuracion_usuario
+        config = obtener_configuracion_usuario(self.usuario_actual)
+        config["datos_contrato"] = contrato_data
+        guardar_configuracion_usuario(self.usuario_actual, config)
         
         # Admin puede elegir "Todos", usuario normal solo puede verse a sí mismo
         if self.usuario_actual != "admin":
@@ -316,32 +351,53 @@ class ExportarHandler(BaseRoute):
             self.redirect('/exportar?error=No hay datos para exportar')
             return
         
+        tmp_path = None
         try:
             suffix = '.xlsx' if formato == 'excel' else '.csv'
-            with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as tmp:
-                if formato == 'excel':
-                    if not generar_informe_template(df, tmp.name):
-                        self.redirect('/exportar?error=No se pudo cargar la plantilla Excel')
-                        return
-                    content_type = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-                    filename = f"Informe_{self.usuario_actual}_{datetime.now().strftime('%Y%m%d')}.xlsx"
-                else:
-                    df.to_csv(tmp.name, index=False, encoding='utf-8')
-                    content_type = 'text/csv'
-                    filename = f"exportacion_{self.usuario_actual}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv"
-                
-                with open(tmp.name, 'rb') as f:
-                    file_data = f.read()
-                os.unlink(tmp.name)
+            # En Windows, NamedTemporaryFile mantiene el archivo abierto y bloqueado.
+            # mkstemp nos da la ruta y cerramos el descriptor inmediatamente para liberar el bloqueo.
+            fd, tmp_path = tempfile.mkstemp(suffix=suffix)
+            os.close(fd)
             
-            self.request.send_response(200)
-            self.request.send_header('Content-Type', content_type)
-            self.request.send_header('Content-Disposition', f'attachment; filename="{filename}"')
-            self.request.send_header('Content-Length', str(len(file_data)))
-            self.request.end_headers()
-            self.request.wfile.write(file_data)
+            if formato == 'excel':
+                generado = False
+                if tipo_reporte == 'final':
+                    from export_final_service import generar_informe_final_resumen
+                    generado = generar_informe_final_resumen(df, tmp_path, contrato_data=contrato_data)
+                else:
+                    generado = generar_informe_template(df, tmp_path, contrato_data=contrato_data)
+                
+                if not generado:
+                    self.redirect('/exportar?error=No se pudo generar el archivo Excel')
+                    return
+                content_type = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+                filename = f"Informe_{tipo_reporte}_{self.usuario_actual}_{datetime.now().strftime('%Y%m%d')}.xlsx"
+            else:
+                df.to_csv(tmp_path, index=False, encoding='utf-8')
+                content_type = 'text/csv'
+                filename = f"exportacion_{self.usuario_actual}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv"
+            
+            with open(tmp_path, 'rb') as f:
+                file_data = f.read()
         except Exception as e:
+            from config import logger
+            logger.exception(f"Error crítico en ExportarHandler.post: {e}")
             self.redirect('/exportar?error=Error al procesar la exportación')
+            return
+        finally:
+            if tmp_path and os.path.exists(tmp_path):
+                try:
+                    os.remove(tmp_path)
+                except Exception as e:
+                    from config import logger
+                    logger.error(f"No se pudo eliminar el archivo temporal {tmp_path}: {e}")
+        
+        self.request.send_response(200)
+        self.request.send_header('Content-Type', content_type)
+        self.request.send_header('Content-Disposition', f'attachment; filename="{filename}"')
+        self.request.send_header('Content-Length', str(len(file_data)))
+        self.request.end_headers()
+        self.request.wfile.write(file_data)
 
 # =============================================================================
 # HANDLERS DE ACCIONES (POST)
@@ -350,17 +406,20 @@ class ExportarHandler(BaseRoute):
 class GuardarRegistroHandler(BaseRoute):
     """Guarda un nuevo registro de actividad"""
     def post(self, params, post_data):
+        from config import logger
         if not self._require_auth():
             return
         
         data = parse_qs(post_data)
         ahora = datetime.now()
         
+        logger.info(f"Recibida solicitud de registro para usuario: {self.usuario_actual}")
+        
         registro = {
             'USUARIO': self.usuario_actual,
             'FECHA': ahora.strftime('%Y-%m-%d %H:%M:%S'),
             'TIPO DE ACTIVIDAD': data.get('actividad', [''])[0],
-            'DEPENDENCIA': data.get('dependencia', [''])[0],
+            'DEPENDENCIA': data.get('ubicacion', [''])[0],
             'SOLICITANTE': data.get('solicitante', [''])[0],
             'TIPO DE SOLICITUD': data.get('tipo_solicitud', [''])[0],
             'MEDIO DE SOLICITUD': data.get('medio_solicitud', [''])[0],
@@ -370,9 +429,12 @@ class GuardarRegistroHandler(BaseRoute):
             'OBSERVACIONES': data.get('observaciones', [''])[0]
         }
         
-        if guardar_registro(registro):
+        res = guardar_registro(registro)
+        if res:
+            logger.info(f"Registro guardado exitosamente con ID: {res}")
             self.redirect('/?success=1')
         else:
+            logger.error(f"Fallo al guardar registro para usuario: {self.usuario_actual}")
             self.redirect('/?error=1')
 
 

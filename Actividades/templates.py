@@ -161,16 +161,12 @@ MAIN_TEMPLATE = """
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <div class="mb-3">
+                                <div class="mb-4">
                                     <label class="form-label">📞 Medio de Solicitud:</label>
                                     <select name="medio_solicitud" class="form-select" required>
                                         <option value="">Seleccionar medio...</option>
                                         {opciones_medios}
                                     </select>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">🏢 Dependencia:</label>
-                                    <input type="text" name="dependencia" class="form-control" placeholder="Ej: Recursos Humanos" required>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6">
@@ -332,7 +328,7 @@ ESTADISTICAS_TEMPLATE = """
         .icon-purple {{ background: #faf5ff; color: #805ad5; }}
         .stat-value {{ font-size: 1.8rem; font-weight: 800; color: #2d3748; }}
         .stat-label {{ color: #718096; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; font-size: 0.75rem; }}
-        .chart-container {{ background: white; border-radius: 15px; padding: 25px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); margin-bottom: 30px; min-height: 400px; }}
+        .chart-container {{ background: white; border-radius: 15px; padding: 25px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); margin-bottom: 30px; }}
         .chart-title {{ font-weight: 700; color: #1a202c; margin-bottom: 20px; border-left: 4px solid #667eea; padding-left: 15px; }}
     </style>
 </head>
@@ -344,19 +340,48 @@ ESTADISTICAS_TEMPLATE = """
             """ + _SIDEBAR_TEMPLATE.format(active_inicio="", active_gestion="", active_estadisticas="active", active_exportar="") + """
 
             <div class="col-md-10 main-content">
+                <div class="row g-4 mb-4">
+                    <div class="col-12">
+                        <div class="card border-0 shadow-sm rounded-4">
+                            <div class="card-body p-4">
+                                <form action="/estadisticas" method="GET" class="row align-items-end g-3">
+                                    <div class="col-md-4">
+                                        <label class="form-label small fw-bold text-muted">FECHA INICIO</label>
+                                        <input type="date" name="fecha_inicio" class="form-control" value="{val_fecha_inicio}">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label small fw-bold text-muted">FECHA FIN</label>
+                                        <input type="date" name="fecha_fin" class="form-control" value="{val_fecha_fin}">
+                                    </div>
+                                    <div class="col-md-2">
+                                        <button type="submit" class="btn btn-primary w-100 py-2">
+                                            <i class="fas fa-filter"></i> Filtrar
+                                        </button>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <a href="/estadisticas" class="btn btn-outline-secondary w-100 py-2">
+                                            <i class="fas fa-undo"></i> Limpiar
+                                        </a>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="row g-4 mb-5">
                     <div class="col-md-3">
                         <div class="stat-card">
                             <div class="stat-icon icon-blue"><i class="fas fa-database"></i></div>
                             <div class="stat-value">{total_registros}</div>
-                            <div class="stat-label">Registros Totales</div>
+                            <div class="stat-label">Registros</div>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="stat-card">
                             <div class="stat-icon icon-green"><i class="fas fa-check-double"></i></div>
                             <div class="stat-value">{total_tipos_actividad}</div>
-                            <div class="stat-label">Tipos de Actividad</div>
+                            <div class="stat-label">Tipo Actividades</div>
                         </div>
                     </div>
                     <div class="col-md-3">
@@ -368,9 +393,9 @@ ESTADISTICAS_TEMPLATE = """
                     </div>
                     <div class="col-md-3">
                         <div class="stat-card">
-                            <div class="stat-icon icon-purple"><i class="fas fa-history"></i></div>
+                            <div class="stat-icon icon-purple"><i class="fas fa-calendar-alt"></i></div>
                             <div class="stat-value h5 mb-0" style="padding-top: 10px;">{fecha_min}</div>
-                            <div class="stat-label">Desde el inicio</div>
+                            <div class="stat-label">Desde</div>
                         </div>
                     </div>
                 </div>
@@ -378,8 +403,10 @@ ESTADISTICAS_TEMPLATE = """
                 <div class="row">
                     <div class="col-lg-8">
                         <div class="chart-container">
-                            <h5 class="chart-title">Actividad por Categoría (Top 10)</h5>
-                            <canvas id="actividadesChart"></canvas>
+                            <h5 class="chart-title">Distribución de Actividades</h5>
+                            <div style="position: relative; height: 350px;">
+                                <canvas id="actividadesChart"></canvas>
+                            </div>
                         </div>
                         
                         <div class="card border-0 shadow-sm rounded-4 mb-4">
@@ -407,13 +434,17 @@ ESTADISTICAS_TEMPLATE = """
 
                         <div class="chart-container">
                             <h5 class="chart-title">Tendencia de Registros Diarios</h5>
-                            <canvas id="lineaChart"></canvas>
+                            <div style="position: relative; height: 350px;">
+                                <canvas id="lineaChart"></canvas>
+                            </div>
                         </div>
                     </div>
                     <div class="col-lg-4">
                         <div class="chart-container">
                             <h5 class="chart-title">Nivel de Cumplimiento</h5>
-                            <canvas id="cumplimientoChart"></canvas>
+                            <div style="position: relative; height: 350px;">
+                                <canvas id="cumplimientoChart"></canvas>
+                            </div>
                         </div>
                         <div class="card border-0 shadow-sm rounded-4 overflow-hidden mt-4">
                             <div class="card-body p-4 bg-primary text-white">
@@ -513,7 +544,7 @@ EXPORTAR_TEMPLATE = """
                                         <select class="form-select" name="actividad">
                                             <option value="Todas">Todas las actividades</option>
                                             {opciones_actividades}
-                                        </select>
+                                         </select>
                                     </div>
                                 </div>
                                 {filtro_usuario_html}
@@ -524,6 +555,51 @@ EXPORTAR_TEMPLATE = """
                                             <option value="excel">Excel (.xlsx)</option>
                                             <option value="csv">CSV (.csv)</option>
                                         </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="mb-3">
+                                        <label class="form-label">Tipo de Reporte</label>
+                                        <select class="form-select" name="tipo_reporte">
+                                            <option value="detallado">Detallado (Plantilla Base)</option>
+                                            <option value="final">Informe Final (Concentrado)</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row border-top pt-4 mt-2">
+                                <div class="col-12 mb-3">
+                                    <h6 class="text-muted text-uppercase small fw-bold"><i class="fas fa-file-signature me-2"></i> Datos del Contrato</h6>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="mb-3">
+                                        <label class="form-label">Objeto del Contrato</label>
+                                        <textarea class="form-control" name="contrato_objeto" rows="2" placeholder="Describa el objeto del contrato...">{val_contrato_objeto}</textarea>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label class="form-label">Nro. Contrato</label>
+                                        <input type="text" class="form-control" name="contrato_nro" placeholder="Ej: 123-2024" value="{val_contrato_nro}">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Nombre del Contratista</label>
+                                        <input type="text" class="form-control" name="contrato_nombre" placeholder="Nombre completo" value="{val_contrato_nombre}">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Cédula / NIT</label>
+                                        <input type="text" class="form-control" name="contrato_cedula" placeholder="Documento de identidad" value="{val_contrato_cedula}">
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="mb-3">
+                                        <label class="form-label">Supervisor del Contrato</label>
+                                        <input type="text" class="form-control" name="contrato_supervisor" placeholder="Nombre del supervisor" value="{val_contrato_supervisor}">
                                     </div>
                                 </div>
                             </div>

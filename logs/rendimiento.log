@@ -231,3 +231,1025 @@
 2026-02-11 10:44:40,014 - config - INFO - FUNCIÓN: obtener_estadisticas_exportacion - TIEMPO: 15.93ms - ARGUMENTOS: 1 args, 0 kwargs
 2026-02-11 10:44:40,015 - config - INFO - FUNCIÓN: cargar_actividades_globales - TIEMPO: 0.46ms - ARGUMENTOS: 0 args, 0 kwargs
 2026-02-11 10:44:40,015 - config - INFO - FUNCIÓN: cargar_actividades - TIEMPO: 0.34ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-11 11:00:01,038 - config - INFO - Sistema de logging inicializado correctamente
+2026-02-11 11:00:01,731 - config - INFO - FUNCIÓN: inicializar_usuarios - TIEMPO: 0.09ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-11 11:00:01,735 - config - INFO - FUNCIÓN: inicializar_config - TIEMPO: 0.12ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-11 11:00:01,735 - config - INFO - FUNCIÓN: inicializar_excel - TIEMPO: 0.08ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-11 11:00:02,107 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 328.78ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-11 11:00:02,108 - config - INFO - FUNCIÓN: generar_tabla_registros_recientes - TIEMPO: 0.43ms - ARGUMENTOS: 2 args, 0 kwargs
+2026-02-11 11:00:02,110 - config - INFO - FUNCIÓN: cargar_actividades_globales - TIEMPO: 1.78ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-11 11:00:02,111 - config - INFO - FUNCIÓN: cargar_actividades - TIEMPO: 2.83ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-11 11:00:02,111 - config - INFO - FUNCIÓN: generar_opciones_actividades - TIEMPO: 3.08ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-11 11:00:02,112 - config - INFO - FUNCIÓN: cargar_ubicaciones - TIEMPO: 0.40ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-11 11:00:02,112 - config - INFO - FUNCIÓN: generar_opciones_ubicaciones - TIEMPO: 0.58ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-11 11:00:02,112 - config - INFO - FUNCIÓN: cargar_tipos_solicitud - TIEMPO: 0.32ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-11 11:00:02,113 - config - INFO - FUNCIÓN: generar_opciones_tipos_solicitud - TIEMPO: 0.51ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-11 11:00:02,113 - config - INFO - FUNCIÓN: cargar_medios_solicitud - TIEMPO: 0.31ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-11 11:00:02,114 - config - INFO - FUNCIÓN: generar_opciones_medios_solicitud - TIEMPO: 0.55ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-11 11:00:05,920 - config - INFO - FUNCIÓN: cargar_actividades - TIEMPO: 0.01ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-11 11:00:05,921 - config - INFO - FUNCIÓN: generar_gestion_actividades_globales - TIEMPO: 0.80ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-11 11:00:05,926 - config - INFO - FUNCIÓN: cargar_usuarios - TIEMPO: 0.60ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-11 11:00:05,926 - config - INFO - FUNCIÓN: generar_gestion_usuarios - TIEMPO: 0.99ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-11 11:00:05,927 - config - INFO - FUNCIÓN: generar_gestion_actividades_personales - TIEMPO: 0.00ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-11 11:00:07,358 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 7.71ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-11 11:00:07,363 - config - INFO - FUNCIÓN: exportar_registros_filtrados - TIEMPO: 13.03ms - ARGUMENTOS: 0 args, 1 kwargs
+2026-02-11 11:00:07,370 - config - INFO - FUNCIÓN: obtener_estadisticas_exportacion - TIEMPO: 19.94ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-11 11:00:08,425 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 7.99ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-11 11:00:08,428 - config - INFO - FUNCIÓN: exportar_registros_filtrados - TIEMPO: 11.45ms - ARGUMENTOS: 0 args, 1 kwargs
+2026-02-11 11:00:08,434 - config - INFO - FUNCIÓN: obtener_estadisticas_exportacion - TIEMPO: 16.66ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-11 11:00:08,754 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 7.73ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-11 11:00:08,759 - config - INFO - FUNCIÓN: exportar_registros_filtrados - TIEMPO: 13.07ms - ARGUMENTOS: 0 args, 1 kwargs
+2026-02-11 11:00:08,764 - config - INFO - FUNCIÓN: obtener_estadisticas_exportacion - TIEMPO: 18.07ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-11 11:00:10,526 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 7.87ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-11 11:00:10,530 - config - INFO - FUNCIÓN: exportar_registros_filtrados - TIEMPO: 12.09ms - ARGUMENTOS: 0 args, 1 kwargs
+2026-02-11 11:00:10,536 - config - INFO - FUNCIÓN: obtener_estadisticas_exportacion - TIEMPO: 17.66ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-11 11:00:10,863 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 7.40ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-11 11:00:10,866 - config - INFO - FUNCIÓN: exportar_registros_filtrados - TIEMPO: 10.75ms - ARGUMENTOS: 0 args, 1 kwargs
+2026-02-11 11:00:10,870 - config - INFO - FUNCIÓN: obtener_estadisticas_exportacion - TIEMPO: 15.02ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-11 11:00:11,920 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 6.95ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-11 11:00:11,924 - config - INFO - FUNCIÓN: exportar_registros_filtrados - TIEMPO: 10.79ms - ARGUMENTOS: 0 args, 1 kwargs
+2026-02-11 11:00:11,930 - config - INFO - FUNCIÓN: obtener_estadisticas_exportacion - TIEMPO: 17.35ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-11 11:00:12,250 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 8.81ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-11 11:00:12,254 - config - INFO - FUNCIÓN: exportar_registros_filtrados - TIEMPO: 12.43ms - ARGUMENTOS: 0 args, 1 kwargs
+2026-02-11 11:00:12,258 - config - INFO - FUNCIÓN: obtener_estadisticas_exportacion - TIEMPO: 16.78ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-11 11:00:40,139 - config - INFO - FUNCIÓN: cargar_actividades_globales - TIEMPO: 0.47ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-11 11:00:40,140 - config - INFO - FUNCIÓN: cargar_actividades - TIEMPO: 0.79ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-11 11:00:40,141 - config - INFO - FUNCIÓN: generar_gestion_actividades_globales - TIEMPO: 2.01ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-11 11:00:40,142 - config - INFO - FUNCIÓN: cargar_usuarios - TIEMPO: 0.40ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-11 11:00:40,142 - config - INFO - FUNCIÓN: generar_gestion_usuarios - TIEMPO: 0.71ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-11 11:00:40,143 - config - INFO - FUNCIÓN: generar_gestion_actividades_personales - TIEMPO: 0.00ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-11 11:00:41,325 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 6.76ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-11 11:00:41,325 - config - INFO - FUNCIÓN: generar_tabla_registros_recientes - TIEMPO: 0.44ms - ARGUMENTOS: 2 args, 0 kwargs
+2026-02-11 11:00:41,327 - config - INFO - FUNCIÓN: cargar_actividades - TIEMPO: 0.42ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-11 11:00:41,327 - config - INFO - FUNCIÓN: generar_opciones_actividades - TIEMPO: 0.74ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-11 11:00:41,328 - config - INFO - FUNCIÓN: cargar_ubicaciones - TIEMPO: 0.44ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-11 11:00:41,328 - config - INFO - FUNCIÓN: generar_opciones_ubicaciones - TIEMPO: 0.85ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-11 11:00:41,329 - config - INFO - FUNCIÓN: cargar_tipos_solicitud - TIEMPO: 0.40ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-11 11:00:41,329 - config - INFO - FUNCIÓN: generar_opciones_tipos_solicitud - TIEMPO: 0.68ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-11 11:00:41,330 - config - INFO - FUNCIÓN: cargar_medios_solicitud - TIEMPO: 0.35ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-11 11:00:41,330 - config - INFO - FUNCIÓN: generar_opciones_medios_solicitud - TIEMPO: 0.63ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-11 11:00:43,350 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 7.83ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-11 11:00:43,356 - config - INFO - FUNCIÓN: exportar_registros_filtrados - TIEMPO: 13.12ms - ARGUMENTOS: 0 args, 1 kwargs
+2026-02-11 11:00:43,360 - config - INFO - FUNCIÓN: obtener_estadisticas_exportacion - TIEMPO: 17.46ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-11 11:00:43,680 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 6.67ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-11 11:00:43,684 - config - INFO - FUNCIÓN: exportar_registros_filtrados - TIEMPO: 10.12ms - ARGUMENTOS: 0 args, 1 kwargs
+2026-02-11 11:00:43,689 - config - INFO - FUNCIÓN: obtener_estadisticas_exportacion - TIEMPO: 15.78ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-11 11:00:44,741 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 9.50ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-11 11:00:44,745 - config - INFO - FUNCIÓN: exportar_registros_filtrados - TIEMPO: 13.14ms - ARGUMENTOS: 0 args, 1 kwargs
+2026-02-11 11:00:44,749 - config - INFO - FUNCIÓN: obtener_estadisticas_exportacion - TIEMPO: 17.73ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-11 11:00:45,082 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 6.92ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-11 11:00:45,085 - config - INFO - FUNCIÓN: exportar_registros_filtrados - TIEMPO: 10.53ms - ARGUMENTOS: 0 args, 1 kwargs
+2026-02-11 11:00:45,091 - config - INFO - FUNCIÓN: obtener_estadisticas_exportacion - TIEMPO: 16.38ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-11 11:00:50,137 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 8.12ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-11 11:00:50,141 - config - INFO - FUNCIÓN: exportar_registros_filtrados - TIEMPO: 12.21ms - ARGUMENTOS: 0 args, 1 kwargs
+2026-02-11 11:00:50,145 - config - INFO - FUNCIÓN: obtener_estadisticas_exportacion - TIEMPO: 16.84ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-11 11:00:50,464 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 6.69ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-11 11:00:50,469 - config - INFO - FUNCIÓN: exportar_registros_filtrados - TIEMPO: 11.44ms - ARGUMENTOS: 0 args, 1 kwargs
+2026-02-11 11:00:50,473 - config - INFO - FUNCIÓN: obtener_estadisticas_exportacion - TIEMPO: 15.65ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-11 11:01:20,512 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 9.69ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-11 11:01:20,516 - config - INFO - FUNCIÓN: exportar_registros_filtrados - TIEMPO: 13.58ms - ARGUMENTOS: 0 args, 1 kwargs
+2026-02-11 11:01:20,521 - config - INFO - FUNCIÓN: obtener_estadisticas_exportacion - TIEMPO: 18.40ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-11 11:01:20,850 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 7.69ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-11 11:01:20,853 - config - INFO - FUNCIÓN: exportar_registros_filtrados - TIEMPO: 11.09ms - ARGUMENTOS: 0 args, 1 kwargs
+2026-02-11 11:01:20,860 - config - INFO - FUNCIÓN: obtener_estadisticas_exportacion - TIEMPO: 17.37ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-11 11:02:20,900 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 8.13ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-11 11:02:20,905 - config - INFO - FUNCIÓN: exportar_registros_filtrados - TIEMPO: 12.88ms - ARGUMENTOS: 0 args, 1 kwargs
+2026-02-11 11:02:20,910 - config - INFO - FUNCIÓN: obtener_estadisticas_exportacion - TIEMPO: 17.58ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-11 11:02:21,239 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 7.18ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-11 11:02:21,243 - config - INFO - FUNCIÓN: exportar_registros_filtrados - TIEMPO: 10.54ms - ARGUMENTOS: 0 args, 1 kwargs
+2026-02-11 11:02:21,247 - config - INFO - FUNCIÓN: obtener_estadisticas_exportacion - TIEMPO: 14.79ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-11 11:13:03,898 - config - INFO - Sistema de logging inicializado correctamente
+2026-02-11 11:13:04,554 - config - INFO - FUNCIÓN: inicializar_usuarios - TIEMPO: 0.09ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-11 11:13:04,555 - config - INFO - FUNCIÓN: inicializar_config - TIEMPO: 0.09ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-11 11:13:04,555 - config - INFO - FUNCIÓN: inicializar_excel - TIEMPO: 0.09ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-11 11:13:04,997 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 317.50ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-11 11:13:04,998 - config - INFO - FUNCIÓN: generar_tabla_registros_recientes - TIEMPO: 0.48ms - ARGUMENTOS: 2 args, 0 kwargs
+2026-02-11 11:13:04,999 - config - INFO - FUNCIÓN: cargar_actividades_globales - TIEMPO: 0.60ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-11 11:13:05,000 - config - INFO - FUNCIÓN: cargar_actividades - TIEMPO: 1.22ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-11 11:13:05,000 - config - INFO - FUNCIÓN: generar_opciones_actividades - TIEMPO: 1.44ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-11 11:13:05,000 - config - INFO - FUNCIÓN: cargar_ubicaciones - TIEMPO: 0.29ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-11 11:13:05,001 - config - INFO - FUNCIÓN: generar_opciones_ubicaciones - TIEMPO: 0.54ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-11 11:13:05,001 - config - INFO - FUNCIÓN: cargar_tipos_solicitud - TIEMPO: 0.28ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-11 11:13:05,001 - config - INFO - FUNCIÓN: generar_opciones_tipos_solicitud - TIEMPO: 0.51ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-11 11:13:05,002 - config - INFO - FUNCIÓN: cargar_medios_solicitud - TIEMPO: 0.42ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-11 11:13:05,003 - config - INFO - FUNCIÓN: generar_opciones_medios_solicitud - TIEMPO: 0.73ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-11 11:13:06,686 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 9.16ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-11 11:13:06,691 - config - INFO - FUNCIÓN: exportar_registros_filtrados - TIEMPO: 14.56ms - ARGUMENTOS: 0 args, 1 kwargs
+2026-02-11 11:13:06,696 - config - INFO - FUNCIÓN: obtener_estadisticas_exportacion - TIEMPO: 19.53ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-11 11:13:09,064 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 9.30ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-11 11:13:09,069 - config - INFO - FUNCIÓN: exportar_registros_filtrados - TIEMPO: 13.95ms - ARGUMENTOS: 0 args, 1 kwargs
+2026-02-11 11:13:09,076 - config - INFO - FUNCIÓN: obtener_estadisticas_exportacion - TIEMPO: 20.55ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-11 11:13:09,076 - config - INFO - FUNCIÓN: cargar_usuarios - TIEMPO: 0.50ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-11 11:13:09,077 - config - INFO - FUNCIÓN: generar_opciones_usuarios - TIEMPO: 0.73ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-11 11:13:42,126 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 8.81ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-11 11:13:42,127 - config - INFO - FUNCIÓN: generar_tabla_registros_recientes - TIEMPO: 0.38ms - ARGUMENTOS: 2 args, 0 kwargs
+2026-02-11 11:13:42,128 - config - INFO - FUNCIÓN: cargar_actividades_globales - TIEMPO: 0.44ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-11 11:13:42,128 - config - INFO - FUNCIÓN: cargar_actividades - TIEMPO: 1.07ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-11 11:13:42,128 - config - INFO - FUNCIÓN: generar_opciones_actividades - TIEMPO: 1.34ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-11 11:13:42,129 - config - INFO - FUNCIÓN: cargar_ubicaciones - TIEMPO: 0.39ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-11 11:13:42,130 - config - INFO - FUNCIÓN: generar_opciones_ubicaciones - TIEMPO: 0.67ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-11 11:13:42,130 - config - INFO - FUNCIÓN: cargar_tipos_solicitud - TIEMPO: 0.38ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-11 11:13:42,130 - config - INFO - FUNCIÓN: generar_opciones_tipos_solicitud - TIEMPO: 0.61ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-11 11:13:42,131 - config - INFO - FUNCIÓN: cargar_medios_solicitud - TIEMPO: 0.38ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-11 11:13:42,131 - config - INFO - FUNCIÓN: generar_opciones_medios_solicitud - TIEMPO: 0.60ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-11 11:17:39,518 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 9.34ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-11 11:17:39,522 - config - INFO - FUNCIÓN: exportar_registros_filtrados - TIEMPO: 13.10ms - ARGUMENTOS: 0 args, 1 kwargs
+2026-02-11 11:17:39,526 - config - INFO - FUNCIÓN: obtener_estadisticas_exportacion - TIEMPO: 17.91ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-11 11:17:50,596 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 8.38ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-11 11:17:50,602 - config - INFO - FUNCIÓN: exportar_registros_filtrados - TIEMPO: 14.04ms - ARGUMENTOS: 0 args, 1 kwargs
+2026-02-11 11:17:50,609 - config - INFO - FUNCIÓN: obtener_estadisticas_exportacion - TIEMPO: 21.38ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-11 11:17:50,610 - config - INFO - FUNCIÓN: cargar_usuarios - TIEMPO: 0.65ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-11 11:17:50,611 - config - INFO - FUNCIÓN: generar_opciones_usuarios - TIEMPO: 0.99ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-11 11:17:50,612 - config - INFO - FUNCIÓN: cargar_actividades_globales - TIEMPO: 0.58ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-11 11:17:50,613 - config - INFO - FUNCIÓN: cargar_actividades - TIEMPO: 0.56ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-11 11:17:51,870 - config - INFO - FUNCIÓN: cargar_actividades - TIEMPO: 0.01ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-11 11:17:51,870 - config - INFO - FUNCIÓN: generar_gestion_actividades_globales - TIEMPO: 0.55ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-11 11:17:51,873 - config - INFO - FUNCIÓN: generar_gestion_usuarios - TIEMPO: 0.02ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-11 11:17:51,874 - config - INFO - FUNCIÓN: generar_gestion_actividades_personales - TIEMPO: 0.00ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-11 11:19:49,274 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 7.78ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-11 11:19:49,277 - config - INFO - FUNCIÓN: exportar_registros_filtrados - TIEMPO: 11.21ms - ARGUMENTOS: 0 args, 1 kwargs
+2026-02-11 11:19:49,282 - config - INFO - FUNCIÓN: obtener_estadisticas_exportacion - TIEMPO: 15.53ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-11 11:20:02,503 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 10.70ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-11 11:20:02,504 - config - INFO - FUNCIÓN: generar_tabla_registros_recientes - TIEMPO: 0.63ms - ARGUMENTOS: 2 args, 0 kwargs
+2026-02-11 11:20:02,506 - config - INFO - FUNCIÓN: cargar_actividades_globales - TIEMPO: 0.72ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-11 11:20:02,507 - config - INFO - FUNCIÓN: cargar_actividades - TIEMPO: 1.68ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-11 11:20:02,507 - config - INFO - FUNCIÓN: generar_opciones_actividades - TIEMPO: 2.12ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-11 11:20:02,508 - config - INFO - FUNCIÓN: cargar_ubicaciones - TIEMPO: 0.48ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-11 11:20:02,509 - config - INFO - FUNCIÓN: generar_opciones_ubicaciones - TIEMPO: 1.62ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-11 11:20:02,510 - config - INFO - FUNCIÓN: cargar_tipos_solicitud - TIEMPO: 0.59ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-11 11:20:02,511 - config - INFO - FUNCIÓN: generar_opciones_tipos_solicitud - TIEMPO: 0.91ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-11 11:20:02,513 - config - INFO - FUNCIÓN: cargar_medios_solicitud - TIEMPO: 0.57ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-11 11:20:02,514 - config - INFO - FUNCIÓN: generar_opciones_medios_solicitud - TIEMPO: 0.86ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-11 11:20:34,857 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 6.63ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-11 11:20:34,862 - config - INFO - FUNCIÓN: exportar_registros_filtrados - TIEMPO: 11.45ms - ARGUMENTOS: 0 args, 1 kwargs
+2026-02-11 11:20:34,866 - config - INFO - FUNCIÓN: obtener_estadisticas_exportacion - TIEMPO: 15.94ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-11 11:35:19,082 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 7.59ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-11 11:35:19,086 - config - INFO - FUNCIÓN: exportar_registros_filtrados - TIEMPO: 12.32ms - ARGUMENTOS: 0 args, 1 kwargs
+2026-02-11 11:35:19,091 - config - INFO - FUNCIÓN: obtener_estadisticas_exportacion - TIEMPO: 17.06ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-11 11:35:19,092 - config - INFO - FUNCIÓN: cargar_usuarios - TIEMPO: 0.49ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-11 11:35:19,092 - config - INFO - FUNCIÓN: generar_opciones_usuarios - TIEMPO: 0.76ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-11 11:35:19,093 - config - INFO - FUNCIÓN: cargar_actividades_globales - TIEMPO: 0.54ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-11 11:35:19,094 - config - INFO - FUNCIÓN: cargar_actividades - TIEMPO: 0.32ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-11 13:53:07,272 - config - INFO - FUNCIÓN: cargar_usuarios - TIEMPO: 616.85ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-11 13:53:07,356 - config - WARNING - FUNCIÓN LENTA: cargar_usuarios tomó 616.85ms
+2026-02-11 13:53:07,729 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 53.58ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-11 13:53:07,739 - config - INFO - FUNCIÓN: generar_tabla_registros_recientes - TIEMPO: 9.58ms - ARGUMENTOS: 2 args, 0 kwargs
+2026-02-11 13:53:07,740 - config - INFO - FUNCIÓN: cargar_actividades_globales - TIEMPO: 0.88ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-11 13:53:07,741 - config - INFO - FUNCIÓN: cargar_actividades - TIEMPO: 1.94ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-11 13:53:07,741 - config - INFO - FUNCIÓN: generar_opciones_actividades - TIEMPO: 2.26ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-11 13:53:07,742 - config - INFO - FUNCIÓN: cargar_ubicaciones - TIEMPO: 0.38ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-11 13:53:07,742 - config - INFO - FUNCIÓN: generar_opciones_ubicaciones - TIEMPO: 0.68ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-11 13:53:07,743 - config - INFO - FUNCIÓN: cargar_tipos_solicitud - TIEMPO: 0.38ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-11 13:53:07,743 - config - INFO - FUNCIÓN: generar_opciones_tipos_solicitud - TIEMPO: 0.64ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-11 13:53:07,744 - config - INFO - FUNCIÓN: cargar_medios_solicitud - TIEMPO: 0.39ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-11 13:53:07,744 - config - INFO - FUNCIÓN: generar_opciones_medios_solicitud - TIEMPO: 0.60ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-11 13:53:10,262 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 11.31ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-11 13:53:10,302 - config - INFO - FUNCIÓN: exportar_registros_filtrados - TIEMPO: 51.37ms - ARGUMENTOS: 0 args, 1 kwargs
+2026-02-11 13:53:10,317 - config - INFO - FUNCIÓN: obtener_estadisticas_exportacion - TIEMPO: 66.55ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-11 13:53:11,124 - config - INFO - FUNCIÓN: cargar_actividades - TIEMPO: 0.01ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-11 13:53:11,125 - config - INFO - FUNCIÓN: generar_gestion_actividades_globales - TIEMPO: 0.31ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-11 13:53:11,129 - config - INFO - FUNCIÓN: generar_gestion_usuarios - TIEMPO: 0.02ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-11 13:53:11,129 - config - INFO - FUNCIÓN: generar_gestion_actividades_personales - TIEMPO: 0.00ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-11 14:01:23,703 - config - INFO - Sistema de logging inicializado correctamente
+2026-02-11 14:01:24,474 - config - INFO - FUNCIÓN: inicializar_usuarios - TIEMPO: 0.11ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-11 14:01:24,476 - config - INFO - FUNCIÓN: inicializar_config - TIEMPO: 0.11ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-11 14:01:24,476 - config - INFO - FUNCIÓN: inicializar_excel - TIEMPO: 0.08ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-11 14:01:33,820 - config - INFO - FUNCIÓN: cargar_usuarios - TIEMPO: 0.59ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-11 14:01:34,279 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 454.49ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-11 14:01:34,279 - config - INFO - FUNCIÓN: generar_tabla_registros_recientes - TIEMPO: 0.46ms - ARGUMENTOS: 2 args, 0 kwargs
+2026-02-11 14:01:34,280 - config - INFO - FUNCIÓN: cargar_actividades_globales - TIEMPO: 0.50ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-11 14:01:34,281 - config - INFO - FUNCIÓN: cargar_actividades - TIEMPO: 1.09ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-11 14:01:34,281 - config - INFO - FUNCIÓN: generar_opciones_actividades - TIEMPO: 1.31ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-11 14:01:34,281 - config - INFO - FUNCIÓN: cargar_ubicaciones - TIEMPO: 0.31ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-11 14:01:34,282 - config - INFO - FUNCIÓN: generar_opciones_ubicaciones - TIEMPO: 0.53ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-11 14:01:34,282 - config - INFO - FUNCIÓN: cargar_tipos_solicitud - TIEMPO: 0.33ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-11 14:01:34,282 - config - INFO - FUNCIÓN: generar_opciones_tipos_solicitud - TIEMPO: 0.59ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-11 14:01:34,283 - config - INFO - FUNCIÓN: cargar_medios_solicitud - TIEMPO: 0.45ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-11 14:01:34,284 - config - INFO - FUNCIÓN: generar_opciones_medios_solicitud - TIEMPO: 0.70ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-11 14:01:36,484 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 7.45ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-11 14:01:36,489 - config - INFO - FUNCIÓN: exportar_registros_filtrados - TIEMPO: 13.07ms - ARGUMENTOS: 0 args, 3 kwargs
+2026-02-11 14:01:36,496 - config - INFO - FUNCIÓN: obtener_estadisticas_exportacion - TIEMPO: 19.94ms - ARGUMENTOS: 3 args, 0 kwargs
+2026-02-12 09:12:36,315 - config - INFO - Sistema de logging inicializado correctamente
+2026-02-12 09:12:38,618 - config - INFO - FUNCIÓN: inicializar_usuarios - TIEMPO: 0.14ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 09:12:38,619 - config - INFO - FUNCIÓN: inicializar_config - TIEMPO: 0.08ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 09:12:38,620 - config - INFO - FUNCIÓN: inicializar_excel - TIEMPO: 0.11ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 09:12:46,568 - config - INFO - FUNCIÓN: cargar_usuarios - TIEMPO: 0.50ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 09:12:47,712 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 824.08ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-12 09:12:47,712 - config - WARNING - FUNCIÓN LENTA: cargar_registros tomó 824.08ms
+2026-02-12 09:12:47,717 - config - INFO - FUNCIÓN: generar_tabla_registros_recientes - TIEMPO: 4.88ms - ARGUMENTOS: 2 args, 0 kwargs
+2026-02-12 09:12:47,718 - config - INFO - FUNCIÓN: cargar_actividades_globales - TIEMPO: 0.41ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 09:12:47,718 - config - INFO - FUNCIÓN: cargar_actividades - TIEMPO: 0.88ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-12 09:12:47,719 - config - INFO - FUNCIÓN: generar_opciones_actividades - TIEMPO: 1.12ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-12 09:12:47,719 - config - INFO - FUNCIÓN: cargar_ubicaciones - TIEMPO: 0.28ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 09:12:47,719 - config - INFO - FUNCIÓN: generar_opciones_ubicaciones - TIEMPO: 0.53ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 09:12:47,720 - config - INFO - FUNCIÓN: cargar_tipos_solicitud - TIEMPO: 0.35ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 09:12:47,720 - config - INFO - FUNCIÓN: generar_opciones_tipos_solicitud - TIEMPO: 0.59ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 09:12:47,721 - config - INFO - FUNCIÓN: cargar_medios_solicitud - TIEMPO: 0.42ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 09:12:47,721 - config - INFO - FUNCIÓN: generar_opciones_medios_solicitud - TIEMPO: 0.67ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 09:40:17,391 - config - INFO - FUNCIÓN: cargar_actividades_globales - TIEMPO: 1.74ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 09:40:17,393 - config - INFO - FUNCIÓN: cargar_actividades - TIEMPO: 3.13ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 09:40:17,396 - config - INFO - FUNCIÓN: generar_gestion_actividades_globales - TIEMPO: 6.22ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 09:40:17,398 - config - INFO - FUNCIÓN: cargar_usuarios - TIEMPO: 1.10ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 09:40:17,398 - config - INFO - FUNCIÓN: generar_gestion_usuarios - TIEMPO: 1.80ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-12 09:40:17,399 - config - INFO - FUNCIÓN: generar_gestion_actividades_personales - TIEMPO: 0.01ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-12 09:40:20,557 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 9.39ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-12 09:40:20,587 - config - INFO - FUNCIÓN: exportar_registros_filtrados - TIEMPO: 38.98ms - ARGUMENTOS: 0 args, 3 kwargs
+2026-02-12 09:40:20,598 - config - INFO - FUNCIÓN: obtener_estadisticas_exportacion - TIEMPO: 50.56ms - ARGUMENTOS: 3 args, 0 kwargs
+2026-02-12 09:49:04,709 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 13.59ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-12 09:49:04,714 - config - INFO - FUNCIÓN: exportar_registros_filtrados - TIEMPO: 18.12ms - ARGUMENTOS: 0 args, 3 kwargs
+2026-02-12 09:49:04,719 - config - INFO - FUNCIÓN: obtener_estadisticas_exportacion - TIEMPO: 23.12ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-12 09:49:04,720 - config - INFO - FUNCIÓN: cargar_usuarios - TIEMPO: 0.75ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 09:49:04,720 - config - INFO - FUNCIÓN: generar_opciones_usuarios - TIEMPO: 1.18ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 09:49:04,722 - config - INFO - FUNCIÓN: cargar_actividades_globales - TIEMPO: 0.46ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 09:49:04,722 - config - INFO - FUNCIÓN: cargar_actividades - TIEMPO: 0.37ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-12 09:49:05,936 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 8.46ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-12 09:49:05,941 - config - INFO - FUNCIÓN: exportar_registros_filtrados - TIEMPO: 13.41ms - ARGUMENTOS: 0 args, 4 kwargs
+2026-02-12 09:49:06,173 - config - INFO - FUNCIÓN: generar_informe_template - TIEMPO: 229.80ms - ARGUMENTOS: 2 args, 0 kwargs
+2026-02-12 09:49:06,508 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 21.76ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-12 09:49:06,514 - config - INFO - FUNCIÓN: exportar_registros_filtrados - TIEMPO: 27.83ms - ARGUMENTOS: 0 args, 3 kwargs
+2026-02-12 09:49:06,521 - config - INFO - FUNCIÓN: obtener_estadisticas_exportacion - TIEMPO: 34.96ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-12 09:49:06,521 - config - INFO - FUNCIÓN: generar_opciones_usuarios - TIEMPO: 0.01ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 09:49:33,906 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 17.07ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-12 09:49:33,915 - config - INFO - FUNCIÓN: exportar_registros_filtrados - TIEMPO: 25.45ms - ARGUMENTOS: 0 args, 4 kwargs
+2026-02-12 09:49:34,123 - config - INFO - FUNCIÓN: generar_informe_template - TIEMPO: 207.65ms - ARGUMENTOS: 2 args, 0 kwargs
+2026-02-12 09:49:34,154 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 6.80ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-12 09:49:34,158 - config - INFO - FUNCIÓN: exportar_registros_filtrados - TIEMPO: 10.33ms - ARGUMENTOS: 0 args, 3 kwargs
+2026-02-12 09:49:34,162 - config - INFO - FUNCIÓN: obtener_estadisticas_exportacion - TIEMPO: 14.49ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-12 09:49:34,162 - config - INFO - FUNCIÓN: generar_opciones_usuarios - TIEMPO: 0.01ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 09:54:51,462 - config - INFO - Sistema de logging inicializado correctamente
+2026-02-12 09:54:52,064 - config - INFO - FUNCIÓN: inicializar_usuarios - TIEMPO: 0.08ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 09:54:52,064 - config - INFO - FUNCIÓN: inicializar_config - TIEMPO: 0.08ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 09:54:52,064 - config - INFO - FUNCIÓN: inicializar_excel - TIEMPO: 0.08ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 09:54:52,521 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 321.06ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-12 09:54:52,522 - config - INFO - FUNCIÓN: generar_tabla_registros_recientes - TIEMPO: 0.42ms - ARGUMENTOS: 2 args, 0 kwargs
+2026-02-12 09:54:52,523 - config - INFO - FUNCIÓN: cargar_actividades_globales - TIEMPO: 0.51ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 09:54:52,524 - config - INFO - FUNCIÓN: cargar_actividades - TIEMPO: 1.24ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-12 09:54:52,524 - config - INFO - FUNCIÓN: generar_opciones_actividades - TIEMPO: 1.55ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-12 09:54:52,525 - config - INFO - FUNCIÓN: cargar_ubicaciones - TIEMPO: 0.36ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 09:54:52,525 - config - INFO - FUNCIÓN: generar_opciones_ubicaciones - TIEMPO: 0.67ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 09:54:52,526 - config - INFO - FUNCIÓN: cargar_tipos_solicitud - TIEMPO: 0.28ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 09:54:52,526 - config - INFO - FUNCIÓN: generar_opciones_tipos_solicitud - TIEMPO: 0.52ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 09:54:52,527 - config - INFO - FUNCIÓN: cargar_medios_solicitud - TIEMPO: 0.47ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 09:54:52,527 - config - INFO - FUNCIÓN: generar_opciones_medios_solicitud - TIEMPO: 0.72ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 10:36:13,208 - config - INFO - Sistema de logging inicializado correctamente
+2026-02-12 10:36:13,915 - config - INFO - FUNCIÓN: inicializar_usuarios - TIEMPO: 0.11ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 10:36:13,915 - config - INFO - FUNCIÓN: inicializar_config - TIEMPO: 0.13ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 10:36:13,915 - config - INFO - FUNCIÓN: inicializar_excel - TIEMPO: 0.10ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 10:42:33,638 - config - INFO - Sistema de logging inicializado correctamente
+2026-02-12 10:42:34,382 - config - INFO - FUNCIÓN: inicializar_usuarios - TIEMPO: 0.16ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 10:42:34,383 - config - INFO - FUNCIÓN: inicializar_config - TIEMPO: 0.21ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 10:42:34,384 - config - INFO - FUNCIÓN: inicializar_excel - TIEMPO: 0.22ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 10:43:12,327 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 323.29ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-12 10:43:12,327 - config - INFO - FUNCIÓN: generar_tabla_registros_recientes - TIEMPO: 0.46ms - ARGUMENTOS: 2 args, 0 kwargs
+2026-02-12 10:43:12,328 - config - INFO - FUNCIÓN: cargar_actividades_globales - TIEMPO: 0.47ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 10:43:12,329 - config - INFO - FUNCIÓN: cargar_actividades - TIEMPO: 1.09ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-12 10:43:12,329 - config - INFO - FUNCIÓN: generar_opciones_actividades - TIEMPO: 1.33ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-12 10:43:12,329 - config - INFO - FUNCIÓN: cargar_ubicaciones - TIEMPO: 0.33ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 10:43:12,330 - config - INFO - FUNCIÓN: generar_opciones_ubicaciones - TIEMPO: 0.58ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 10:43:12,330 - config - INFO - FUNCIÓN: cargar_tipos_solicitud - TIEMPO: 0.31ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 10:43:12,331 - config - INFO - FUNCIÓN: generar_opciones_tipos_solicitud - TIEMPO: 0.55ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 10:43:12,331 - config - INFO - FUNCIÓN: cargar_medios_solicitud - TIEMPO: 0.45ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 10:43:12,333 - config - INFO - FUNCIÓN: generar_opciones_medios_solicitud - TIEMPO: 1.62ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 10:43:14,462 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 8.67ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-12 10:43:14,468 - config - INFO - FUNCIÓN: exportar_registros_filtrados - TIEMPO: 14.33ms - ARGUMENTOS: 0 args, 3 kwargs
+2026-02-12 10:43:14,474 - config - INFO - FUNCIÓN: obtener_estadisticas_exportacion - TIEMPO: 20.66ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-12 10:43:14,475 - config - INFO - FUNCIÓN: cargar_usuarios - TIEMPO: 0.41ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 10:43:14,475 - config - INFO - FUNCIÓN: generar_opciones_usuarios - TIEMPO: 0.67ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 10:43:17,072 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 21.52ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-12 10:43:17,079 - config - INFO - FUNCIÓN: exportar_registros_filtrados - TIEMPO: 28.79ms - ARGUMENTOS: 0 args, 4 kwargs
+2026-02-12 10:43:17,081 - config - INFO - Iniciando generación de informe. Plantilla: c:\Users\apoyosistemas\Documents\Python - copia\INFORME DE ACTIVIDADES - copia.xlsx, Registros: 1
+2026-02-12 10:43:17,208 - config - INFO - Plantilla cargada correctamente
+2026-02-12 10:43:17,295 - config - INFO - Informe guardado exitosamente en: C:\Users\APOYOS~1\AppData\Local\Temp\tmpfasp9uhm.xlsx
+2026-02-12 10:43:17,295 - config - INFO - FUNCIÓN: generar_informe_template - TIEMPO: 213.59ms - ARGUMENTOS: 2 args, 0 kwargs
+2026-02-12 10:43:17,297 - config - ERROR - Error crítico en ExportarHandler.post: [WinError 32] El proceso no tiene acceso al archivo porque está siendo utilizado por otro proceso: 'C:\\Users\\APOYOS~1\\AppData\\Local\\Temp\\tmpfasp9uhm.xlsx'
+Traceback (most recent call last):
+  File "C:\Users\apoyosistemas\Documents\Python - copia\Actividades\web_handlers.py", line 342, in post
+    os.unlink(tmp.name)
+    ~~~~~~~~~^^^^^^^^^^
+PermissionError: [WinError 32] El proceso no tiene acceso al archivo porque está siendo utilizado por otro proceso: 'C:\\Users\\APOYOS~1\\AppData\\Local\\Temp\\tmpfasp9uhm.xlsx'
+2026-02-12 10:43:17,320 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 6.36ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-12 10:43:17,323 - config - INFO - FUNCIÓN: exportar_registros_filtrados - TIEMPO: 9.83ms - ARGUMENTOS: 0 args, 3 kwargs
+2026-02-12 10:43:17,328 - config - INFO - FUNCIÓN: obtener_estadisticas_exportacion - TIEMPO: 15.03ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-12 10:43:17,329 - config - INFO - FUNCIÓN: generar_opciones_usuarios - TIEMPO: 0.01ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 10:43:23,665 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 7.90ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-12 10:43:23,668 - config - INFO - FUNCIÓN: exportar_registros_filtrados - TIEMPO: 11.45ms - ARGUMENTOS: 0 args, 3 kwargs
+2026-02-12 10:43:23,673 - config - INFO - FUNCIÓN: obtener_estadisticas_exportacion - TIEMPO: 16.70ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-12 10:43:23,674 - config - INFO - FUNCIÓN: generar_opciones_usuarios - TIEMPO: 0.01ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 10:43:34,089 - config - INFO - Sistema de logging inicializado correctamente
+2026-02-12 10:43:34,431 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 331.43ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-12 10:43:34,432 - config - INFO - FUNCIÓN: generar_tabla_registros_recientes - TIEMPO: 0.64ms - ARGUMENTOS: 2 args, 0 kwargs
+2026-02-12 10:43:34,433 - config - INFO - FUNCIÓN: cargar_actividades_globales - TIEMPO: 0.48ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 10:43:34,434 - config - INFO - FUNCIÓN: cargar_actividades - TIEMPO: 1.45ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-12 10:43:34,435 - config - INFO - FUNCIÓN: generar_opciones_actividades - TIEMPO: 2.01ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-12 10:43:34,436 - config - INFO - FUNCIÓN: cargar_ubicaciones - TIEMPO: 0.40ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 10:43:34,436 - config - INFO - FUNCIÓN: generar_opciones_ubicaciones - TIEMPO: 1.09ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 10:43:34,437 - config - INFO - FUNCIÓN: cargar_tipos_solicitud - TIEMPO: 0.46ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 10:43:34,438 - config - INFO - FUNCIÓN: generar_opciones_tipos_solicitud - TIEMPO: 1.00ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 10:43:34,439 - config - INFO - FUNCIÓN: cargar_medios_solicitud - TIEMPO: 0.37ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 10:43:34,441 - config - INFO - FUNCIÓN: generar_opciones_medios_solicitud - TIEMPO: 2.57ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 10:43:34,781 - config - INFO - FUNCIÓN: inicializar_usuarios - TIEMPO: 0.08ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 10:43:34,782 - config - INFO - FUNCIÓN: inicializar_config - TIEMPO: 0.14ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 10:43:34,782 - config - INFO - FUNCIÓN: inicializar_excel - TIEMPO: 0.07ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 10:43:36,472 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 10.16ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-12 10:43:36,491 - config - INFO - FUNCIÓN: exportar_registros_filtrados - TIEMPO: 28.59ms - ARGUMENTOS: 0 args, 3 kwargs
+2026-02-12 10:43:36,498 - config - INFO - FUNCIÓN: obtener_estadisticas_exportacion - TIEMPO: 36.32ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-12 10:43:36,499 - config - INFO - FUNCIÓN: cargar_usuarios - TIEMPO: 0.40ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 10:43:36,500 - config - INFO - FUNCIÓN: generar_opciones_usuarios - TIEMPO: 0.92ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 10:43:38,703 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 8.42ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-12 10:43:38,706 - config - INFO - FUNCIÓN: exportar_registros_filtrados - TIEMPO: 11.72ms - ARGUMENTOS: 0 args, 4 kwargs
+2026-02-12 10:43:38,708 - config - INFO - Iniciando generación de informe. Plantilla: c:\Users\apoyosistemas\Documents\Python - copia\INFORME DE ACTIVIDADES - copia.xlsx, Registros: 1
+2026-02-12 10:43:38,835 - config - INFO - Plantilla cargada correctamente
+2026-02-12 10:43:38,922 - config - INFO - Informe guardado exitosamente en: C:\Users\APOYOS~1\AppData\Local\Temp\tmpdyrrff_d.xlsx
+2026-02-12 10:43:38,922 - config - INFO - FUNCIÓN: generar_informe_template - TIEMPO: 214.11ms - ARGUMENTOS: 2 args, 0 kwargs
+2026-02-12 10:43:38,924 - config - ERROR - Error crítico en ExportarHandler.post: [WinError 32] El proceso no tiene acceso al archivo porque está siendo utilizado por otro proceso: 'C:\\Users\\APOYOS~1\\AppData\\Local\\Temp\\tmpdyrrff_d.xlsx'
+Traceback (most recent call last):
+  File "C:\Users\apoyosistemas\Documents\Python - copia\Actividades\web_handlers.py", line 342, in post
+    os.unlink(tmp.name)
+    ~~~~~~~~~^^^^^^^^^^
+PermissionError: [WinError 32] El proceso no tiene acceso al archivo porque está siendo utilizado por otro proceso: 'C:\\Users\\APOYOS~1\\AppData\\Local\\Temp\\tmpdyrrff_d.xlsx'
+2026-02-12 10:43:38,978 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 19.25ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-12 10:43:38,985 - config - INFO - FUNCIÓN: exportar_registros_filtrados - TIEMPO: 26.36ms - ARGUMENTOS: 0 args, 3 kwargs
+2026-02-12 10:43:38,994 - config - INFO - FUNCIÓN: obtener_estadisticas_exportacion - TIEMPO: 35.54ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-12 10:43:38,995 - config - INFO - FUNCIÓN: generar_opciones_usuarios - TIEMPO: 0.01ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 10:51:23,217 - config - INFO - Sistema de logging inicializado correctamente
+2026-02-12 10:51:23,837 - config - INFO - FUNCIÓN: inicializar_usuarios - TIEMPO: 0.09ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 10:51:23,838 - config - INFO - FUNCIÓN: inicializar_config - TIEMPO: 0.12ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 10:51:23,840 - config - INFO - FUNCIÓN: inicializar_excel - TIEMPO: 0.29ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 10:52:12,788 - config - INFO - Sistema de logging inicializado correctamente
+2026-02-12 10:52:13,399 - config - INFO - FUNCIÓN: inicializar_usuarios - TIEMPO: 0.08ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 10:52:13,399 - config - INFO - FUNCIÓN: inicializar_config - TIEMPO: 0.10ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 10:52:13,400 - config - INFO - FUNCIÓN: inicializar_excel - TIEMPO: 0.08ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 10:52:15,780 - config - INFO - FUNCIÓN: cargar_usuarios - TIEMPO: 0.48ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 10:52:16,091 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 8.79ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-12 10:52:16,092 - config - INFO - FUNCIÓN: generar_tabla_registros_recientes - TIEMPO: 0.44ms - ARGUMENTOS: 2 args, 0 kwargs
+2026-02-12 10:52:16,093 - config - INFO - FUNCIÓN: cargar_actividades_globales - TIEMPO: 0.49ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 10:52:16,094 - config - INFO - FUNCIÓN: cargar_actividades - TIEMPO: 1.43ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-12 10:52:16,095 - config - INFO - FUNCIÓN: generar_opciones_actividades - TIEMPO: 1.96ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-12 10:52:16,096 - config - INFO - FUNCIÓN: cargar_ubicaciones - TIEMPO: 0.43ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 10:52:16,096 - config - INFO - FUNCIÓN: generar_opciones_ubicaciones - TIEMPO: 0.99ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 10:52:16,097 - config - INFO - FUNCIÓN: cargar_tipos_solicitud - TIEMPO: 0.47ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 10:52:16,100 - config - INFO - FUNCIÓN: generar_opciones_tipos_solicitud - TIEMPO: 2.69ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 10:52:16,101 - config - INFO - FUNCIÓN: cargar_medios_solicitud - TIEMPO: 0.52ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 10:52:16,101 - config - INFO - FUNCIÓN: generar_opciones_medios_solicitud - TIEMPO: 1.08ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 10:52:18,100 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 7.31ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-12 10:52:18,105 - config - INFO - FUNCIÓN: exportar_registros_filtrados - TIEMPO: 11.70ms - ARGUMENTOS: 0 args, 3 kwargs
+2026-02-12 10:52:18,110 - config - INFO - FUNCIÓN: obtener_estadisticas_exportacion - TIEMPO: 17.04ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-12 10:52:18,111 - config - INFO - FUNCIÓN: generar_opciones_usuarios - TIEMPO: 0.01ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 10:52:19,334 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 7.91ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-12 10:52:19,339 - config - INFO - FUNCIÓN: exportar_registros_filtrados - TIEMPO: 12.34ms - ARGUMENTOS: 0 args, 4 kwargs
+2026-02-12 10:52:19,340 - config - INFO - Iniciando generación de informe. Plantilla: c:\Users\apoyosistemas\Documents\Python - copia\INFORME DE ACTIVIDADES - copia.xlsx, Registros: 1
+2026-02-12 10:52:19,476 - config - INFO - Plantilla cargada correctamente
+2026-02-12 10:52:19,567 - config - INFO - Informe guardado exitosamente en: C:\Users\APOYOS~1\AppData\Local\Temp\tmptc0onf14.xlsx
+2026-02-12 10:52:19,568 - config - INFO - FUNCIÓN: generar_informe_template - TIEMPO: 227.78ms - ARGUMENTOS: 2 args, 0 kwargs
+2026-02-12 10:52:19,569 - config - ERROR - Error crítico en ExportarHandler.post: [WinError 32] El proceso no tiene acceso al archivo porque está siendo utilizado por otro proceso: 'C:\\Users\\APOYOS~1\\AppData\\Local\\Temp\\tmptc0onf14.xlsx'
+Traceback (most recent call last):
+  File "C:\Users\apoyosistemas\Documents\Python - copia\Actividades\web_handlers.py", line 342, in post
+    filename = f"exportacion_{self.usuario_actual}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv"
+    ^^^^^^^^^^^^^^^^^^^
+PermissionError: [WinError 32] El proceso no tiene acceso al archivo porque está siendo utilizado por otro proceso: 'C:\\Users\\APOYOS~1\\AppData\\Local\\Temp\\tmptc0onf14.xlsx'
+2026-02-12 10:52:19,586 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 8.34ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-12 10:52:19,591 - config - INFO - FUNCIÓN: exportar_registros_filtrados - TIEMPO: 13.19ms - ARGUMENTOS: 0 args, 3 kwargs
+2026-02-12 10:52:19,595 - config - INFO - FUNCIÓN: obtener_estadisticas_exportacion - TIEMPO: 17.50ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-12 10:52:19,595 - config - INFO - FUNCIÓN: generar_opciones_usuarios - TIEMPO: 0.02ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 10:54:43,373 - config - INFO - Sistema de logging inicializado correctamente
+2026-02-12 10:54:44,306 - config - INFO - FUNCIÓN: inicializar_usuarios - TIEMPO: 0.09ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 10:54:44,307 - config - INFO - FUNCIÓN: inicializar_config - TIEMPO: 0.10ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 10:54:44,311 - config - INFO - FUNCIÓN: inicializar_excel - TIEMPO: 0.15ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 10:56:01,777 - config - INFO - Sistema de logging inicializado correctamente
+2026-02-12 10:56:02,127 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 326.61ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-12 10:56:02,128 - config - INFO - FUNCIÓN: generar_tabla_registros_recientes - TIEMPO: 0.50ms - ARGUMENTOS: 2 args, 0 kwargs
+2026-02-12 10:56:02,129 - config - INFO - FUNCIÓN: cargar_actividades_globales - TIEMPO: 0.68ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 10:56:02,131 - config - INFO - FUNCIÓN: cargar_actividades - TIEMPO: 2.35ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-12 10:56:02,132 - config - INFO - FUNCIÓN: generar_opciones_actividades - TIEMPO: 3.17ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-12 10:56:02,132 - config - INFO - FUNCIÓN: cargar_ubicaciones - TIEMPO: 0.39ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 10:56:02,133 - config - INFO - FUNCIÓN: generar_opciones_ubicaciones - TIEMPO: 0.86ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 10:56:02,134 - config - INFO - FUNCIÓN: cargar_tipos_solicitud - TIEMPO: 0.39ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 10:56:02,135 - config - INFO - FUNCIÓN: generar_opciones_tipos_solicitud - TIEMPO: 1.03ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 10:56:02,136 - config - INFO - FUNCIÓN: cargar_medios_solicitud - TIEMPO: 0.37ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 10:56:02,136 - config - INFO - FUNCIÓN: generar_opciones_medios_solicitud - TIEMPO: 0.94ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 10:56:02,481 - config - INFO - FUNCIÓN: inicializar_usuarios - TIEMPO: 0.14ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 10:56:02,482 - config - INFO - FUNCIÓN: inicializar_config - TIEMPO: 0.17ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 10:56:02,482 - config - INFO - FUNCIÓN: inicializar_excel - TIEMPO: 0.15ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 10:56:04,747 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 8.51ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-12 10:56:04,755 - config - INFO - FUNCIÓN: exportar_registros_filtrados - TIEMPO: 15.64ms - ARGUMENTOS: 0 args, 3 kwargs
+2026-02-12 10:56:04,760 - config - INFO - FUNCIÓN: obtener_estadisticas_exportacion - TIEMPO: 21.47ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-12 10:56:04,761 - config - INFO - FUNCIÓN: cargar_usuarios - TIEMPO: 0.45ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 10:56:04,762 - config - INFO - FUNCIÓN: generar_opciones_usuarios - TIEMPO: 1.30ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 10:56:06,118 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 18.92ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-12 10:56:06,127 - config - INFO - FUNCIÓN: exportar_registros_filtrados - TIEMPO: 27.08ms - ARGUMENTOS: 0 args, 4 kwargs
+2026-02-12 10:56:06,131 - config - INFO - Iniciando generación de informe. Plantilla: c:\Users\apoyosistemas\Documents\Python - copia\INFORME DE ACTIVIDADES - copia.xlsx, Registros: 1
+2026-02-12 10:56:06,266 - config - INFO - Plantilla cargada correctamente
+2026-02-12 10:56:06,356 - config - INFO - Informe guardado exitosamente en: C:\Users\APOYOS~1\AppData\Local\Temp\tmpn1v_az1l.xlsx
+2026-02-12 10:56:06,357 - config - INFO - FUNCIÓN: generar_informe_template - TIEMPO: 225.81ms - ARGUMENTOS: 2 args, 0 kwargs
+2026-02-12 11:04:00,023 - config - INFO - Sistema de logging inicializado correctamente
+2026-02-12 11:04:00,234 - config - INFO - Iniciando generación de informe. Plantilla: c:\Users\apoyosistemas\Documents\Python - copia\INFORME DE ACTIVIDADES - copia.xlsx, Registros: 1
+2026-02-12 11:04:00,363 - config - INFO - Plantilla cargada correctamente
+2026-02-12 11:04:00,463 - config - INFO - Informe guardado exitosamente en: diagnostic_output.xlsx
+2026-02-12 11:04:00,465 - config - INFO - FUNCIÓN: generar_informe_template - TIEMPO: 230.63ms - ARGUMENTOS: 2 args, 0 kwargs
+2026-02-12 14:07:04,475 - config - INFO - Sistema de logging inicializado correctamente
+2026-02-12 14:07:05,187 - config - INFO - FUNCIÓN: inicializar_usuarios - TIEMPO: 0.09ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 14:07:05,188 - config - INFO - FUNCIÓN: inicializar_config - TIEMPO: 0.11ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 14:07:05,190 - config - INFO - FUNCIÓN: inicializar_excel - TIEMPO: 0.12ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 14:07:37,998 - config - INFO - Sistema de logging inicializado correctamente
+2026-02-12 14:07:38,773 - config - INFO - FUNCIÓN: inicializar_usuarios - TIEMPO: 0.08ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 14:07:38,774 - config - INFO - FUNCIÓN: inicializar_config - TIEMPO: 0.08ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 14:07:38,774 - config - INFO - FUNCIÓN: inicializar_excel - TIEMPO: 0.07ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 14:07:45,002 - config - INFO - FUNCIÓN: cargar_usuarios - TIEMPO: 0.60ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 14:07:45,677 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 353.40ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-12 14:07:45,679 - config - INFO - FUNCIÓN: generar_tabla_registros_recientes - TIEMPO: 0.60ms - ARGUMENTOS: 2 args, 0 kwargs
+2026-02-12 14:07:45,680 - config - INFO - FUNCIÓN: cargar_actividades_globales - TIEMPO: 0.64ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 14:07:45,681 - config - INFO - FUNCIÓN: cargar_actividades - TIEMPO: 1.63ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-12 14:07:45,682 - config - INFO - FUNCIÓN: generar_opciones_actividades - TIEMPO: 2.14ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-12 14:07:45,683 - config - INFO - FUNCIÓN: cargar_ubicaciones - TIEMPO: 0.39ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 14:07:45,683 - config - INFO - FUNCIÓN: generar_opciones_ubicaciones - TIEMPO: 0.83ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 14:07:45,684 - config - INFO - FUNCIÓN: cargar_tipos_solicitud - TIEMPO: 0.58ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 14:07:45,685 - config - INFO - FUNCIÓN: generar_opciones_tipos_solicitud - TIEMPO: 1.00ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 14:07:45,685 - config - INFO - FUNCIÓN: cargar_medios_solicitud - TIEMPO: 0.35ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 14:07:45,686 - config - INFO - FUNCIÓN: generar_opciones_medios_solicitud - TIEMPO: 0.71ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 14:07:47,701 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 10.83ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-12 14:07:47,706 - config - INFO - FUNCIÓN: exportar_registros_filtrados - TIEMPO: 16.34ms - ARGUMENTOS: 0 args, 3 kwargs
+2026-02-12 14:07:47,713 - config - INFO - FUNCIÓN: obtener_estadisticas_exportacion - TIEMPO: 23.09ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-12 14:07:47,716 - config - INFO - FUNCIÓN: generar_opciones_usuarios - TIEMPO: 0.02ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 14:07:49,153 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 7.84ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-12 14:07:49,157 - config - INFO - FUNCIÓN: exportar_registros_filtrados - TIEMPO: 11.31ms - ARGUMENTOS: 0 args, 4 kwargs
+2026-02-12 14:07:49,158 - config - INFO - Iniciando generación de informe. Plantilla: c:\Users\apoyosistemas\Documents\Python - copia\INFORME DE ACTIVIDADES - copia.xlsx, Registros: 1
+2026-02-12 14:07:49,296 - config - INFO - Plantilla cargada correctamente
+2026-02-12 14:07:49,398 - config - INFO - Informe guardado exitosamente en: C:\Users\APOYOS~1\AppData\Local\Temp\tmp8pr80ufu.xlsx
+2026-02-12 14:07:49,401 - config - INFO - FUNCIÓN: generar_informe_template - TIEMPO: 242.78ms - ARGUMENTOS: 2 args, 0 kwargs
+2026-02-12 14:09:57,377 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 336.16ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-12 14:09:57,383 - config - INFO - FUNCIÓN: exportar_registros_filtrados - TIEMPO: 341.59ms - ARGUMENTOS: 0 args, 4 kwargs
+2026-02-12 14:09:57,385 - config - INFO - Iniciando generación de informe. Plantilla: c:\Users\apoyosistemas\Documents\Python - copia\INFORME DE ACTIVIDADES - copia.xlsx, Registros: 1
+2026-02-12 14:09:57,511 - config - INFO - Plantilla cargada correctamente
+2026-02-12 14:09:57,519 - config - ERROR - Excepción no controlada en generar_informe_template: 'MergedCell' object attribute 'value' is read-only
+Traceback (most recent call last):
+  File "C:\Users\apoyosistemas\Documents\Python - copia\Actividades\export_service.py", line 301, in generar_informe_template
+    ws.cell(row=current_row, column=7, value=conteo_actividad).font = openpyxl.styles.Font(bold=True)
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\apoyosistemas\Documents\Python - copia\Lib\site-packages\openpyxl\worksheet\worksheet.py", line 246, in cell
+    cell.value = value
+    ^^^^^^^^^^
+AttributeError: 'MergedCell' object attribute 'value' is read-only
+2026-02-12 14:09:57,522 - config - INFO - FUNCIÓN: generar_informe_template - TIEMPO: 137.14ms - ARGUMENTOS: 2 args, 0 kwargs
+2026-02-12 14:09:57,532 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 7.58ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-12 14:09:57,536 - config - INFO - FUNCIÓN: exportar_registros_filtrados - TIEMPO: 10.93ms - ARGUMENTOS: 0 args, 3 kwargs
+2026-02-12 14:09:57,540 - config - INFO - FUNCIÓN: obtener_estadisticas_exportacion - TIEMPO: 15.68ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-12 14:09:57,541 - config - INFO - FUNCIÓN: cargar_usuarios - TIEMPO: 0.49ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 14:09:57,541 - config - INFO - FUNCIÓN: generar_opciones_usuarios - TIEMPO: 0.72ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 14:09:57,542 - config - INFO - FUNCIÓN: cargar_actividades_globales - TIEMPO: 0.48ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 14:09:57,544 - config - INFO - FUNCIÓN: cargar_actividades - TIEMPO: 0.83ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-12 14:18:19,962 - config - INFO - Sistema de logging inicializado correctamente
+2026-02-12 14:18:20,287 - config - INFO - Iniciando generación de informe. Plantilla: c:\Users\apoyosistemas\Documents\Python - copia\INFORME DE ACTIVIDADES - copia.xlsx, Registros: 1
+2026-02-12 14:18:20,411 - config - INFO - Plantilla cargada correctamente
+2026-02-12 14:18:20,494 - config - INFO - Informe guardado exitosamente en: test_export_real.xlsx
+2026-02-12 14:18:20,494 - config - INFO - FUNCIÓN: generar_informe_template - TIEMPO: 206.67ms - ARGUMENTOS: 2 args, 0 kwargs
+2026-02-12 14:34:52,318 - config - INFO - Sistema de logging inicializado correctamente
+2026-02-12 14:34:52,338 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 9.16ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-12 14:34:52,339 - config - INFO - FUNCIÓN: generar_tabla_registros_recientes - TIEMPO: 0.46ms - ARGUMENTOS: 2 args, 0 kwargs
+2026-02-12 14:34:52,340 - config - INFO - FUNCIÓN: cargar_actividades_globales - TIEMPO: 0.43ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 14:34:52,340 - config - INFO - FUNCIÓN: cargar_actividades - TIEMPO: 1.11ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-12 14:34:52,341 - config - INFO - FUNCIÓN: generar_opciones_actividades - TIEMPO: 1.45ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-12 14:34:52,341 - config - INFO - FUNCIÓN: cargar_ubicaciones - TIEMPO: 0.44ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 14:34:52,342 - config - INFO - FUNCIÓN: generar_opciones_ubicaciones - TIEMPO: 0.74ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 14:34:52,342 - config - INFO - FUNCIÓN: cargar_tipos_solicitud - TIEMPO: 0.36ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 14:34:52,342 - config - INFO - FUNCIÓN: generar_opciones_tipos_solicitud - TIEMPO: 0.68ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 14:34:52,343 - config - INFO - FUNCIÓN: cargar_medios_solicitud - TIEMPO: 0.36ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 14:34:52,343 - config - INFO - FUNCIÓN: generar_opciones_medios_solicitud - TIEMPO: 0.65ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 14:34:52,958 - config - INFO - FUNCIÓN: inicializar_usuarios - TIEMPO: 0.08ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 14:34:52,959 - config - INFO - FUNCIÓN: inicializar_config - TIEMPO: 0.11ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 14:34:52,959 - config - INFO - FUNCIÓN: inicializar_excel - TIEMPO: 0.08ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 14:34:54,522 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 10.48ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-12 14:34:54,526 - config - INFO - FUNCIÓN: exportar_registros_filtrados - TIEMPO: 14.76ms - ARGUMENTOS: 0 args, 3 kwargs
+2026-02-12 14:34:54,531 - config - INFO - FUNCIÓN: obtener_estadisticas_exportacion - TIEMPO: 19.73ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-12 14:34:54,532 - config - INFO - FUNCIÓN: cargar_usuarios - TIEMPO: 0.41ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 14:34:54,532 - config - INFO - FUNCIÓN: generar_opciones_usuarios - TIEMPO: 0.66ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 14:34:56,538 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 20.07ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-12 14:34:56,545 - config - INFO - FUNCIÓN: exportar_registros_filtrados - TIEMPO: 26.30ms - ARGUMENTOS: 0 args, 4 kwargs
+2026-02-12 14:34:56,546 - config - INFO - Iniciando generación de informe. Plantilla: c:\Users\apoyosistemas\Documents\Python - copia\INFORME DE ACTIVIDADES - copia.xlsx, Registros: 1
+2026-02-12 14:34:56,673 - config - INFO - Plantilla cargada correctamente
+2026-02-12 14:34:56,681 - config - ERROR - Excepción no controlada en generar_informe_template: 'MergedCell' object attribute 'value' is read-only
+Traceback (most recent call last):
+  File "C:\Users\apoyosistemas\Documents\Python - copia\Actividades\export_service.py", line 301, in generar_informe_template
+    ultima_actividad = actividad_actual
+  File "C:\Users\apoyosistemas\Documents\Python - copia\Lib\site-packages\openpyxl\worksheet\worksheet.py", line 246, in cell
+    cell.value = value
+    ^^^^^^^^^^
+AttributeError: 'MergedCell' object attribute 'value' is read-only
+2026-02-12 14:34:56,682 - config - INFO - FUNCIÓN: generar_informe_template - TIEMPO: 136.55ms - ARGUMENTOS: 2 args, 0 kwargs
+2026-02-12 14:34:56,770 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 7.05ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-12 14:34:56,773 - config - INFO - FUNCIÓN: exportar_registros_filtrados - TIEMPO: 10.07ms - ARGUMENTOS: 0 args, 3 kwargs
+2026-02-12 14:34:56,778 - config - INFO - FUNCIÓN: obtener_estadisticas_exportacion - TIEMPO: 14.27ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-12 14:34:56,778 - config - INFO - FUNCIÓN: generar_opciones_usuarios - TIEMPO: 0.02ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 14:35:09,511 - config - INFO - Sistema de logging inicializado correctamente
+2026-02-12 14:35:10,125 - config - INFO - FUNCIÓN: inicializar_usuarios - TIEMPO: 0.08ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 14:35:10,125 - config - INFO - FUNCIÓN: inicializar_config - TIEMPO: 0.12ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 14:35:10,126 - config - INFO - FUNCIÓN: inicializar_excel - TIEMPO: 0.07ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 14:35:10,606 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 305.67ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-12 14:35:10,607 - config - INFO - FUNCIÓN: generar_tabla_registros_recientes - TIEMPO: 0.42ms - ARGUMENTOS: 2 args, 0 kwargs
+2026-02-12 14:35:10,607 - config - INFO - FUNCIÓN: cargar_actividades_globales - TIEMPO: 0.38ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 14:35:10,608 - config - INFO - FUNCIÓN: cargar_actividades - TIEMPO: 0.92ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-12 14:35:10,608 - config - INFO - FUNCIÓN: generar_opciones_actividades - TIEMPO: 1.15ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-12 14:35:10,609 - config - INFO - FUNCIÓN: cargar_ubicaciones - TIEMPO: 0.29ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 14:35:10,609 - config - INFO - FUNCIÓN: generar_opciones_ubicaciones - TIEMPO: 0.57ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 14:35:10,609 - config - INFO - FUNCIÓN: cargar_tipos_solicitud - TIEMPO: 0.29ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 14:35:10,610 - config - INFO - FUNCIÓN: generar_opciones_tipos_solicitud - TIEMPO: 0.57ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 14:35:10,611 - config - INFO - FUNCIÓN: cargar_medios_solicitud - TIEMPO: 0.42ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 14:35:10,611 - config - INFO - FUNCIÓN: generar_opciones_medios_solicitud - TIEMPO: 0.67ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 14:35:12,246 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 9.02ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-12 14:35:12,252 - config - INFO - FUNCIÓN: exportar_registros_filtrados - TIEMPO: 14.89ms - ARGUMENTOS: 0 args, 3 kwargs
+2026-02-12 14:35:12,259 - config - INFO - FUNCIÓN: obtener_estadisticas_exportacion - TIEMPO: 21.81ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-12 14:35:12,260 - config - INFO - FUNCIÓN: cargar_usuarios - TIEMPO: 0.43ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 14:35:12,260 - config - INFO - FUNCIÓN: generar_opciones_usuarios - TIEMPO: 0.72ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-12 14:35:13,318 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 15.03ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-12 14:35:13,324 - config - INFO - FUNCIÓN: exportar_registros_filtrados - TIEMPO: 20.82ms - ARGUMENTOS: 0 args, 4 kwargs
+2026-02-12 14:35:13,326 - config - INFO - Iniciando generación de informe. Plantilla: c:\Users\apoyosistemas\Documents\Python - copia\INFORME DE ACTIVIDADES - copia.xlsx, Registros: 1
+2026-02-12 14:35:13,442 - config - INFO - Plantilla cargada correctamente
+2026-02-12 14:35:13,518 - config - INFO - Informe guardado exitosamente en: C:\Users\APOYOS~1\AppData\Local\Temp\tmpom09bn2m.xlsx
+2026-02-12 14:35:13,519 - config - INFO - FUNCIÓN: generar_informe_template - TIEMPO: 192.90ms - ARGUMENTOS: 2 args, 0 kwargs
+2026-02-13 08:49:15,230 - config - INFO - Sistema de logging inicializado correctamente
+2026-02-13 08:49:15,922 - config - INFO - FUNCIÓN: inicializar_usuarios - TIEMPO: 0.08ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 08:49:15,923 - config - INFO - FUNCIÓN: inicializar_config - TIEMPO: 0.08ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 08:49:15,923 - config - INFO - FUNCIÓN: inicializar_excel - TIEMPO: 0.08ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 08:49:20,644 - config - INFO - FUNCIÓN: cargar_usuarios - TIEMPO: 0.50ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 08:49:21,313 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 353.56ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 08:49:21,318 - config - INFO - FUNCIÓN: generar_tabla_registros_recientes - TIEMPO: 4.61ms - ARGUMENTOS: 2 args, 0 kwargs
+2026-02-13 08:49:21,319 - config - INFO - FUNCIÓN: cargar_actividades_globales - TIEMPO: 0.73ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 08:49:21,320 - config - INFO - FUNCIÓN: cargar_actividades - TIEMPO: 1.41ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 08:49:21,320 - config - INFO - FUNCIÓN: generar_opciones_actividades - TIEMPO: 1.65ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 08:49:21,321 - config - INFO - FUNCIÓN: cargar_ubicaciones - TIEMPO: 0.31ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 08:49:21,321 - config - INFO - FUNCIÓN: generar_opciones_ubicaciones - TIEMPO: 0.50ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 08:49:21,321 - config - INFO - FUNCIÓN: cargar_tipos_solicitud - TIEMPO: 0.29ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 08:49:21,322 - config - INFO - FUNCIÓN: generar_opciones_tipos_solicitud - TIEMPO: 0.48ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 08:49:21,322 - config - INFO - FUNCIÓN: cargar_medios_solicitud - TIEMPO: 0.30ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 08:49:21,322 - config - INFO - FUNCIÓN: generar_opciones_medios_solicitud - TIEMPO: 0.48ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 08:49:23,451 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 7.93ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 08:49:23,480 - config - INFO - FUNCIÓN: exportar_registros_filtrados - TIEMPO: 36.58ms - ARGUMENTOS: 0 args, 3 kwargs
+2026-02-13 08:49:23,492 - config - INFO - FUNCIÓN: obtener_estadisticas_exportacion - TIEMPO: 48.91ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 08:49:23,492 - config - INFO - FUNCIÓN: generar_opciones_usuarios - TIEMPO: 0.01ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 08:49:27,123 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 7.05ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 08:49:27,127 - config - INFO - FUNCIÓN: exportar_registros_filtrados - TIEMPO: 10.97ms - ARGUMENTOS: 0 args, 4 kwargs
+2026-02-13 08:49:27,129 - config - INFO - Iniciando generación de informe. Plantilla: c:\Users\apoyosistemas\Documents\Python - copia\INFORME DE ACTIVIDADES - copia.xlsx, Registros: 1
+2026-02-13 08:49:27,258 - config - INFO - Plantilla cargada correctamente
+2026-02-13 08:49:27,343 - config - INFO - Informe guardado exitosamente en: C:\Users\APOYOS~1\AppData\Local\Temp\tmpn0v2j14z.xlsx
+2026-02-13 08:49:27,343 - config - INFO - FUNCIÓN: generar_informe_template - TIEMPO: 213.82ms - ARGUMENTOS: 2 args, 0 kwargs
+2026-02-13 08:53:19,680 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 8.83ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 08:53:19,684 - config - INFO - FUNCIÓN: exportar_registros_filtrados - TIEMPO: 12.52ms - ARGUMENTOS: 0 args, 3 kwargs
+2026-02-13 08:53:19,689 - config - INFO - FUNCIÓN: obtener_estadisticas_exportacion - TIEMPO: 18.13ms - ARGUMENTOS: 3 args, 0 kwargs
+2026-02-13 08:53:20,298 - config - INFO - FUNCIÓN: cargar_actividades_globales - TIEMPO: 0.43ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 08:53:20,298 - config - INFO - FUNCIÓN: cargar_actividades - TIEMPO: 0.70ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 08:53:20,299 - config - INFO - FUNCIÓN: generar_gestion_actividades_globales - TIEMPO: 2.12ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 08:53:20,300 - config - INFO - FUNCIÓN: cargar_usuarios - TIEMPO: 0.47ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 08:53:20,301 - config - INFO - FUNCIÓN: generar_gestion_usuarios - TIEMPO: 0.81ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 08:53:20,301 - config - INFO - FUNCIÓN: generar_gestion_actividades_personales - TIEMPO: 0.00ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 08:53:22,345 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 7.44ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 08:53:22,345 - config - INFO - FUNCIÓN: generar_tabla_registros_recientes - TIEMPO: 0.41ms - ARGUMENTOS: 2 args, 0 kwargs
+2026-02-13 08:53:22,349 - config - INFO - FUNCIÓN: cargar_actividades - TIEMPO: 0.64ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 08:53:22,350 - config - INFO - FUNCIÓN: generar_opciones_actividades - TIEMPO: 1.13ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 08:53:22,351 - config - INFO - FUNCIÓN: cargar_ubicaciones - TIEMPO: 0.42ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 08:53:22,351 - config - INFO - FUNCIÓN: generar_opciones_ubicaciones - TIEMPO: 0.72ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 08:53:22,352 - config - INFO - FUNCIÓN: cargar_tipos_solicitud - TIEMPO: 0.48ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 08:53:22,352 - config - INFO - FUNCIÓN: generar_opciones_tipos_solicitud - TIEMPO: 0.76ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 08:53:22,353 - config - INFO - FUNCIÓN: cargar_medios_solicitud - TIEMPO: 0.42ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 08:53:22,353 - config - INFO - FUNCIÓN: generar_opciones_medios_solicitud - TIEMPO: 0.67ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 08:53:23,943 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 7.56ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 08:53:23,947 - config - INFO - FUNCIÓN: exportar_registros_filtrados - TIEMPO: 11.98ms - ARGUMENTOS: 0 args, 3 kwargs
+2026-02-13 08:53:23,953 - config - INFO - FUNCIÓN: obtener_estadisticas_exportacion - TIEMPO: 17.32ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 08:53:23,953 - config - INFO - FUNCIÓN: generar_opciones_usuarios - TIEMPO: 0.01ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 09:05:41,291 - config - INFO - Sistema de logging inicializado correctamente
+2026-02-13 09:05:41,635 - config - INFO - Iniciando generación de informe. Plantilla: c:\Users\apoyosistemas\Documents\Python - copia\INFORME DE ACTIVIDADES - copia.xlsx, Registros: 3
+2026-02-13 09:05:41,817 - config - INFO - Plantilla cargada correctamente
+2026-02-13 09:05:41,939 - config - INFO - Informe guardado exitosamente en: test_informe_mejorado.xlsx
+2026-02-13 09:05:41,940 - config - INFO - FUNCIÓN: generar_informe_template - TIEMPO: 632.18ms - ARGUMENTOS: 2 args, 1 kwargs
+2026-02-13 09:05:41,940 - config - WARNING - FUNCIÓN LENTA: generar_informe_template tomó 632.18ms
+2026-02-13 09:09:29,090 - config - INFO - Sistema de logging inicializado correctamente
+2026-02-13 09:09:29,768 - config - INFO - FUNCIÓN: inicializar_usuarios - TIEMPO: 0.09ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 09:09:29,768 - config - INFO - FUNCIÓN: inicializar_config - TIEMPO: 0.09ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 09:09:29,769 - config - INFO - FUNCIÓN: inicializar_excel - TIEMPO: 0.14ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 09:09:30,199 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 314.85ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 09:09:30,200 - config - INFO - FUNCIÓN: generar_tabla_registros_recientes - TIEMPO: 0.41ms - ARGUMENTOS: 2 args, 0 kwargs
+2026-02-13 09:09:30,200 - config - INFO - FUNCIÓN: cargar_actividades_globales - TIEMPO: 0.41ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 09:09:30,201 - config - INFO - FUNCIÓN: cargar_actividades - TIEMPO: 0.99ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 09:09:30,201 - config - INFO - FUNCIÓN: generar_opciones_actividades - TIEMPO: 1.23ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 09:09:30,202 - config - INFO - FUNCIÓN: cargar_ubicaciones - TIEMPO: 0.30ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 09:09:30,202 - config - INFO - FUNCIÓN: generar_opciones_ubicaciones - TIEMPO: 0.60ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 09:09:30,203 - config - INFO - FUNCIÓN: cargar_tipos_solicitud - TIEMPO: 0.29ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 09:09:30,203 - config - INFO - FUNCIÓN: generar_opciones_tipos_solicitud - TIEMPO: 0.54ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 09:09:30,204 - config - INFO - FUNCIÓN: cargar_medios_solicitud - TIEMPO: 0.49ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 09:09:30,204 - config - INFO - FUNCIÓN: generar_opciones_medios_solicitud - TIEMPO: 0.77ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 09:09:33,629 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 8.74ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 09:09:33,636 - config - INFO - FUNCIÓN: exportar_registros_filtrados - TIEMPO: 15.38ms - ARGUMENTOS: 0 args, 3 kwargs
+2026-02-13 09:09:33,641 - config - INFO - FUNCIÓN: obtener_estadisticas_exportacion - TIEMPO: 20.84ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 09:09:33,642 - config - INFO - FUNCIÓN: cargar_usuarios - TIEMPO: 0.41ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 09:09:33,642 - config - INFO - FUNCIÓN: generar_opciones_usuarios - TIEMPO: 0.68ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 09:10:23,393 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 20.21ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 09:10:23,399 - config - INFO - FUNCIÓN: exportar_registros_filtrados - TIEMPO: 26.14ms - ARGUMENTOS: 0 args, 4 kwargs
+2026-02-13 09:10:23,402 - config - INFO - Iniciando generación de informe. Plantilla: c:\Users\apoyosistemas\Documents\Python - copia\INFORME DE ACTIVIDADES - copia.xlsx, Registros: 1
+2026-02-13 09:10:23,525 - config - INFO - Plantilla cargada correctamente
+2026-02-13 09:10:23,610 - config - INFO - Informe guardado exitosamente en: C:\Users\APOYOS~1\AppData\Local\Temp\tmp111rojnt.xlsx
+2026-02-13 09:10:23,610 - config - INFO - FUNCIÓN: generar_informe_template - TIEMPO: 208.28ms - ARGUMENTOS: 2 args, 1 kwargs
+2026-02-13 09:20:06,723 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 13.86ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 09:20:06,724 - config - INFO - FUNCIÓN: generar_tabla_registros_recientes - TIEMPO: 0.49ms - ARGUMENTOS: 2 args, 0 kwargs
+2026-02-13 09:20:06,726 - config - INFO - FUNCIÓN: cargar_actividades_globales - TIEMPO: 0.63ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 09:20:06,727 - config - INFO - FUNCIÓN: cargar_actividades - TIEMPO: 1.53ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 09:20:06,727 - config - INFO - FUNCIÓN: generar_opciones_actividades - TIEMPO: 1.92ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 09:20:06,728 - config - INFO - FUNCIÓN: cargar_ubicaciones - TIEMPO: 0.54ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 09:20:06,729 - config - INFO - FUNCIÓN: generar_opciones_ubicaciones - TIEMPO: 0.95ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 09:20:06,729 - config - INFO - FUNCIÓN: cargar_tipos_solicitud - TIEMPO: 0.39ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 09:20:06,730 - config - INFO - FUNCIÓN: generar_opciones_tipos_solicitud - TIEMPO: 0.69ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 09:20:06,731 - config - INFO - FUNCIÓN: cargar_medios_solicitud - TIEMPO: 0.40ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 09:20:06,731 - config - INFO - FUNCIÓN: generar_opciones_medios_solicitud - TIEMPO: 0.70ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 09:20:08,226 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 9.37ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 09:20:08,231 - config - INFO - FUNCIÓN: exportar_registros_filtrados - TIEMPO: 14.28ms - ARGUMENTOS: 0 args, 3 kwargs
+2026-02-13 09:20:08,236 - config - INFO - FUNCIÓN: obtener_estadisticas_exportacion - TIEMPO: 19.41ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 09:20:08,237 - config - INFO - FUNCIÓN: cargar_usuarios - TIEMPO: 0.38ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 09:20:08,237 - config - INFO - FUNCIÓN: generar_opciones_usuarios - TIEMPO: 1.06ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 09:53:26,335 - config - INFO - Sistema de logging inicializado correctamente
+2026-02-13 09:53:26,702 - config - INFO - Iniciando generación de informe. Plantilla: c:\Users\apoyosistemas\Documents\Python - copia\INFORME DE ACTIVIDADES - copia.xlsx, Registros: 3
+2026-02-13 09:53:26,879 - config - INFO - Plantilla cargada correctamente
+2026-02-13 09:53:26,986 - config - INFO - Informe guardado exitosamente en: test_informe_mejorado.xlsx
+2026-02-13 09:53:26,988 - config - INFO - FUNCIÓN: generar_informe_template - TIEMPO: 611.17ms - ARGUMENTOS: 2 args, 1 kwargs
+2026-02-13 09:53:26,988 - config - WARNING - FUNCIÓN LENTA: generar_informe_template tomó 611.17ms
+2026-02-13 09:55:23,987 - config - INFO - Sistema de logging inicializado correctamente
+2026-02-13 09:55:24,606 - config - INFO - FUNCIÓN: inicializar_usuarios - TIEMPO: 0.09ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 09:55:24,606 - config - INFO - FUNCIÓN: inicializar_config - TIEMPO: 0.09ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 09:55:24,607 - config - INFO - FUNCIÓN: inicializar_excel - TIEMPO: 0.09ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 09:55:30,449 - config - INFO - FUNCIÓN: cargar_usuarios - TIEMPO: 0.49ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 09:55:31,077 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 318.07ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 09:55:31,077 - config - INFO - FUNCIÓN: generar_tabla_registros_recientes - TIEMPO: 0.45ms - ARGUMENTOS: 2 args, 0 kwargs
+2026-02-13 09:55:31,078 - config - INFO - FUNCIÓN: cargar_actividades_globales - TIEMPO: 0.44ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 09:55:31,079 - config - INFO - FUNCIÓN: cargar_actividades - TIEMPO: 1.00ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 09:55:31,079 - config - INFO - FUNCIÓN: generar_opciones_actividades - TIEMPO: 1.25ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 09:55:31,079 - config - INFO - FUNCIÓN: cargar_ubicaciones - TIEMPO: 0.31ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 09:55:31,080 - config - INFO - FUNCIÓN: generar_opciones_ubicaciones - TIEMPO: 0.56ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 09:55:31,080 - config - INFO - FUNCIÓN: cargar_tipos_solicitud - TIEMPO: 0.37ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 09:55:31,081 - config - INFO - FUNCIÓN: generar_opciones_tipos_solicitud - TIEMPO: 0.65ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 09:55:31,082 - config - INFO - FUNCIÓN: cargar_medios_solicitud - TIEMPO: 0.48ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 09:55:31,082 - config - INFO - FUNCIÓN: generar_opciones_medios_solicitud - TIEMPO: 0.68ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 09:55:34,022 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 8.07ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 09:55:34,029 - config - INFO - FUNCIÓN: exportar_registros_filtrados - TIEMPO: 15.53ms - ARGUMENTOS: 0 args, 3 kwargs
+2026-02-13 09:55:34,041 - config - INFO - FUNCIÓN: obtener_estadisticas_exportacion - TIEMPO: 27.70ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 09:55:34,045 - config - INFO - FUNCIÓN: obtener_configuracion_usuario - TIEMPO: 0.01ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 09:55:34,045 - config - INFO - FUNCIÓN: generar_opciones_usuarios - TIEMPO: 0.01ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 10:37:17,226 - config - INFO - FUNCIÓN: cargar_usuarios - TIEMPO: 0.61ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 10:37:17,569 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 23.86ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 10:37:17,574 - config - INFO - FUNCIÓN: generar_tabla_registros_recientes - TIEMPO: 1.21ms - ARGUMENTOS: 2 args, 0 kwargs
+2026-02-13 10:37:17,577 - config - INFO - FUNCIÓN: cargar_actividades_globales - TIEMPO: 1.25ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 10:37:17,579 - config - INFO - FUNCIÓN: cargar_actividades - TIEMPO: 3.07ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 10:37:17,579 - config - INFO - FUNCIÓN: generar_opciones_actividades - TIEMPO: 3.83ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 10:37:17,581 - config - INFO - FUNCIÓN: cargar_ubicaciones - TIEMPO: 0.99ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 10:37:17,582 - config - INFO - FUNCIÓN: generar_opciones_ubicaciones - TIEMPO: 1.74ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 10:37:17,584 - config - INFO - FUNCIÓN: cargar_tipos_solicitud - TIEMPO: 0.97ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 10:37:17,586 - config - INFO - FUNCIÓN: generar_opciones_tipos_solicitud - TIEMPO: 2.73ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 10:37:17,591 - config - INFO - FUNCIÓN: cargar_medios_solicitud - TIEMPO: 1.23ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 10:37:17,593 - config - INFO - FUNCIÓN: generar_opciones_medios_solicitud - TIEMPO: 3.59ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 10:39:04,987 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 7.68ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 10:39:04,993 - config - INFO - FUNCIÓN: exportar_registros_filtrados - TIEMPO: 12.95ms - ARGUMENTOS: 0 args, 3 kwargs
+2026-02-13 10:39:04,998 - config - INFO - FUNCIÓN: obtener_estadisticas_exportacion - TIEMPO: 17.99ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 10:39:04,999 - config - INFO - FUNCIÓN: cargar_usuarios - TIEMPO: 0.44ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 10:39:04,999 - config - INFO - FUNCIÓN: obtener_configuracion_usuario - TIEMPO: 0.72ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 10:39:04,999 - config - INFO - FUNCIÓN: generar_opciones_usuarios - TIEMPO: 0.01ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 10:39:05,000 - config - INFO - FUNCIÓN: cargar_actividades_globales - TIEMPO: 0.39ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 10:39:05,001 - config - INFO - FUNCIÓN: cargar_actividades - TIEMPO: 0.34ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 10:39:13,068 - config - INFO - Sistema de logging inicializado correctamente
+2026-02-13 10:39:13,728 - config - INFO - FUNCIÓN: inicializar_usuarios - TIEMPO: 0.09ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 10:39:13,728 - config - INFO - FUNCIÓN: inicializar_config - TIEMPO: 0.09ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 10:39:13,729 - config - INFO - FUNCIÓN: inicializar_excel - TIEMPO: 0.09ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 10:39:14,195 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 341.22ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 10:39:14,196 - config - INFO - FUNCIÓN: generar_tabla_registros_recientes - TIEMPO: 0.51ms - ARGUMENTOS: 2 args, 0 kwargs
+2026-02-13 10:39:14,196 - config - INFO - FUNCIÓN: cargar_actividades_globales - TIEMPO: 0.40ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 10:39:14,197 - config - INFO - FUNCIÓN: cargar_actividades - TIEMPO: 0.96ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 10:39:14,197 - config - INFO - FUNCIÓN: generar_opciones_actividades - TIEMPO: 1.20ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 10:39:14,198 - config - INFO - FUNCIÓN: cargar_ubicaciones - TIEMPO: 0.30ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 10:39:14,198 - config - INFO - FUNCIÓN: generar_opciones_ubicaciones - TIEMPO: 0.55ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 10:39:14,198 - config - INFO - FUNCIÓN: cargar_tipos_solicitud - TIEMPO: 0.38ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 10:39:14,199 - config - INFO - FUNCIÓN: generar_opciones_tipos_solicitud - TIEMPO: 0.81ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 10:39:14,200 - config - INFO - FUNCIÓN: cargar_medios_solicitud - TIEMPO: 0.50ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 10:39:14,201 - config - INFO - FUNCIÓN: generar_opciones_medios_solicitud - TIEMPO: 0.75ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 10:39:15,793 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 9.96ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 10:39:15,799 - config - INFO - FUNCIÓN: exportar_registros_filtrados - TIEMPO: 15.59ms - ARGUMENTOS: 0 args, 3 kwargs
+2026-02-13 10:39:15,805 - config - INFO - FUNCIÓN: obtener_estadisticas_exportacion - TIEMPO: 21.21ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 10:39:15,805 - config - INFO - FUNCIÓN: cargar_usuarios - TIEMPO: 0.42ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 10:39:15,806 - config - INFO - FUNCIÓN: obtener_configuracion_usuario - TIEMPO: 0.69ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 10:39:15,806 - config - INFO - FUNCIÓN: generar_opciones_usuarios - TIEMPO: 0.01ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 10:39:30,104 - config - INFO - FUNCIÓN: obtener_configuracion_usuario - TIEMPO: 0.01ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 10:39:30,109 - config - INFO - FUNCIÓN: guardar_usuarios - TIEMPO: 4.98ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 10:39:30,110 - config - INFO - FUNCIÓN: guardar_configuracion_usuario - TIEMPO: 5.31ms - ARGUMENTOS: 2 args, 0 kwargs
+2026-02-13 10:39:30,123 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 12.90ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 10:39:30,126 - config - INFO - FUNCIÓN: exportar_registros_filtrados - TIEMPO: 16.30ms - ARGUMENTOS: 0 args, 4 kwargs
+2026-02-13 10:39:30,128 - config - INFO - Iniciando generación de informe. Plantilla: c:\Users\apoyosistemas\Documents\Python - copia\INFORME DE ACTIVIDADES - copia.xlsx, Registros: 1
+2026-02-13 10:39:30,255 - config - INFO - Plantilla cargada correctamente
+2026-02-13 10:39:30,339 - config - INFO - Informe guardado exitosamente en: C:\Users\APOYOS~1\AppData\Local\Temp\tmpswux9x8j.xlsx
+2026-02-13 10:39:30,340 - config - INFO - FUNCIÓN: generar_informe_template - TIEMPO: 211.39ms - ARGUMENTOS: 2 args, 1 kwargs
+2026-02-13 10:42:17,918 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 22.09ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 10:42:17,925 - config - INFO - FUNCIÓN: exportar_registros_filtrados - TIEMPO: 29.43ms - ARGUMENTOS: 0 args, 3 kwargs
+2026-02-13 10:42:17,931 - config - INFO - FUNCIÓN: obtener_estadisticas_exportacion - TIEMPO: 35.35ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 10:42:17,932 - config - INFO - FUNCIÓN: cargar_usuarios - TIEMPO: 0.62ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 10:42:17,933 - config - INFO - FUNCIÓN: obtener_configuracion_usuario - TIEMPO: 0.95ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 10:42:17,933 - config - INFO - FUNCIÓN: generar_opciones_usuarios - TIEMPO: 0.01ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 10:42:17,934 - config - INFO - FUNCIÓN: cargar_actividades_globales - TIEMPO: 0.44ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 10:42:17,935 - config - INFO - FUNCIÓN: cargar_actividades - TIEMPO: 0.51ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 10:42:19,721 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 6.95ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 10:42:19,727 - config - INFO - FUNCIÓN: exportar_registros_filtrados - TIEMPO: 12.11ms - ARGUMENTOS: 0 args, 3 kwargs
+2026-02-13 10:42:19,731 - config - INFO - FUNCIÓN: obtener_estadisticas_exportacion - TIEMPO: 16.25ms - ARGUMENTOS: 3 args, 0 kwargs
+2026-02-13 10:42:20,498 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 8.10ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 10:42:20,502 - config - INFO - FUNCIÓN: exportar_registros_filtrados - TIEMPO: 12.07ms - ARGUMENTOS: 0 args, 3 kwargs
+2026-02-13 10:42:20,507 - config - INFO - FUNCIÓN: obtener_estadisticas_exportacion - TIEMPO: 16.55ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 10:42:20,507 - config - INFO - FUNCIÓN: obtener_configuracion_usuario - TIEMPO: 0.01ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 10:42:20,508 - config - INFO - FUNCIÓN: generar_opciones_usuarios - TIEMPO: 0.01ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 10:52:34,661 - config - INFO - Sistema de logging inicializado correctamente
+2026-02-13 10:52:35,028 - config - INFO - Iniciando generación de informe. Plantilla: c:\Users\apoyosistemas\Documents\Python - copia\INFORME DE ACTIVIDADES - copia.xlsx, Registros: 3
+2026-02-13 10:52:35,144 - config - INFO - Plantilla cargada correctamente
+2026-02-13 10:52:35,263 - config - INFO - Informe guardado exitosamente en: test_informe_mejorado.xlsx
+2026-02-13 10:52:35,264 - config - INFO - FUNCIÓN: generar_informe_template - TIEMPO: 561.77ms - ARGUMENTOS: 2 args, 1 kwargs
+2026-02-13 10:52:35,265 - config - WARNING - FUNCIÓN LENTA: generar_informe_template tomó 561.77ms
+2026-02-13 10:54:11,278 - config - INFO - Sistema de logging inicializado correctamente
+2026-02-13 10:54:11,960 - config - INFO - FUNCIÓN: inicializar_usuarios - TIEMPO: 0.08ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 10:54:11,961 - config - INFO - FUNCIÓN: inicializar_config - TIEMPO: 0.09ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 10:54:11,961 - config - INFO - FUNCIÓN: inicializar_excel - TIEMPO: 0.08ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 10:54:12,426 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 373.60ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 10:54:12,426 - config - INFO - FUNCIÓN: generar_tabla_registros_recientes - TIEMPO: 0.42ms - ARGUMENTOS: 2 args, 0 kwargs
+2026-02-13 10:54:12,427 - config - INFO - FUNCIÓN: cargar_actividades_globales - TIEMPO: 0.42ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 10:54:12,428 - config - INFO - FUNCIÓN: cargar_actividades - TIEMPO: 1.14ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 10:54:12,428 - config - INFO - FUNCIÓN: generar_opciones_actividades - TIEMPO: 1.39ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 10:54:12,429 - config - INFO - FUNCIÓN: cargar_ubicaciones - TIEMPO: 0.30ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 10:54:12,429 - config - INFO - FUNCIÓN: generar_opciones_ubicaciones - TIEMPO: 0.55ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 10:54:12,429 - config - INFO - FUNCIÓN: cargar_tipos_solicitud - TIEMPO: 0.33ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 10:54:12,430 - config - INFO - FUNCIÓN: generar_opciones_tipos_solicitud - TIEMPO: 0.54ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 10:54:12,431 - config - INFO - FUNCIÓN: cargar_medios_solicitud - TIEMPO: 0.41ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 10:54:12,431 - config - INFO - FUNCIÓN: generar_opciones_medios_solicitud - TIEMPO: 0.65ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 10:54:17,497 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 9.19ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 10:54:17,502 - config - INFO - FUNCIÓN: exportar_registros_filtrados - TIEMPO: 14.70ms - ARGUMENTOS: 0 args, 3 kwargs
+2026-02-13 10:54:17,508 - config - INFO - FUNCIÓN: obtener_estadisticas_exportacion - TIEMPO: 20.60ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 10:54:17,509 - config - INFO - FUNCIÓN: cargar_usuarios - TIEMPO: 0.42ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 10:54:17,509 - config - INFO - FUNCIÓN: obtener_configuracion_usuario - TIEMPO: 0.68ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 10:54:17,510 - config - INFO - FUNCIÓN: generar_opciones_usuarios - TIEMPO: 0.01ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 10:54:25,227 - config - INFO - FUNCIÓN: obtener_configuracion_usuario - TIEMPO: 0.01ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 10:54:25,232 - config - INFO - FUNCIÓN: guardar_usuarios - TIEMPO: 5.07ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 10:54:25,233 - config - INFO - FUNCIÓN: guardar_configuracion_usuario - TIEMPO: 5.85ms - ARGUMENTOS: 2 args, 0 kwargs
+2026-02-13 10:54:25,244 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 10.44ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 10:54:25,247 - config - INFO - FUNCIÓN: exportar_registros_filtrados - TIEMPO: 14.19ms - ARGUMENTOS: 0 args, 4 kwargs
+2026-02-13 10:54:25,249 - config - INFO - Iniciando generación de informe. Plantilla: c:\Users\apoyosistemas\Documents\Python - copia\INFORME DE ACTIVIDADES - copia.xlsx, Registros: 1
+2026-02-13 10:54:25,378 - config - INFO - Plantilla cargada correctamente
+2026-02-13 10:54:25,476 - config - INFO - Informe guardado exitosamente en: C:\Users\APOYOS~1\AppData\Local\Temp\tmpsdm2rc34.xlsx
+2026-02-13 10:54:25,476 - config - INFO - FUNCIÓN: generar_informe_template - TIEMPO: 226.99ms - ARGUMENTOS: 2 args, 1 kwargs
+2026-02-13 11:25:26,446 - config - INFO - Sistema de logging inicializado correctamente
+2026-02-13 11:25:26,884 - config - INFO - Iniciando generación de informe. Plantilla: c:\Users\apoyosistemas\Documents\Python - copia\INFORME DE ACTIVIDADES - copia.xlsx, Registros: 3
+2026-02-13 11:25:27,022 - config - INFO - Plantilla cargada correctamente
+2026-02-13 11:25:27,130 - config - INFO - Informe guardado exitosamente en: test_informe_mejorado.xlsx
+2026-02-13 11:25:27,131 - config - INFO - FUNCIÓN: generar_informe_template - TIEMPO: 667.71ms - ARGUMENTOS: 2 args, 1 kwargs
+2026-02-13 11:25:27,132 - config - WARNING - FUNCIÓN LENTA: generar_informe_template tomó 667.71ms
+2026-02-13 11:31:45,508 - config - INFO - Sistema de logging inicializado correctamente
+2026-02-13 11:31:46,178 - config - INFO - FUNCIÓN: inicializar_usuarios - TIEMPO: 0.09ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 11:31:46,178 - config - INFO - FUNCIÓN: inicializar_config - TIEMPO: 0.56ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 11:31:46,179 - config - INFO - FUNCIÓN: inicializar_excel - TIEMPO: 0.09ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 11:31:46,577 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 325.35ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 11:31:46,578 - config - INFO - FUNCIÓN: generar_tabla_registros_recientes - TIEMPO: 0.46ms - ARGUMENTOS: 2 args, 0 kwargs
+2026-02-13 11:31:46,579 - config - INFO - FUNCIÓN: cargar_actividades_globales - TIEMPO: 0.44ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 11:31:46,580 - config - INFO - FUNCIÓN: cargar_actividades - TIEMPO: 1.22ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 11:31:46,580 - config - INFO - FUNCIÓN: generar_opciones_actividades - TIEMPO: 1.49ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 11:31:46,580 - config - INFO - FUNCIÓN: cargar_ubicaciones - TIEMPO: 0.31ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 11:31:46,581 - config - INFO - FUNCIÓN: generar_opciones_ubicaciones - TIEMPO: 0.56ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 11:31:46,581 - config - INFO - FUNCIÓN: cargar_tipos_solicitud - TIEMPO: 0.29ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 11:31:46,581 - config - INFO - FUNCIÓN: generar_opciones_tipos_solicitud - TIEMPO: 0.49ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 11:31:46,582 - config - INFO - FUNCIÓN: cargar_medios_solicitud - TIEMPO: 0.43ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 11:31:46,583 - config - INFO - FUNCIÓN: generar_opciones_medios_solicitud - TIEMPO: 0.70ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 11:33:42,270 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 22.58ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 11:33:42,283 - config - INFO - FUNCIÓN: exportar_registros_filtrados - TIEMPO: 35.59ms - ARGUMENTOS: 0 args, 3 kwargs
+2026-02-13 11:33:42,292 - config - INFO - FUNCIÓN: obtener_estadisticas_exportacion - TIEMPO: 44.35ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 11:33:42,293 - config - INFO - FUNCIÓN: cargar_usuarios - TIEMPO: 0.49ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 11:33:42,293 - config - INFO - FUNCIÓN: obtener_configuracion_usuario - TIEMPO: 0.80ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 11:33:42,294 - config - INFO - FUNCIÓN: generar_opciones_usuarios - TIEMPO: 0.01ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 11:33:42,294 - config - INFO - FUNCIÓN: cargar_actividades_globales - TIEMPO: 0.41ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 11:33:42,295 - config - INFO - FUNCIÓN: cargar_actividades - TIEMPO: 0.39ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 11:33:44,481 - config - INFO - FUNCIÓN: obtener_configuracion_usuario - TIEMPO: 0.01ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 11:33:44,486 - config - INFO - FUNCIÓN: guardar_usuarios - TIEMPO: 4.92ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 11:33:44,488 - config - INFO - FUNCIÓN: guardar_configuracion_usuario - TIEMPO: 6.46ms - ARGUMENTOS: 2 args, 0 kwargs
+2026-02-13 11:33:44,497 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 9.18ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 11:33:44,501 - config - INFO - FUNCIÓN: exportar_registros_filtrados - TIEMPO: 13.13ms - ARGUMENTOS: 0 args, 4 kwargs
+2026-02-13 11:33:44,503 - config - INFO - Iniciando generación de informe. Plantilla: c:\Users\apoyosistemas\Documents\Python - copia\INFORME DE ACTIVIDADES - copia.xlsx, Registros: 1
+2026-02-13 11:33:44,627 - config - INFO - Plantilla cargada correctamente
+2026-02-13 11:33:44,714 - config - INFO - Informe guardado exitosamente en: C:\Users\APOYOS~1\AppData\Local\Temp\tmp1yuq1ryu.xlsx
+2026-02-13 11:33:44,715 - config - INFO - FUNCIÓN: generar_informe_template - TIEMPO: 211.79ms - ARGUMENTOS: 2 args, 1 kwargs
+2026-02-13 11:49:49,371 - config - INFO - Sistema de logging inicializado correctamente
+2026-02-13 11:53:43,229 - config - INFO - Sistema de logging inicializado correctamente
+2026-02-13 11:53:43,232 - config - INFO - Generando Informe Final Concentrado. Registros: 6
+2026-02-13 11:53:43,268 - config - INFO - FUNCIÓN: generar_informe_final_resumen - TIEMPO: 36.21ms - ARGUMENTOS: 2 args, 1 kwargs
+2026-02-13 11:57:10,081 - config - INFO - Sistema de logging inicializado correctamente
+2026-02-13 11:57:10,782 - config - INFO - FUNCIÓN: inicializar_usuarios - TIEMPO: 0.09ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 11:57:10,783 - config - INFO - FUNCIÓN: inicializar_config - TIEMPO: 0.10ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 11:57:10,783 - config - INFO - FUNCIÓN: inicializar_excel - TIEMPO: 0.12ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 11:57:14,552 - config - INFO - FUNCIÓN: cargar_usuarios - TIEMPO: 0.59ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 11:57:14,885 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 329.14ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 11:57:14,886 - config - INFO - FUNCIÓN: generar_tabla_registros_recientes - TIEMPO: 0.45ms - ARGUMENTOS: 2 args, 0 kwargs
+2026-02-13 11:57:14,886 - config - INFO - FUNCIÓN: cargar_actividades_globales - TIEMPO: 0.43ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 11:57:14,887 - config - INFO - FUNCIÓN: cargar_actividades - TIEMPO: 0.95ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 11:57:14,887 - config - INFO - FUNCIÓN: generar_opciones_actividades - TIEMPO: 1.20ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 11:57:14,888 - config - INFO - FUNCIÓN: cargar_ubicaciones - TIEMPO: 0.30ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 11:57:14,888 - config - INFO - FUNCIÓN: generar_opciones_ubicaciones - TIEMPO: 0.54ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 11:57:14,889 - config - INFO - FUNCIÓN: cargar_tipos_solicitud - TIEMPO: 0.44ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 11:57:14,889 - config - INFO - FUNCIÓN: generar_opciones_tipos_solicitud - TIEMPO: 0.72ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 11:57:14,890 - config - INFO - FUNCIÓN: cargar_medios_solicitud - TIEMPO: 0.38ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 11:57:14,890 - config - INFO - FUNCIÓN: generar_opciones_medios_solicitud - TIEMPO: 0.62ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 11:57:17,530 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 6.69ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 11:57:17,536 - config - INFO - FUNCIÓN: exportar_registros_filtrados - TIEMPO: 12.87ms - ARGUMENTOS: 0 args, 3 kwargs
+2026-02-13 11:57:17,541 - config - INFO - FUNCIÓN: obtener_estadisticas_exportacion - TIEMPO: 17.81ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 11:57:17,541 - config - INFO - FUNCIÓN: obtener_configuracion_usuario - TIEMPO: 0.01ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 11:57:17,542 - config - INFO - FUNCIÓN: generar_opciones_usuarios - TIEMPO: 0.01ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 11:57:25,799 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 9.40ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 11:57:25,802 - config - INFO - FUNCIÓN: exportar_registros_filtrados - TIEMPO: 12.88ms - ARGUMENTOS: 0 args, 3 kwargs
+2026-02-13 11:57:25,807 - config - INFO - FUNCIÓN: obtener_estadisticas_exportacion - TIEMPO: 17.33ms - ARGUMENTOS: 3 args, 0 kwargs
+2026-02-13 11:57:26,445 - config - INFO - FUNCIÓN: cargar_actividades - TIEMPO: 0.01ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 11:57:26,445 - config - INFO - FUNCIÓN: generar_gestion_actividades_globales - TIEMPO: 0.42ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 11:57:26,446 - config - INFO - FUNCIÓN: generar_gestion_usuarios - TIEMPO: 0.03ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 11:57:26,447 - config - INFO - FUNCIÓN: generar_gestion_actividades_personales - TIEMPO: 0.00ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 11:57:27,162 - config - INFO - FUNCIÓN: generar_gestion_actividades_globales - TIEMPO: 0.03ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 11:57:27,162 - config - INFO - FUNCIÓN: generar_gestion_usuarios - TIEMPO: 0.01ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 11:57:27,164 - config - INFO - FUNCIÓN: generar_gestion_actividades_personales - TIEMPO: 0.00ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 11:57:27,646 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 7.93ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 11:57:27,649 - config - INFO - FUNCIÓN: exportar_registros_filtrados - TIEMPO: 11.12ms - ARGUMENTOS: 0 args, 3 kwargs
+2026-02-13 11:57:27,654 - config - INFO - FUNCIÓN: obtener_estadisticas_exportacion - TIEMPO: 16.04ms - ARGUMENTOS: 3 args, 0 kwargs
+2026-02-13 11:57:30,150 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 8.13ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 11:57:30,153 - config - INFO - FUNCIÓN: exportar_registros_filtrados - TIEMPO: 11.73ms - ARGUMENTOS: 0 args, 3 kwargs
+2026-02-13 11:57:30,159 - config - INFO - FUNCIÓN: obtener_estadisticas_exportacion - TIEMPO: 17.33ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 11:57:30,159 - config - INFO - FUNCIÓN: obtener_configuracion_usuario - TIEMPO: 0.01ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 11:57:30,160 - config - INFO - FUNCIÓN: generar_opciones_usuarios - TIEMPO: 0.01ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 11:58:39,560 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 7.63ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 11:58:39,561 - config - INFO - FUNCIÓN: generar_tabla_registros_recientes - TIEMPO: 0.32ms - ARGUMENTOS: 2 args, 0 kwargs
+2026-02-13 11:58:39,562 - config - INFO - FUNCIÓN: cargar_actividades_globales - TIEMPO: 0.56ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 11:58:39,563 - config - INFO - FUNCIÓN: cargar_actividades - TIEMPO: 1.77ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 11:58:39,564 - config - INFO - FUNCIÓN: generar_opciones_actividades - TIEMPO: 2.13ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 11:58:39,565 - config - INFO - FUNCIÓN: cargar_ubicaciones - TIEMPO: 0.39ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 11:58:39,565 - config - INFO - FUNCIÓN: generar_opciones_ubicaciones - TIEMPO: 0.69ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 11:58:39,566 - config - INFO - FUNCIÓN: cargar_tipos_solicitud - TIEMPO: 0.34ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 11:58:39,566 - config - INFO - FUNCIÓN: generar_opciones_tipos_solicitud - TIEMPO: 0.58ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 11:58:39,569 - config - INFO - FUNCIÓN: cargar_medios_solicitud - TIEMPO: 0.59ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 11:58:39,569 - config - INFO - FUNCIÓN: generar_opciones_medios_solicitud - TIEMPO: 1.05ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 12:00:22,315 - config - INFO - Recibida solicitud de registro para usuario: admin
+2026-02-13 12:00:22,358 - config - INFO - FUNCIÓN: guardar_registro - TIEMPO: 41.84ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 12:00:22,358 - config - INFO - Registro guardado exitosamente con ID: 2
+2026-02-13 12:00:22,371 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 8.04ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 12:00:22,371 - config - INFO - FUNCIÓN: generar_tabla_registros_recientes - TIEMPO: 0.49ms - ARGUMENTOS: 2 args, 0 kwargs
+2026-02-13 12:00:22,372 - config - INFO - FUNCIÓN: cargar_actividades_globales - TIEMPO: 0.42ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 12:00:22,373 - config - INFO - FUNCIÓN: cargar_actividades - TIEMPO: 1.21ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 12:00:22,373 - config - INFO - FUNCIÓN: generar_opciones_actividades - TIEMPO: 1.48ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 12:00:22,374 - config - INFO - FUNCIÓN: cargar_ubicaciones - TIEMPO: 0.41ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 12:00:22,374 - config - INFO - FUNCIÓN: generar_opciones_ubicaciones - TIEMPO: 0.72ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 12:00:22,375 - config - INFO - FUNCIÓN: cargar_tipos_solicitud - TIEMPO: 0.39ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 12:00:22,376 - config - INFO - FUNCIÓN: generar_opciones_tipos_solicitud - TIEMPO: 1.67ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 12:00:22,377 - config - INFO - FUNCIÓN: cargar_medios_solicitud - TIEMPO: 0.47ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 12:00:22,378 - config - INFO - FUNCIÓN: generar_opciones_medios_solicitud - TIEMPO: 0.75ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 12:00:24,154 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 7.94ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 12:00:24,158 - config - INFO - FUNCIÓN: exportar_registros_filtrados - TIEMPO: 12.48ms - ARGUMENTOS: 0 args, 3 kwargs
+2026-02-13 12:00:24,162 - config - INFO - FUNCIÓN: obtener_estadisticas_exportacion - TIEMPO: 16.74ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 12:00:24,163 - config - INFO - FUNCIÓN: cargar_usuarios - TIEMPO: 0.44ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 12:00:24,163 - config - INFO - FUNCIÓN: obtener_configuracion_usuario - TIEMPO: 0.71ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 12:00:24,164 - config - INFO - FUNCIÓN: generar_opciones_usuarios - TIEMPO: 0.01ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 12:00:31,856 - config - INFO - FUNCIÓN: obtener_configuracion_usuario - TIEMPO: 0.01ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 12:00:31,865 - config - INFO - FUNCIÓN: guardar_usuarios - TIEMPO: 7.87ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 12:00:31,866 - config - INFO - FUNCIÓN: guardar_configuracion_usuario - TIEMPO: 8.97ms - ARGUMENTOS: 2 args, 0 kwargs
+2026-02-13 12:00:31,877 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 11.17ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 12:00:31,884 - config - INFO - FUNCIÓN: exportar_registros_filtrados - TIEMPO: 18.13ms - ARGUMENTOS: 0 args, 4 kwargs
+2026-02-13 12:00:31,886 - config - INFO - Iniciando generación de informe. Plantilla: c:\Users\apoyosistemas\Documents\Python - copia\INFORME DE ACTIVIDADES - copia.xlsx, Registros: 1
+2026-02-13 12:00:32,018 - config - INFO - Plantilla cargada correctamente
+2026-02-13 12:00:32,118 - config - INFO - Informe guardado exitosamente en: C:\Users\APOYOS~1\AppData\Local\Temp\tmpbhsz7e07.xlsx
+2026-02-13 12:00:32,118 - config - INFO - FUNCIÓN: generar_informe_template - TIEMPO: 232.07ms - ARGUMENTOS: 2 args, 1 kwargs
+2026-02-13 12:00:57,383 - config - INFO - FUNCIÓN: cargar_usuarios - TIEMPO: 0.53ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 12:00:57,383 - config - INFO - FUNCIÓN: obtener_configuracion_usuario - TIEMPO: 0.84ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 12:00:57,390 - config - INFO - FUNCIÓN: guardar_usuarios - TIEMPO: 4.76ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 12:00:57,390 - config - INFO - FUNCIÓN: guardar_configuracion_usuario - TIEMPO: 5.51ms - ARGUMENTOS: 2 args, 0 kwargs
+2026-02-13 12:00:57,401 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 9.07ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 12:00:57,411 - config - INFO - FUNCIÓN: exportar_registros_filtrados - TIEMPO: 18.71ms - ARGUMENTOS: 0 args, 4 kwargs
+2026-02-13 12:00:57,414 - config - INFO - Generando Informe Final Concentrado. Registros: 1
+2026-02-13 12:00:57,470 - config - ERROR - Error generando informe final: 'MergedCell' object attribute 'value' is read-only
+2026-02-13 12:00:57,470 - config - INFO - FUNCIÓN: generar_informe_final_resumen - TIEMPO: 55.61ms - ARGUMENTOS: 2 args, 1 kwargs
+2026-02-13 12:00:57,698 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 8.18ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 12:00:57,703 - config - INFO - FUNCIÓN: exportar_registros_filtrados - TIEMPO: 12.39ms - ARGUMENTOS: 0 args, 3 kwargs
+2026-02-13 12:00:57,707 - config - INFO - FUNCIÓN: obtener_estadisticas_exportacion - TIEMPO: 16.64ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 12:00:57,708 - config - INFO - FUNCIÓN: cargar_usuarios - TIEMPO: 0.54ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 12:00:57,708 - config - INFO - FUNCIÓN: obtener_configuracion_usuario - TIEMPO: 1.08ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 12:00:57,709 - config - INFO - FUNCIÓN: generar_opciones_usuarios - TIEMPO: 0.01ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 12:00:57,710 - config - INFO - FUNCIÓN: cargar_actividades_globales - TIEMPO: 0.43ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 12:00:57,710 - config - INFO - FUNCIÓN: cargar_actividades - TIEMPO: 0.45ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 12:01:12,492 - config - INFO - FUNCIÓN: obtener_configuracion_usuario - TIEMPO: 0.01ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 12:01:12,498 - config - INFO - FUNCIÓN: guardar_usuarios - TIEMPO: 5.22ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 12:01:12,503 - config - INFO - FUNCIÓN: guardar_configuracion_usuario - TIEMPO: 10.51ms - ARGUMENTOS: 2 args, 0 kwargs
+2026-02-13 12:01:12,512 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 8.89ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 12:01:12,520 - config - INFO - FUNCIÓN: exportar_registros_filtrados - TIEMPO: 16.31ms - ARGUMENTOS: 0 args, 4 kwargs
+2026-02-13 12:01:12,521 - config - INFO - Iniciando generación de informe. Plantilla: c:\Users\apoyosistemas\Documents\Python - copia\INFORME DE ACTIVIDADES - copia.xlsx, Registros: 2
+2026-02-13 12:01:12,644 - config - INFO - Plantilla cargada correctamente
+2026-02-13 12:01:12,778 - config - INFO - Informe guardado exitosamente en: C:\Users\APOYOS~1\AppData\Local\Temp\tmpdesd01t1.xlsx
+2026-02-13 12:01:12,778 - config - INFO - FUNCIÓN: generar_informe_template - TIEMPO: 257.43ms - ARGUMENTOS: 2 args, 1 kwargs
+2026-02-13 12:01:28,607 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 7.42ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 12:01:28,611 - config - INFO - FUNCIÓN: exportar_registros_filtrados - TIEMPO: 12.01ms - ARGUMENTOS: 0 args, 3 kwargs
+2026-02-13 12:01:28,616 - config - INFO - FUNCIÓN: obtener_estadisticas_exportacion - TIEMPO: 16.60ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 12:01:28,617 - config - INFO - FUNCIÓN: cargar_usuarios - TIEMPO: 0.52ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 12:01:28,617 - config - INFO - FUNCIÓN: obtener_configuracion_usuario - TIEMPO: 0.80ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 12:01:28,618 - config - INFO - FUNCIÓN: generar_opciones_usuarios - TIEMPO: 0.01ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 12:01:28,618 - config - INFO - FUNCIÓN: cargar_actividades_globales - TIEMPO: 0.41ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 12:01:28,619 - config - INFO - FUNCIÓN: cargar_actividades - TIEMPO: 0.46ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 12:01:30,124 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 7.02ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 12:01:30,129 - config - INFO - FUNCIÓN: exportar_registros_filtrados - TIEMPO: 11.86ms - ARGUMENTOS: 0 args, 3 kwargs
+2026-02-13 12:01:30,133 - config - INFO - FUNCIÓN: obtener_estadisticas_exportacion - TIEMPO: 16.19ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 12:01:30,134 - config - INFO - FUNCIÓN: obtener_configuracion_usuario - TIEMPO: 0.01ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 12:01:30,134 - config - INFO - FUNCIÓN: generar_opciones_usuarios - TIEMPO: 0.01ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 12:01:33,893 - config - INFO - FUNCIÓN: obtener_configuracion_usuario - TIEMPO: 0.01ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 12:01:33,899 - config - INFO - FUNCIÓN: guardar_usuarios - TIEMPO: 5.46ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 12:01:33,903 - config - INFO - FUNCIÓN: guardar_configuracion_usuario - TIEMPO: 9.56ms - ARGUMENTOS: 2 args, 0 kwargs
+2026-02-13 12:01:33,912 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 8.64ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 12:01:33,916 - config - INFO - FUNCIÓN: exportar_registros_filtrados - TIEMPO: 12.33ms - ARGUMENTOS: 0 args, 4 kwargs
+2026-02-13 12:01:33,918 - config - INFO - Iniciando generación de informe. Plantilla: c:\Users\apoyosistemas\Documents\Python - copia\INFORME DE ACTIVIDADES - copia.xlsx, Registros: 2
+2026-02-13 12:01:34,043 - config - INFO - Plantilla cargada correctamente
+2026-02-13 12:01:34,170 - config - INFO - Informe guardado exitosamente en: C:\Users\APOYOS~1\AppData\Local\Temp\tmp06kosmn_.xlsx
+2026-02-13 12:01:34,171 - config - INFO - FUNCIÓN: generar_informe_template - TIEMPO: 253.04ms - ARGUMENTOS: 2 args, 1 kwargs
+2026-02-13 15:15:49,951 - config - INFO - Sistema de logging inicializado correctamente
+2026-02-13 15:15:49,955 - config - INFO - Generando Informe Final Concentrado. Registros: 6
+2026-02-13 15:15:50,075 - config - INFO - FUNCIÓN: generar_informe_final_resumen - TIEMPO: 119.89ms - ARGUMENTOS: 2 args, 1 kwargs
+2026-02-13 15:20:56,004 - config - INFO - Sistema de logging inicializado correctamente
+2026-02-13 15:20:56,630 - config - INFO - FUNCIÓN: inicializar_usuarios - TIEMPO: 0.10ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 15:20:56,630 - config - INFO - FUNCIÓN: inicializar_config - TIEMPO: 0.08ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 15:20:56,631 - config - INFO - FUNCIÓN: inicializar_excel - TIEMPO: 0.07ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 15:21:00,461 - config - INFO - FUNCIÓN: cargar_usuarios - TIEMPO: 0.57ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 15:21:01,100 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 321.48ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 15:21:01,100 - config - INFO - FUNCIÓN: generar_tabla_registros_recientes - TIEMPO: 0.56ms - ARGUMENTOS: 2 args, 0 kwargs
+2026-02-13 15:21:01,101 - config - INFO - FUNCIÓN: cargar_actividades_globales - TIEMPO: 0.42ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 15:21:01,102 - config - INFO - FUNCIÓN: cargar_actividades - TIEMPO: 1.04ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 15:21:01,102 - config - INFO - FUNCIÓN: generar_opciones_actividades - TIEMPO: 1.30ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 15:21:01,103 - config - INFO - FUNCIÓN: cargar_ubicaciones - TIEMPO: 0.56ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 15:21:01,103 - config - INFO - FUNCIÓN: generar_opciones_ubicaciones - TIEMPO: 1.02ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 15:21:01,104 - config - INFO - FUNCIÓN: cargar_tipos_solicitud - TIEMPO: 0.56ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 15:21:01,105 - config - INFO - FUNCIÓN: generar_opciones_tipos_solicitud - TIEMPO: 0.84ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 15:21:01,105 - config - INFO - FUNCIÓN: cargar_medios_solicitud - TIEMPO: 0.37ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 15:21:01,106 - config - INFO - FUNCIÓN: generar_opciones_medios_solicitud - TIEMPO: 0.58ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 15:21:02,897 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 8.71ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 15:21:02,902 - config - INFO - FUNCIÓN: exportar_registros_filtrados - TIEMPO: 14.23ms - ARGUMENTOS: 0 args, 3 kwargs
+2026-02-13 15:21:02,909 - config - INFO - FUNCIÓN: obtener_estadisticas_exportacion - TIEMPO: 20.66ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 15:21:02,909 - config - INFO - FUNCIÓN: obtener_configuracion_usuario - TIEMPO: 0.01ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 15:21:02,909 - config - INFO - FUNCIÓN: generar_opciones_usuarios - TIEMPO: 0.01ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 15:21:06,417 - config - INFO - FUNCIÓN: obtener_configuracion_usuario - TIEMPO: 0.01ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 15:21:06,420 - config - INFO - FUNCIÓN: guardar_usuarios - TIEMPO: 3.41ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 15:21:06,422 - config - INFO - FUNCIÓN: guardar_configuracion_usuario - TIEMPO: 5.14ms - ARGUMENTOS: 2 args, 0 kwargs
+2026-02-13 15:21:06,432 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 9.67ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 15:21:06,436 - config - INFO - FUNCIÓN: exportar_registros_filtrados - TIEMPO: 13.52ms - ARGUMENTOS: 0 args, 4 kwargs
+2026-02-13 15:21:06,438 - config - INFO - Iniciando generación de informe. Plantilla: c:\Users\apoyosistemas\Documents\Python - copia\INFORME DE ACTIVIDADES - copia.xlsx, Registros: 2
+2026-02-13 15:21:06,560 - config - INFO - Plantilla cargada correctamente
+2026-02-13 15:21:06,660 - config - INFO - Informe guardado exitosamente en: C:\Users\APOYOS~1\AppData\Local\Temp\tmpt2t9d602.xlsx
+2026-02-13 15:21:06,661 - config - INFO - FUNCIÓN: generar_informe_template - TIEMPO: 222.70ms - ARGUMENTOS: 2 args, 1 kwargs
+2026-02-13 15:21:20,249 - config - INFO - FUNCIÓN: cargar_usuarios - TIEMPO: 0.46ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 15:21:20,249 - config - INFO - FUNCIÓN: obtener_configuracion_usuario - TIEMPO: 0.86ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 15:21:20,257 - config - INFO - FUNCIÓN: guardar_usuarios - TIEMPO: 6.78ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 15:21:20,260 - config - INFO - FUNCIÓN: guardar_configuracion_usuario - TIEMPO: 9.32ms - ARGUMENTOS: 2 args, 0 kwargs
+2026-02-13 15:21:20,269 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 8.14ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 15:21:20,275 - config - INFO - FUNCIÓN: exportar_registros_filtrados - TIEMPO: 14.02ms - ARGUMENTOS: 0 args, 4 kwargs
+2026-02-13 15:21:20,276 - config - INFO - Generando Informe Final Concentrado. Registros: 2
+2026-02-13 15:21:20,378 - config - INFO - FUNCIÓN: generar_informe_final_resumen - TIEMPO: 101.89ms - ARGUMENTOS: 2 args, 1 kwargs
+2026-02-13 15:31:22,368 - config - INFO - Sistema de logging inicializado correctamente
+2026-02-13 15:31:22,753 - config - INFO - Iniciando generación de informe. Plantilla: c:\Users\apoyosistemas\Documents\Python - copia\INFORME DE ACTIVIDADES - copia.xlsx, Registros: 3
+2026-02-13 15:31:22,945 - config - INFO - Plantilla cargada correctamente
+2026-02-13 15:31:23,084 - config - INFO - Informe guardado exitosamente en: test_informe_mejorado.xlsx
+2026-02-13 15:31:23,085 - config - INFO - FUNCIÓN: generar_informe_template - TIEMPO: 700.80ms - ARGUMENTOS: 2 args, 1 kwargs
+2026-02-13 15:31:23,087 - config - WARNING - FUNCIÓN LENTA: generar_informe_template tomó 700.80ms
+2026-02-13 15:31:25,160 - config - INFO - Sistema de logging inicializado correctamente
+2026-02-13 15:31:25,171 - config - INFO - Generando Informe Final Concentrado. Registros: 6
+2026-02-13 15:31:25,327 - config - INFO - FUNCIÓN: generar_informe_final_resumen - TIEMPO: 156.28ms - ARGUMENTOS: 2 args, 1 kwargs
+2026-02-13 15:32:00,684 - config - INFO - Sistema de logging inicializado correctamente
+2026-02-13 15:32:01,361 - config - INFO - FUNCIÓN: inicializar_usuarios - TIEMPO: 0.09ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 15:32:01,362 - config - INFO - FUNCIÓN: inicializar_config - TIEMPO: 0.11ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 15:32:01,362 - config - INFO - FUNCIÓN: inicializar_excel - TIEMPO: 0.08ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 15:32:01,779 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 336.27ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 15:32:01,780 - config - INFO - FUNCIÓN: generar_tabla_registros_recientes - TIEMPO: 0.50ms - ARGUMENTOS: 2 args, 0 kwargs
+2026-02-13 15:32:01,781 - config - INFO - FUNCIÓN: cargar_actividades_globales - TIEMPO: 0.39ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 15:32:01,781 - config - INFO - FUNCIÓN: cargar_actividades - TIEMPO: 0.96ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 15:32:01,781 - config - INFO - FUNCIÓN: generar_opciones_actividades - TIEMPO: 1.21ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 15:32:01,782 - config - INFO - FUNCIÓN: cargar_ubicaciones - TIEMPO: 0.31ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 15:32:01,782 - config - INFO - FUNCIÓN: generar_opciones_ubicaciones - TIEMPO: 0.56ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 15:32:01,783 - config - INFO - FUNCIÓN: cargar_tipos_solicitud - TIEMPO: 0.34ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 15:32:01,783 - config - INFO - FUNCIÓN: generar_opciones_tipos_solicitud - TIEMPO: 0.61ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 15:32:01,784 - config - INFO - FUNCIÓN: cargar_medios_solicitud - TIEMPO: 0.52ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 15:32:01,784 - config - INFO - FUNCIÓN: generar_opciones_medios_solicitud - TIEMPO: 0.81ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 15:32:03,589 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 10.85ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 15:32:03,600 - config - INFO - FUNCIÓN: exportar_registros_filtrados - TIEMPO: 21.88ms - ARGUMENTOS: 0 args, 3 kwargs
+2026-02-13 15:32:03,606 - config - INFO - FUNCIÓN: obtener_estadisticas_exportacion - TIEMPO: 28.47ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 15:32:03,607 - config - INFO - FUNCIÓN: cargar_usuarios - TIEMPO: 0.43ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 15:32:03,609 - config - INFO - FUNCIÓN: obtener_configuracion_usuario - TIEMPO: 1.98ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 15:32:03,610 - config - INFO - FUNCIÓN: generar_opciones_usuarios - TIEMPO: 0.01ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-13 15:32:05,197 - config - INFO - FUNCIÓN: obtener_configuracion_usuario - TIEMPO: 0.01ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 15:32:05,201 - config - INFO - FUNCIÓN: guardar_usuarios - TIEMPO: 3.78ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 15:32:05,203 - config - INFO - FUNCIÓN: guardar_configuracion_usuario - TIEMPO: 6.23ms - ARGUMENTOS: 2 args, 0 kwargs
+2026-02-13 15:32:05,214 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 9.88ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-13 15:32:05,217 - config - INFO - FUNCIÓN: exportar_registros_filtrados - TIEMPO: 13.60ms - ARGUMENTOS: 0 args, 4 kwargs
+2026-02-13 15:32:05,219 - config - INFO - Iniciando generación de informe. Plantilla: c:\Users\apoyosistemas\Documents\Python - copia\INFORME DE ACTIVIDADES - copia.xlsx, Registros: 2
+2026-02-13 15:32:05,339 - config - INFO - Plantilla cargada correctamente
+2026-02-13 15:32:05,431 - config - INFO - Informe guardado exitosamente en: C:\Users\APOYOS~1\AppData\Local\Temp\tmplysj7lyd.xlsx
+2026-02-13 15:32:05,432 - config - INFO - FUNCIÓN: generar_informe_template - TIEMPO: 212.46ms - ARGUMENTOS: 2 args, 1 kwargs
+2026-02-13 15:42:31,332 - config - INFO - Sistema de logging inicializado correctamente
+2026-02-13 15:42:31,770 - config - INFO - DEBUG: generar_informe_template usando plantilla IMPORTADA: c:\Users\apoyosistemas\Documents\Python - copia\INFORME DE ACTIVIDADES - copia.xlsx
+2026-02-13 15:42:31,849 - config - INFO - Plantilla cargada correctamente
+2026-02-13 15:42:31,947 - config - INFO - Informe guardado exitosamente en: test_informe_mejorado.xlsx
+2026-02-13 15:42:31,950 - config - INFO - FUNCIÓN: generar_informe_template - TIEMPO: 602.71ms - ARGUMENTOS: 2 args, 1 kwargs
+2026-02-13 15:42:31,951 - config - WARNING - FUNCIÓN LENTA: generar_informe_template tomó 602.71ms
+2026-02-13 15:44:24,581 - config - INFO - Sistema de logging inicializado correctamente
+2026-02-13 15:44:24,884 - config - INFO - DEBUG: generar_informe_template usando plantilla IMPORTADA: c:\Users\apoyosistemas\Documents\Python - copia\INFORME DE ACTIVIDADES - copia.xlsx
+2026-02-13 15:44:24,923 - config - INFO - Plantilla cargada correctamente
+2026-02-13 15:44:24,976 - config - INFO - Informe guardado exitosamente en: debug_detallado.xlsx
+2026-02-13 15:44:24,977 - config - INFO - FUNCIÓN: generar_informe_template - TIEMPO: 92.75ms - ARGUMENTOS: 2 args, 1 kwargs
+2026-02-13 15:44:24,977 - config - INFO - Generando Informe Final Concentrado. Registros: 2
+2026-02-13 15:44:25,079 - config - INFO - FUNCIÓN: generar_informe_final_resumen - TIEMPO: 101.43ms - ARGUMENTOS: 2 args, 1 kwargs

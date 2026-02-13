@@ -17,6 +17,7 @@ CONFIG_FILE = "config_actividades.json"
 USERS_FILE = "usuarios.json"
 EXCEL_FILE = "actividades.xlsx"
 TEMPLATE_EXCEL = r"c:\Users\apoyosistemas\Documents\Python - copia\INFORME DE ACTIVIDADES - copia.xlsx"
+TEMPLATE_INFORME_FINAL = r"c:\Users\apoyosistemas\Documents\Python - copia\InformeFinal.XLSX"
 
 # Columnas del Excel
 COLUMNAS = [
