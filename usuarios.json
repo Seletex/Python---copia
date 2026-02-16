@@ -23,10 +23,10 @@
             "orden_direccion": "desc",
             "datos_contrato": {
                 "objeto": "1",
-                "nro": "1",
-                "nombre": "1",
-                "cedula": "1",
-                "supervisor": "Mario"
+                "nro": "2",
+                "nombre": "3",
+                "cedula": "4",
+                "supervisor": "Mario Alfonso Henao Lopez"
             }
         }
     }

@@ -287,7 +287,7 @@ def generar_informe_template(df, output_path, contrato_data=None):
             
             # Si cambia la actividad, mostrar subtotal de la anterior
             if ultima_actividad is not None and actividad_actual != ultima_actividad:
-                ws.cell(row=current_row, column=1, value="TOTAL")
+                ws.cell(row=current_row, column=1, value="ACTIVIDADES: ")
                 ws.cell(row=current_row, column=2, value=conteo_actividad).font = openpyxl.styles.Font(bold=True)
                 for c in range(1, 10):
                     ws.cell(row=current_row, column=c).border = copy.copy(base_styles[c-1]['border'])
@@ -329,7 +329,7 @@ def generar_informe_template(df, output_path, contrato_data=None):
             
         # Último subtotal y Gran Total
         if ultima_actividad:
-            ws.cell(row=current_row, column=1, value="ACTIVIDADES")
+            ws.cell(row=current_row, column=1, value="ACTIVIDADES: ")
             ws.cell(row=current_row, column=2, value=conteo_actividad).font = openpyxl.styles.Font(bold=True)
             for c in range(1, 10):
                 ws.cell(row=current_row, column=c).border = copy.copy(base_styles[c-1]['border'])

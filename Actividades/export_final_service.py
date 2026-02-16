@@ -51,92 +51,115 @@ def generar_informe_final_resumen(df, output_path, contrato_data=None):
                 ws.cell(row=6, column=3,
                         value=f"{fechas_dt.min().strftime('%d/%m/%Y')} al {fechas_dt.max().strftime('%d/%m/%Y')}")
 
-        # 3. Limpieza de área de datos (Filas 8 en adelante)
-        for row_idx in range(8, 200):
-            for col_idx in range(1, 11):
-                ws.cell(row=row_idx, column=col_idx, value=None)
-        
-        # Desenlazar celdas desde la fila 8 en adelante
+        # 3. Guardar estilos base de fila 7 (Cabecera) y fila 8 (Datos)
+        # En la plantilla V3, la fila 7 tiene "TIPO DE ACTIVIDAD" y "CANTIDAD"
+        header_styles = []
+        for col in range(1, 11):
+            cell = ws.cell(row=7, column=col)
+            header_styles.append({
+                'font': copy.copy(cell.font),
+                'border': copy.copy(cell.border),
+                'fill': copy.copy(cell.fill),
+                'alignment': copy.copy(cell.alignment)
+            })
+
+        # 4. Limpieza de área de datos (Filas 7 en adelante)
+        # Desenlazar celdas PRIMERO
         merged_ranges = list(ws.merged_cells.ranges)
         for merged_range in merged_ranges:
-            if merged_range.min_row >= 8:
+            if merged_range.min_row >= 7:
                 try:
                     ws.unmerge_cells(str(merged_range))
                 except Exception: pass
 
-        # 4. Escribir Tabla de Resumen
-        current_row = 8
-        ws.cell(row=current_row, column=1, value="RESUMEN DE ACTIVIDADES REALIZADAS:").font = openpyxl.styles.Font(bold=True)
-        ws.merge_cells(start_row=current_row, start_column=1, end_row=current_row, end_column=8)
-        current_row += 2
+        # Luego limpiar para reconstruir con los datos actuales
+        for row_idx in range(7, 300):
+            for col_idx in range(1, 11):
+                ws.cell(row=row_idx, column=col_idx, value=None)
+
+        # 5. Escribir Cabecera de Tabla (Fila 7)
+        current_row = 7
+        ws.cell(row=current_row, column=1, value="TIPO DE ACTIVIDAD")
+        ws.merge_cells(start_row=current_row, start_column=1, end_row=current_row, end_column=7)
+        ws.cell(row=current_row, column=8, value="CANTIDAD")
+        ws.merge_cells(start_row=current_row, start_column=8, end_row=current_row, end_column=10)
         
-        ws.cell(row=current_row, column=1, value="DESCRIPCIÓN DE LA ACTIVIDAD").font = openpyxl.styles.Font(bold=True)
-        ws.cell(row=current_row, column=9, value="CONTEO").font = openpyxl.styles.Font(bold=True)
-        # Aplicar borde a cabecera de tabla
-        for c in range(1, 10):
-            ws.cell(row=current_row, column=c).border = openpyxl.styles.Border(
-                left=openpyxl.styles.Side(style='thin'),
-                right=openpyxl.styles.Side(style='thin'),
-                top=openpyxl.styles.Side(style='thin'),
-                bottom=openpyxl.styles.Side(style='thin')
-            )
+        # Aplicar estilos de cabecera
+        for col_idx in range(1, 11):
+            cell = ws.cell(row=current_row, column=col_idx)
+            style = header_styles[col_idx-1]
+            cell.font = style['font']
+            cell.border = style['border']
+            cell.fill = style['fill']
+            cell.alignment = style['alignment']
+        
         current_row += 1
         
+        # 6. Escribir Datos de Resumen
         for _, r in resumen.iterrows():
+            # Actividad (A-G)
             ws.cell(row=current_row, column=1, value=r['Actividad'])
-            ws.merge_cells(start_row=current_row, start_column=1, end_row=current_row, end_column=8)
-            ws.cell(row=current_row, column=9, value=r['Cantidad'])
+            ws.merge_cells(start_row=current_row, start_column=1, end_row=current_row, end_column=7)
+            # Cantidad (H-J)
+            ws.cell(row=current_row, column=8, value=r['Cantidad'])
+            ws.merge_cells(start_row=current_row, start_column=8, end_row=current_row, end_column=10)
             
-            # Bordes para la fila
-            for c in range(1, 10):
-                ws.cell(row=current_row, column=c).border = openpyxl.styles.Border(
-                    left=openpyxl.styles.Side(style='thin'),
-                    right=openpyxl.styles.Side(style='thin'),
-                    top=openpyxl.styles.Side(style='thin'),
-                    bottom=openpyxl.styles.Side(style='thin')
-                )
+            # Bordes y alineación para la fila de datos
+            for c in range(1, 11):
+                cell = ws.cell(row=current_row, column=c)
+                cell.border = header_styles[c-1]['border']
+                cell.alignment = header_styles[c-1]['alignment']
+                # Si es la columna de cantidad (H), centrar
+                if c >= 8:
+                    cell.alignment = openpyxl.styles.Alignment(horizontal='center', vertical='center')
+            
             current_row += 1
             
         # Total General
         ws.cell(row=current_row, column=1, value="TOTAL GENERAL DE ACTIVIDADES:").font = openpyxl.styles.Font(bold=True)
-        ws.merge_cells(start_row=current_row, start_column=1, end_row=current_row, end_column=8)
-        ws.cell(row=current_row, column=9, value=resumen['Cantidad'].sum()).font = openpyxl.styles.Font(bold=True)
-        for c in range(1, 10):
-            ws.cell(row=current_row, column=c).border = openpyxl.styles.Border(
-                left=openpyxl.styles.Side(style='thin'),
-                right=openpyxl.styles.Side(style='thin'),
-                top=openpyxl.styles.Side(style='thin'),
-                bottom=openpyxl.styles.Side(style='thin')
-            )
+        ws.merge_cells(start_row=current_row, start_column=1, end_row=current_row, end_column=7)
+        ws.cell(row=current_row, column=8, value=resumen['Cantidad'].sum()).font = openpyxl.styles.Font(bold=True)
+        ws.merge_cells(start_row=current_row, start_column=8, end_row=current_row, end_column=10)
+        
+        for c in range(1, 11):
+            cell = ws.cell(row=current_row, column=c)
+            cell.border = header_styles[c-1]['border']
+            cell.alignment = header_styles[c-1]['alignment']
+            if c >= 8:
+                cell.alignment = openpyxl.styles.Alignment(horizontal='center', vertical='center')
+
         current_row += 2
         
-        # 5. Fecha e Informe (mismo estilo que el detallado)
+        # 7. Fecha e Informe (mismo estilo que el detallado)
         meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", 
                  "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"]
         ahora = datetime.now()
         ws.cell(row=current_row, column=1, value="Fecha de informe:").font = openpyxl.styles.Font(bold=True)
         ws.cell(row=current_row, column=2, value=f"{meses[ahora.month-1]} de {ahora.year}")
-        ws.merge_cells(start_row=current_row, start_column=2, end_row=current_row, end_column=8)
-        current_row += 1
+        ws.merge_cells(start_row=current_row, start_column=2, end_row=current_row, end_column=7)
+        current_row += 2
         
         # Firmas
         if contrato_data:
+            start_firmas = current_row
+            # Nombre Contratista
             if contrato_data.get('nombre'):
                 ws.cell(row=current_row, column=1, value="Elaborado por:").font = openpyxl.styles.Font(bold=True)
                 ws.cell(row=current_row, column=2, value=contrato_data['nombre'].upper())
-                ws.merge_cells(start_row=current_row, start_column=2, end_row=current_row, end_column=8)
+                ws.merge_cells(start_row=current_row, start_column=2, end_row=current_row, end_column=7)
                 current_row += 1
                 ws.cell(row=current_row, column=1, value="CONTRATISTA:").font = openpyxl.styles.Font(bold=True)
-                ws.merge_cells(start_row=current_row, start_column=2, end_row=current_row, end_column=8)
-                current_row += 1                
+                ws.merge_cells(start_row=current_row, start_column=2, end_row=current_row, end_column=7)
+                current_row += 2            
             
+            # Supervisor
             if contrato_data.get('supervisor'):
                 ws.cell(row=current_row, column=1, value="Vo.Bo:").font = openpyxl.styles.Font(bold=True)
                 ws.cell(row=current_row, column=2, value=contrato_data['supervisor'].upper())
-                ws.merge_cells(start_row=current_row, start_column=2, end_row=current_row, end_column=8)
+                ws.merge_cells(start_row=current_row, start_column=2, end_row=current_row, end_column=7)
                 current_row += 1
                 ws.cell(row=current_row, column=1, value="SUPERVISOR:").font = openpyxl.styles.Font(bold=True)
-                ws.merge_cells(start_row=current_row, start_column=2, end_row=current_row, end_column=8)
+                ws.merge_cells(start_row=current_row, start_column=2, end_row=current_row, end_column=7)
                 current_row += 1
 
         wb.save(output_path)
