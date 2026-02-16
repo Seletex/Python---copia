@@ -73,9 +73,9 @@ def generar_informe_final_resumen(df, output_path, contrato_data=None):
                 except Exception: pass
 
         # Luego limpiar para reconstruir con los datos actuales
-        for row_idx in range(7, 300):
-            for col_idx in range(1, 11):
-                ws.cell(row=row_idx, column=col_idx, value=None)
+        for row in ws.iter_rows(min_row=7, max_row=300, min_col=1, max_col=11):
+            for cell in row:
+                cell.value = None
 
         # 5. Escribir Cabecera de Tabla (Fila 7)
         current_row = 7
@@ -128,7 +128,7 @@ def generar_informe_final_resumen(df, output_path, contrato_data=None):
             if c >= 8:
                 cell.alignment = openpyxl.styles.Alignment(horizontal='center', vertical='center')
 
-        current_row += 2
+        current_row += 1
         
         # 7. Fecha e Informe (mismo estilo que el detallado)
         meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", 
@@ -136,8 +136,8 @@ def generar_informe_final_resumen(df, output_path, contrato_data=None):
         ahora = datetime.now()
         ws.cell(row=current_row, column=1, value="Fecha de informe:").font = openpyxl.styles.Font(bold=True)
         ws.cell(row=current_row, column=2, value=f"{meses[ahora.month-1]} de {ahora.year}")
-        ws.merge_cells(start_row=current_row, start_column=2, end_row=current_row, end_column=7)
-        current_row += 2
+        ws.merge_cells(start_row=current_row, start_column=2, end_row=current_row, end_column=10)
+        current_row += 1
         
         # Firmas
         if contrato_data:
@@ -146,20 +146,20 @@ def generar_informe_final_resumen(df, output_path, contrato_data=None):
             if contrato_data.get('nombre'):
                 ws.cell(row=current_row, column=1, value="Elaborado por:").font = openpyxl.styles.Font(bold=True)
                 ws.cell(row=current_row, column=2, value=contrato_data['nombre'].upper())
-                ws.merge_cells(start_row=current_row, start_column=2, end_row=current_row, end_column=7)
+                ws.merge_cells(start_row=current_row, start_column=2, end_row=current_row, end_column=10)
                 current_row += 1
                 ws.cell(row=current_row, column=1, value="CONTRATISTA:").font = openpyxl.styles.Font(bold=True)
-                ws.merge_cells(start_row=current_row, start_column=2, end_row=current_row, end_column=7)
-                current_row += 2            
+                ws.merge_cells(start_row=current_row, start_column=2, end_row=current_row, end_column=10)
+                current_row += 1
             
             # Supervisor
             if contrato_data.get('supervisor'):
                 ws.cell(row=current_row, column=1, value="Vo.Bo:").font = openpyxl.styles.Font(bold=True)
                 ws.cell(row=current_row, column=2, value=contrato_data['supervisor'].upper())
-                ws.merge_cells(start_row=current_row, start_column=2, end_row=current_row, end_column=7)
+                ws.merge_cells(start_row=current_row, start_column=2, end_row=current_row, end_column=10)
                 current_row += 1
                 ws.cell(row=current_row, column=1, value="SUPERVISOR:").font = openpyxl.styles.Font(bold=True)
-                ws.merge_cells(start_row=current_row, start_column=2, end_row=current_row, end_column=7)
+                ws.merge_cells(start_row=current_row, start_column=2, end_row=current_row, end_column=10)
                 current_row += 1
 
         wb.save(output_path)

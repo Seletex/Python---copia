@@ -4,8 +4,8 @@ Solo genera fragmentos HTML, no páginas completas.
 """
 
 from database import (
-    cargar_actividades, cargar_ubicaciones, cargar_tipos_solicitud,
-    cargar_medios_solicitud, cargar_usuarios
+    cargar_actividades, cargar_actividades_globales, cargar_ubicaciones, 
+    cargar_tipos_solicitud, cargar_medios_solicitud, cargar_usuarios
 )
 from activity_service import obtener_actividades_personales
 from utils import medir_tiempo
@@ -55,44 +55,91 @@ def generar_opciones_usuarios():
 @medir_tiempo
 def generar_gestion_actividades_globales():
     """Genera HTML para la gestión de actividades globales (solo admin)"""
-    actividades = cargar_actividades()
-    
-    contenido = """
-    <div class="mb-4">
-        <h6 class="text-uppercase text-muted fw-bold mb-3 small">🌍 Configuración Global</h6>
-        <form action="/agregar_actividad_global" method="POST" class="row g-2 mb-4">
+    return _generar_gestion_lista_simple(
+        titulo="🎨 Actividades Globales",
+        item_label="actividad global",
+        items=cargar_actividades_globales(),
+        action_add="/agregar_actividad_global",
+        action_del="/eliminar_actividad_global",
+        field_name="actividad"
+    )
+
+@medir_tiempo
+def generar_gestion_ubicaciones():
+    """Genera HTML para la gestión de ubicaciones"""
+    return _generar_gestion_lista_simple(
+        titulo="📍 Gestión de Ubicaciones",
+        item_label="ubicación",
+        items=cargar_ubicaciones(),
+        action_add="/agregar_ubicacion",
+        action_del="/eliminar_ubicacion",
+        field_name="ubicacion"
+    )
+
+@medir_tiempo
+def generar_gestion_tipos_solicitud():
+    """Genera HTML para la gestión de tipos de solicitud"""
+    return _generar_gestion_lista_simple(
+        titulo="📝 Tipos de Solicitud",
+        item_label="tipo de solicitud",
+        items=cargar_tipos_solicitud(),
+        action_add="/agregar_tipo_solicitud",
+        action_del="/eliminar_tipo_solicitud",
+        field_name="tipo"
+    )
+
+@medir_tiempo
+def generar_gestion_medios_solicitud():
+    """Genera HTML para la gestión de medios de solicitud"""
+    return _generar_gestion_lista_simple(
+        titulo="📞 Medios de Solicitud",
+        item_label="medio de solicitud",
+        items=cargar_medios_solicitud(),
+        action_add="/agregar_medio_solicitud",
+        action_del="/eliminar_medio_solicitud",
+        field_name="medio"
+    )
+
+def _generar_gestion_lista_simple(titulo, item_label, items, action_add, action_del, field_name):
+    """Helper genérico para generar una sección de gestión de lista (Añadir/Eliminar)"""
+    id_prefix = action_add.strip('/').replace('_', '-')
+    contenido = f"""
+    <div class="mb-5 p-4 border rounded-3 bg-white shadow-sm">
+        <h6 class="text-uppercase text-primary fw-bold mb-3 small d-flex align-items-center">
+            {titulo}
+        </h6>
+        <form action="{action_add}" method="POST" class="row g-2 mb-4">
             <div class="col-md-9">
-                <input type="text" name="nueva_actividad" 
-                       placeholder="Escribe una nueva actividad global..." class="form-control" required>
+                <input type="text" name="nuevo_item" 
+                       placeholder="Añadir {item_label}..." class="form-control" required>
             </div>
             <div class="col-md-3">
                 <button type="submit" class="btn btn-primary w-100">
-                    <i class="fas fa-plus"></i> Añadir
+                    <i class="fas fa-plus me-2"></i>Añadir
                 </button>
             </div>
         </form>
-        <div class="list-group list-group-flush border rounded-3 overflow-hidden shadow-sm">
+        <div class="list-group list-group-flush border-top">
     """
     
-    if actividades:
-        for actividad in actividades:
+    if items:
+        for item in items:
             contenido += f"""
-            <div class="list-group-item d-flex justify-content-between align-items-center py-3 px-4">
-                <div class="text-dark"><i class="fas fa-arrow-right me-3 text-primary opacity-50"></i>{actividad}</div>
-                <form action="/eliminar_actividad_global" method="POST" class="ms-2">
-                    <input type="hidden" name="actividad" value="{actividad}">
+            <div class="list-group-item d-flex justify-content-between align-items-center py-3 px-2 border-bottom">
+                <div class="text-dark small"><i class="fas fa-chevron-right me-3 text-muted opacity-50"></i>{item}</div>
+                <form action="{action_del}" method="POST" class="ms-2">
+                    <input type="hidden" name="{field_name}" value="{item}">
                     <button type="submit" class="btn btn-outline-danger btn-sm border-0" 
-                            onclick="return confirm('¿Eliminar esta actividad global?')">
+                            onclick="return confirm('¿Eliminar esta {item_label}?')">
                         <i class="fas fa-trash-alt"></i>
                     </button>
                 </form>
             </div>
             """
     else:
-        contenido += """
+        contenido += f"""
             <div class="list-group-item text-center text-muted py-4">
-                <i class="fas fa-info-circle mb-2 d-block fa-2x"></i>
-                No hay actividades globales configuradas
+                No hay {item_label} configuradas
             </div>
         """
     

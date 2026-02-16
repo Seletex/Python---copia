@@ -15,6 +15,9 @@ from templates import (
 )
 from database import (
     cargar_actividades, cargar_actividades_globales,
+    cargar_ubicaciones, guardar_ubicaciones,
+    cargar_tipos_solicitud, guardar_tipos_solicitud,
+    cargar_medios_solicitud, guardar_medios_solicitud,
     cargar_usuarios, guardar_usuarios,
     guardar_actividades, guardar_registro,
     eliminar_registro, EXCEL_FILE, cargar_registros
@@ -29,7 +32,8 @@ from html_utils import (
     generar_opciones_tipos_solicitud, generar_opciones_medios_solicitud,
     generar_opciones_usuarios, generar_gestion_usuarios,
     generar_gestion_actividades_globales, generar_gestion_actividades_personales,
-    generar_tabla_registros_recientes
+    generar_gestion_ubicaciones, generar_gestion_tipos_solicitud,
+    generar_gestion_medios_solicitud, generar_tabla_registros_recientes
 )
 
 # =============================================================================
@@ -181,11 +185,14 @@ class GestionHandler(BaseRoute):
         
         gestion_actividades = generar_gestion_actividades_globales() if self.usuario_actual == "admin" else ""
         gestion_usuarios = generar_gestion_usuarios(self.usuario_actual) if self.usuario_actual == "admin" else ""
+        gestion_ubicaciones = generar_gestion_ubicaciones() if self.usuario_actual == "admin" else ""
+        gestion_tipos = generar_gestion_tipos_solicitud() if self.usuario_actual == "admin" else ""
+        gestion_medios = generar_gestion_medios_solicitud() if self.usuario_actual == "admin" else ""
         gestion_personal = generar_gestion_actividades_personales(self.usuario_actual)
         
         html = GESTION_TEMPLATE.format(
             usuario_actual=self.usuario_actual,
-            gestion_actividades=gestion_actividades,
+            gestion_actividades=f"{gestion_actividades}{gestion_ubicaciones}{gestion_tipos}{gestion_medios}",
             gestion_usuarios=gestion_usuarios,
             gestion_personal=gestion_personal,
             alertas=alertas
@@ -499,30 +506,29 @@ class UserAdminHandler(BaseRoute):
         self.redirect('/gestion')
 
 
-class ActivityAdminHandler(BaseRoute):
-    """Gestiona actividades globales y personales"""
+class ConfigAdminHandler(BaseRoute):
+    """Gestiona actividades globales, personales, ubicaciones, tipos y medios"""
     def post(self, params, post_data):
         if not self._require_auth():
             return
         
         data = parse_qs(post_data)
         path = self.request.path.split('?')[0]
+        nuevo_item = data.get('nuevo_item', [''])[0].strip()
         
+        # --- ACTIVIDADES GLOBALES ---
         if path == '/agregar_actividad_global':
-            if not self._require_admin():
-                return
-            nueva = data.get('nueva_actividad', [''])[0].strip()
-            if nueva:
+            if not self._require_admin(): return
+            if nuevo_item:
                 act = cargar_actividades_globales()
-                if nueva not in act:
-                    act.append(nueva)
+                if nuevo_item not in act:
+                    act.append(nuevo_item)
                     guardar_actividades(act)
                     self.redirect('/gestion?msg=Actividad global agregada')
                     return
         
         elif path == '/eliminar_actividad_global':
-            if not self._require_admin():
-                return
+            if not self._require_admin(): return
             actividad = data.get('actividad', [''])[0].strip()
             if actividad:
                 act = cargar_actividades_globales()
@@ -531,9 +537,76 @@ class ActivityAdminHandler(BaseRoute):
                     guardar_actividades(act)
                     self.redirect('/gestion?msg=Actividad global eliminada')
                     return
+
+        # --- UBICACIONES ---
+        elif path == '/agregar_ubicacion':
+            if not self._require_admin(): return
+            if nuevo_item:
+                items = cargar_ubicaciones()
+                if nuevo_item not in items:
+                    items.append(nuevo_item)
+                    guardar_ubicaciones(items)
+                    self.redirect('/gestion?msg=Ubicación agregada')
+                    return
         
+        elif path == '/eliminar_ubicacion':
+            if not self._require_admin(): return
+            item = data.get('ubicacion', [''])[0].strip()
+            if item:
+                items = cargar_ubicaciones()
+                if item in items:
+                    items.remove(item)
+                    guardar_ubicaciones(items)
+                    self.redirect('/gestion?msg=Ubicación eliminada')
+                    return
+
+        # --- TIPOS DE SOLICITUD ---
+        elif path == '/agregar_tipo_solicitud':
+            if not self._require_admin(): return
+            if nuevo_item:
+                items = cargar_tipos_solicitud()
+                if nuevo_item not in items:
+                    items.append(nuevo_item)
+                    guardar_tipos_solicitud(items)
+                    self.redirect('/gestion?msg=Tipo de solicitud agregado')
+                    return
+        
+        elif path == '/eliminar_tipo_solicitud':
+            if not self._require_admin(): return
+            item = data.get('tipo', [''])[0].strip()
+            if item:
+                items = cargar_tipos_solicitud()
+                if item in items:
+                    items.remove(item)
+                    guardar_tipos_solicitud(items)
+                    self.redirect('/gestion?msg=Tipo de solicitud eliminado')
+                    return
+
+        # --- MEDIOS DE SOLICITUD ---
+        elif path == '/agregar_medio_solicitud':
+            if not self._require_admin(): return
+            if nuevo_item:
+                items = cargar_medios_solicitud()
+                if nuevo_item not in items:
+                    items.append(nuevo_item)
+                    guardar_medios_solicitud(items)
+                    self.redirect('/gestion?msg=Medio de solicitud agregado')
+                    return
+        
+        elif path == '/eliminar_medio_solicitud':
+            if not self._require_admin(): return
+            item = data.get('medio', [''])[0].strip()
+            if item:
+                items = cargar_medios_solicitud()
+                if item in items:
+                    items.remove(item)
+                    guardar_medios_solicitud(items)
+                    self.redirect('/gestion?msg=Medio de solicitud eliminado')
+                    return
+
+        # --- ACTIVIDADES PERSONALES ---
         elif path == '/agregar_actividad_personal':
-            nueva = data.get('nueva_actividad', [''])[0].strip()
+            nueva = data.get('nueva_actividad', nuevo_item if nuevo_item else [''])[0].strip()
             if nueva:
                 agregar_actividad_personal(self.usuario_actual, nueva)
                 self.redirect('/gestion?msg=Actividad personal agregada')
@@ -598,10 +671,16 @@ ROUTE_MAP = {
     '/eliminar_registro_accion': EliminarRegistroAccionHandler,
     '/agregar_usuario': UserAdminHandler,
     '/eliminar_usuario': UserAdminHandler,
-    '/agregar_actividad_global': ActivityAdminHandler,
-    '/eliminar_actividad_global': ActivityAdminHandler,
-    '/agregar_actividad_personal': ActivityAdminHandler,
-    '/eliminar_actividad_personal': ActivityAdminHandler,
+    '/agregar_actividad_global': ConfigAdminHandler,
+    '/eliminar_actividad_global': ConfigAdminHandler,
+    '/agregar_actividad_personal': ConfigAdminHandler,
+    '/eliminar_actividad_personal': ConfigAdminHandler,
+    '/agregar_ubicacion': ConfigAdminHandler,
+    '/eliminar_ubicacion': ConfigAdminHandler,
+    '/agregar_tipo_solicitud': ConfigAdminHandler,
+    '/eliminar_tipo_solicitud': ConfigAdminHandler,
+    '/agregar_medio_solicitud': ConfigAdminHandler,
+    '/eliminar_medio_solicitud': ConfigAdminHandler,
     '/api/actividades': APIHandler,
     '/api/estadisticas_exportacion': APIHandler,
     '/descargar_excel': StaticHandler,
