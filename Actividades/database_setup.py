@@ -1,17 +1,15 @@
 
 import sqlite3
 import os
-from config import logger
-
-DB_NAME = "actividades.db"
+from config import logger, DB_FILE
 
 def init_db():
     """Inicializa la base de datos SQLite con las tablas necesarias"""
-    if os.path.exists(DB_NAME):
-        logger.info(f"La base de datos {DB_NAME} ya existe.")
+    if os.path.exists(DB_FILE):
+        logger.info(f"La base de datos {DB_FILE} ya existe.")
         return
 
-    conn = sqlite3.connect(DB_NAME)
+    conn = sqlite3.connect(DB_FILE)
     cursor = conn.cursor()
 
     try:

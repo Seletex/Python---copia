@@ -13,11 +13,20 @@ from logging.handlers import RotatingFileHandler
 # CONSTANTES DE CONFIGURACIÓN
 # =============================================================================
 
-CONFIG_FILE = "config_actividades.json"
-USERS_FILE = "usuarios.json"
-EXCEL_FILE = "actividades.xlsx"
-TEMPLATE_EXCEL = r"c:\Users\apoyosistemas\Documents\Python - copia\INFORME DE ACTIVIDADES - copia.xlsx"
-TEMPLATE_INFORME_FINAL = r"c:\Users\apoyosistemas\Documents\Python - copia\InformeFinal.XLSX"
+# =============================================================================
+# CONSTANTES DE CONFIGURACIÓN
+# =============================================================================
+
+# Directorio base absoluto (donde está este archivo config.py)
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+CONFIG_FILE = os.path.join(BASE_DIR, "config_actividades.json")
+USERS_FILE = os.path.join(BASE_DIR, "usuarios.json")
+EXCEL_FILE = os.path.join(BASE_DIR, "actividades.xlsx")
+# Usar nombres de archivo relativos, asumiendo que están en la misma carpeta o subcarpetas
+TEMPLATE_EXCEL = os.path.join(BASE_DIR, "INFORME DE ACTIVIDADES - copia.xlsx")
+TEMPLATE_INFORME_FINAL = os.path.join(BASE_DIR, "InformeFinal.XLSX")
+DB_FILE = os.path.join(BASE_DIR, "actividades.db") # Definir ruta de DB aquí también
 
 # Columnas del Excel
 COLUMNAS = [
@@ -85,7 +94,7 @@ _CACHE_TIMEOUT = 30  # segundos
 
 def setup_logging():
     """Configura el sistema de logging para monitoreo de rendimiento"""
-    log_dir = "logs"
+    log_dir = os.path.join(BASE_DIR, "logs")
     if not os.path.exists(log_dir):
         os.makedirs(log_dir)
     

@@ -4,17 +4,15 @@ import pandas as pd
 import json
 import os
 from config import (
-    CONFIG_FILE, USERS_FILE, EXCEL_FILE, logger
+    CONFIG_FILE, USERS_FILE, EXCEL_FILE, logger, DB_FILE
 )
 
-DB_NAME = "actividades.db"
-
 def migrate_data():
-    if not os.path.exists(DB_NAME):
-        print(f"Error: La base de datos {DB_NAME} no existe. Ejecuta database_setup.py primero.")
+    if not os.path.exists(DB_FILE):
+        print(f"Error: La base de datos {DB_FILE} no existe. Ejecuta database_setup.py primero.")
         return
 
-    conn = sqlite3.connect(DB_NAME)
+    conn = sqlite3.connect(DB_FILE)
     cursor = conn.cursor()
 
     try:

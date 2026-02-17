@@ -11,15 +11,18 @@ import pandas as pd
 from config import (
     COLUMNAS, logger, ACTIVIDADES_DEFAULT, UBICACIONES_DEFAULT,
     TIPOS_SOLICITUD_DEFAULT, MEDIOS_SOLICITUD_DEFAULT,
-    EXCEL_FILE, USERS_FILE, CONFIG_FILE
+    EXCEL_FILE, USERS_FILE, CONFIG_FILE, DB_FILE
 )
 from utils import cache_decorator, medir_tiempo, clear_cache
 
-DB_NAME = "actividades.db"
+# DB_NAME eliminado, usamos DB_FILE de config
 
 def get_db_connection():
-    conn = sqlite3.connect(DB_NAME)
+    # Timeout aumentado para evitar bloqueos en cargas pesadas
+    conn = sqlite3.connect(DB_FILE, timeout=20)
     conn.row_factory = sqlite3.Row
+    # Habilitar Write-Ahead Logging para mejor concurrencia
+    conn.execute("PRAGMA journal_mode=WAL")
     return conn
 
 # =============================================================================
