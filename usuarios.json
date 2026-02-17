@@ -39,6 +39,26 @@
                 "cedula": "4",
                 "supervisor": "Mario Alfonso Henao Lopez"
             }
+        },
+        "Alejandro": {
+            "tema": "claro",
+            "columnas_visibles": [
+                "TIPO DE ACTIVIDAD",
+                "FECHA",
+                "DEPENDENCIA",
+                "SOLICITANTE",
+                "DESCRIPCIÓN",
+                "CUMPLIDO"
+            ],
+            "orden_por": "FECHA",
+            "orden_direccion": "desc",
+            "datos_contrato": {
+                "objeto": "CONTRATO DE PRESTACIÓN DE SERVICIOS DE APOYO A LA GESTION PARA LA ASISTENCIA TECNICAEN TODA LA INFRAESTRUCTURA TECNOLÓGICA DE LA ADMINISTRACIÓN MUNICIPAL DE LA CEJA DEL TAMBO",
+                "nro": "2026.10.05.06.035",
+                "nombre": "STEVEN ALEJANDRO RUIZ RENDON",
+                "cedula": "1,036,964,737",
+                "supervisor": "Mario Alfonso Henao Lopez"
+            }
         }
     }
 }

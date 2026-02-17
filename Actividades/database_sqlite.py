@@ -10,8 +10,7 @@ import sqlite3
 import pandas as pd
 from config import (
     COLUMNAS, logger, ACTIVIDADES_DEFAULT, UBICACIONES_DEFAULT,
-    TIPOS_SOLICITUD_DEFAULT, MEDIOS_SOLICITUD_DEFAULT,
-    EXCEL_FILE, USERS_FILE, CONFIG_FILE
+    TIPOS_SOLICITUD_DEFAULT, MEDIOS_SOLICITUD_DEFAULT
 )
 from utils import cache_decorator, medir_tiempo, clear_cache
 

@@ -401,14 +401,7 @@ ESTADISTICAS_TEMPLATE = """
                 </div>
 
                 <div class="row">
-                    <div class="col-lg-8">
-                        <div class="chart-container">
-                            <h5 class="chart-title">Distribución de Actividades</h5>
-                            <div style="position: relative; height: 350px;">
-                                <canvas id="actividadesChart"></canvas>
-                            </div>
-                        </div>
-                        
+                    <div class="col-lg-8"> 
                         <div class="card border-0 shadow-sm rounded-4 mb-4">
                             <div class="card-header bg-white py-3">
                                 <h5 class="mb-0"><i class="fas fa-users me-2 text-primary"></i> Resumen por Ejecutivo</h5>
