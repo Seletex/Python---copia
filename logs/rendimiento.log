@@ -2112,3 +2112,22 @@ ValueError: Value must be one of {'distributed', 'justify', 'top', 'bottom', 'ce
 2026-02-16 15:36:16,119 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 4.61ms - ARGUMENTOS: 1 args, 0 kwargs
 2026-02-16 15:36:16,124 - config - INFO - FUNCIÓN: exportar_registros_filtrados - TIEMPO: 9.59ms - ARGUMENTOS: 0 args, 3 kwargs
 2026-02-16 15:36:16,130 - config - INFO - FUNCIÓN: obtener_estadisticas_exportacion - TIEMPO: 15.44ms - ARGUMENTOS: 3 args, 0 kwargs
+2026-02-17 11:58:34,862 - config - INFO - Sistema de logging inicializado correctamente
+2026-02-17 11:58:43,253 - config - INFO - FUNCIÓN: cargar_usuarios - TIEMPO: 18.83ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-17 11:58:43,588 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 18.54ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-17 11:58:43,588 - config - INFO - FUNCIÓN: generar_tabla_registros_recientes - TIEMPO: 0.36ms - ARGUMENTOS: 2 args, 0 kwargs
+2026-02-17 11:58:43,589 - config - INFO - FUNCIÓN: cargar_actividades_globales - TIEMPO: 0.78ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-17 11:58:43,590 - config - INFO - FUNCIÓN: cargar_actividades - TIEMPO: 1.64ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-17 11:58:43,591 - config - INFO - FUNCIÓN: generar_opciones_actividades - TIEMPO: 1.90ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-17 11:58:43,591 - config - INFO - FUNCIÓN: cargar_ubicaciones - TIEMPO: 0.67ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-17 11:58:43,592 - config - INFO - FUNCIÓN: generar_opciones_ubicaciones - TIEMPO: 0.93ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-17 11:58:43,593 - config - INFO - FUNCIÓN: cargar_tipos_solicitud - TIEMPO: 0.66ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-17 11:58:43,593 - config - INFO - FUNCIÓN: generar_opciones_tipos_solicitud - TIEMPO: 0.89ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-17 11:58:43,594 - config - INFO - FUNCIÓN: cargar_medios_solicitud - TIEMPO: 0.82ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-17 11:58:43,594 - config - INFO - FUNCIÓN: generar_opciones_medios_solicitud - TIEMPO: 1.18ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-17 11:59:22,733 - config - INFO - FUNCIÓN: cargar_registros - TIEMPO: 2.75ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-17 11:59:22,758 - config - INFO - FUNCIÓN: exportar_registros_filtrados - TIEMPO: 28.38ms - ARGUMENTOS: 0 args, 3 kwargs
+2026-02-17 11:59:22,767 - config - INFO - FUNCIÓN: obtener_estadisticas_exportacion - TIEMPO: 37.57ms - ARGUMENTOS: 3 args, 0 kwargs
+2026-02-17 11:59:24,142 - config - INFO - FUNCIÓN: cargar_usuarios - TIEMPO: 1.14ms - ARGUMENTOS: 0 args, 0 kwargs
+2026-02-17 11:59:24,142 - config - INFO - FUNCIÓN: obtener_actividades_personales - TIEMPO: 1.48ms - ARGUMENTOS: 1 args, 0 kwargs
+2026-02-17 11:59:24,143 - config - INFO - FUNCIÓN: generar_gestion_actividades_personales - TIEMPO: 2.47ms - ARGUMENTOS: 1 args, 0 kwargs

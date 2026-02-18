@@ -10,7 +10,10 @@ def zip_project(source_dir, output_filename):
         '.venv', 'venv', 'env', 'Lib', 'Scripts', 'Include',  # Entornos virtuales
         '__pycache__', '.git', '.github', '.idea', '.vscode', # Metadatos y temporales
         'logs', 'tmp', 'actividades_deploy.zip',              # Logs y el propio zip
-        'target', 'src'                                       # Rust artifacts
+        'target', 'src',                                      # Rust artifacts
+        'actividades.db', 'usuarios.json',                    # DATOS: No incluir para no sobreescribir prod
+        'config_actividades.json',                            # CONFIG: Respetar la del servidor
+        'backups'                                             # Backups locales
     }
     
     files_added = 0

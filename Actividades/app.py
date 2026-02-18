@@ -35,7 +35,7 @@ from templates import (
 )
 
 app = Flask(__name__)
-app.secret_key = os.urandom(24)  # Clave secreta para sesiones
+app.secret_key = os.environ.get("FLASK_SECRET_KEY", os.urandom(24))
 
 # =============================================================================
 # DECORADORES
@@ -536,10 +536,27 @@ def exportar():
                 os.remove(tmp_path)
             return redirect(url_for('exportar', error='Error al procesar la exportación'))
 
+# =============================================================================
+# INICIALIZACIÓN (Útil para Render/Gunicorn)
+# =============================================================================
+
+from database import inicializar_usuarios, inicializar_config, inicializar_excel
+
+def initialize_app():
+    with app.app_context():
+        try:
+            inicializar_usuarios()
+            inicializar_config()
+            inicializar_excel()
+            logger.info("Aplicación inicializada correctamente (Usuarios, Config, Excel)")
+        except Exception as e:
+            logger.error(f"Error durante la inicialización de la aplicación: {e}")
+
+# Llamar a la inicialización al importar el módulo (para Gunicorn)
+initialize_app()
+
 if __name__ == '__main__':
-    from database import inicializar_usuarios, inicializar_config, inicializar_excel
-    inicializar_usuarios()
-    inicializar_config()
-    inicializar_excel()
-    print("Iniciando servidor Flask...")
-    app.run(debug=True, port=8000)
+    print("Iniciando servidor Flask local...")
+    # Render suele pasar el puerto como variable de entorno
+    port = int(os.environ.get("PORT", 8000))
+    app.run(host='0.0.0.0', port=port, debug=True)

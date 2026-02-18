@@ -27,6 +27,7 @@ EXCEL_FILE = os.path.join(BASE_DIR, "actividades.xlsx")
 TEMPLATE_EXCEL = os.path.join(BASE_DIR, "INFORME DE ACTIVIDADES - copia.xlsx")
 TEMPLATE_INFORME_FINAL = os.path.join(BASE_DIR, "InformeFinal.XLSX")
 DB_FILE = os.path.join(BASE_DIR, "actividades.db") # Definir ruta de DB aquí también
+DATABASE_URL = os.environ.get("DATABASE_URL") # URL de base de datos para Render (PostgreSQL)
 
 # Columnas del Excel
 COLUMNAS = [
