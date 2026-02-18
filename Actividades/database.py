@@ -232,7 +232,7 @@ def guardar_configuracion_usuario(usuario, config):
                 INSERT INTO configuracion_usuario (username, clave, valor) 
                 VALUES (?, ?, ?)
                 ON CONFLICT(username, clave) DO UPDATE SET valor=excluded.valor
-            ''', (usuario, key, val_str))
+            ''', (usuario, key, val_str)))
             
         conn.commit()
         conn.close()
