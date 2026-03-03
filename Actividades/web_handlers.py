@@ -526,6 +526,9 @@ class ConfigAdminHandler(BaseRoute):
                     guardar_actividades(act)
                     self.redirect('/gestion?msg=Actividad global agregada')
                     return
+                else:
+                    self.redirect('/gestion?error=La actividad ya existe')
+                    return
         
         elif path == '/eliminar_actividad_global':
             if not self._require_admin(): return
@@ -608,8 +611,10 @@ class ConfigAdminHandler(BaseRoute):
         elif path == '/agregar_actividad_personal':
             nueva = data.get('nueva_actividad', nuevo_item if nuevo_item else [''])[0].strip()
             if nueva:
-                agregar_actividad_personal(self.usuario_actual, nueva)
-                self.redirect('/gestion?msg=Actividad personal agregada')
+                if agregar_actividad_personal(self.usuario_actual, nueva):
+                    self.redirect('/gestion?msg=Actividad personal agregada')
+                else:
+                    self.redirect('/gestion?error=La actividad ya existe o hubo un error')
                 return
         
         elif path == '/eliminar_actividad_personal':

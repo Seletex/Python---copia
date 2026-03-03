@@ -8,7 +8,12 @@ import os
 import json
 from datetime import datetime
 import pandas as pd
-from tkinter import messagebox
+
+# Intentar importar tkinter, si falla (en servidor), definir mocks
+try:
+    from tkinter import messagebox
+except ImportError:
+    messagebox = None
 
 from config import (
     EXCEL_FILE as FILE_NAME,
@@ -75,7 +80,8 @@ def _guardar_json(filepath, data, error_title="Error"):
             json.dump(data, f, ensure_ascii=False, indent=4)
         return True
     except Exception as e:
-        messagebox.showerror(error_title, f"No se pudo guardar: {e}")
+        if messagebox:
+            messagebox.showerror(error_title, f"No se pudo guardar: {e}")
         return False
 
 def cargar_config():
@@ -144,7 +150,8 @@ def guardar_registro(data):
         df.to_excel(FILE_NAME, index=False)
         return nuevo_id
     except Exception as e:
-        messagebox.showerror("Error", f"Error al guardar: {str(e)}")
+        if messagebox:
+            messagebox.showerror("Error", f"Error al guardar: {str(e)}")
         return None
 
 def cargar_registros(usuario=None):
@@ -157,7 +164,8 @@ def cargar_registros(usuario=None):
             return df
         return pd.DataFrame(columns=COLUMNAS)
     except Exception as e:
-        messagebox.showerror("Error", f"Error al cargar registros: {str(e)}")
+        if messagebox:
+            messagebox.showerror("Error", f"Error al cargar registros: {str(e)}")
         return pd.DataFrame(columns=COLUMNAS)
 
 def buscar_registros(termino, usuario=None):
@@ -176,13 +184,15 @@ def eliminar_registro(id_registro, usuario=None):
             return False
         registro = df[df["ID"] == id_registro].iloc[0]
         if usuario != "admin" and registro["USUARIO"] != usuario:
-            messagebox.showerror("Error", "No tienes permiso para eliminar este registro")
+            if messagebox:
+                messagebox.showerror("Error", "No tienes permiso para eliminar este registro")
             return False
         df = df[df["ID"] != id_registro]
         df.to_excel(FILE_NAME, index=False)
         return True
     except Exception as e:
-        messagebox.showerror("Error", f"Error al eliminar: {str(e)}")
+        if messagebox:
+            messagebox.showerror("Error", f"Error al eliminar: {str(e)}")
         return False
 
 def actualizar_registro(id_registro, data, usuario=None):
@@ -193,12 +203,14 @@ def actualizar_registro(id_registro, data, usuario=None):
             return False
         registro = df[df["ID"] == id_registro].iloc[0]
         if usuario != "admin" and registro["USUARIO"] != usuario:
-            messagebox.showerror("Error", "No tienes permiso para actualizar este registro")
+            if messagebox:
+                messagebox.showerror("Error", "No tienes permiso para actualizar este registro")
             return False
         for key, value in data.items():
             df.loc[df["ID"] == id_registro, key] = value
         df.to_excel(FILE_NAME, index=False)
         return True
     except Exception as e:
-        messagebox.showerror("Error", f"Error al actualizar: {str(e)}")
+        if messagebox:
+            messagebox.showerror("Error", f"Error al actualizar: {str(e)}")
         return False

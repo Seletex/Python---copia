@@ -10,83 +10,23 @@ import sqlite3
 import pandas as pd
 from config import (
     COLUMNAS, logger, ACTIVIDADES_DEFAULT, UBICACIONES_DEFAULT,
-    TIPOS_SOLICITUD_DEFAULT, MEDIOS_SOLICITUD_DEFAULT,
-    EXCEL_FILE, USERS_FILE, CONFIG_FILE, DB_FILE, DATABASE_URL
+    TIPOS_SOLICITUD_DEFAULT, MEDIOS_SOLICITUD_DEFAULT
 )
 from utils import cache_decorator, medir_tiempo, clear_cache
 
-# Intentar importar psycopg2 para PostgreSQL (Render)
-try:
-    import psycopg2
-    from psycopg2.extras import RealDictCursor
-except ImportError:
-    psycopg2 = None
-
-# DB_NAME eliminado, usamos DB_FILE de config
+DB_NAME = "actividades.db"
 
 def get_db_connection():
-    """Obtiene conexión a BD (PostgreSQL si hay URL, sino SQLite)"""
-    if DATABASE_URL and psycopg2:
-        try:
-            conn = psycopg2.connect(DATABASE_URL)
-            return conn
-        except Exception as e:
-            logger.error(f"Error conectando a Postgres: {e}")
-            # Fallback a SQLite si falla Postgres (opcional)
-            
-    # Timeout aumentado para evitar bloqueos en cargas pesadas
-    conn = sqlite3.connect(DB_FILE, timeout=20)
+    conn = sqlite3.connect(DB_NAME)
     conn.row_factory = sqlite3.Row
-    # Habilitar Write-Ahead Logging para mejor concurrencia
-    conn.execute("PRAGMA journal_mode=WAL")
     return conn
-
-def get_cursor(conn):
-    """Devuelve un cursor tipo diccionario compatible entre ambos motores"""
-    if DATABASE_URL and psycopg2 and isinstance(conn, psycopg2.extensions.connection):
-        return conn.cursor(cursor_factory=RealDictCursor)
-    return conn.cursor()
-
-def fix_query(query):
-    """Adapta la sintaxis de la consulta de SQLite (?) a Postgres (%s)"""
-    if DATABASE_URL and psycopg2:
-        return query.replace('?', '%s').replace('INSERT OR IGNORE', 'INSERT').replace('AUTOINCREMENT', '')
-    return query
-
-def inicializar_tablas_postgres():
-    """Crea las tablas en Postgres si no existen (para el primer despliegue)"""
-    if not DATABASE_URL or not psycopg2:
-        return
-    try:
-        conn = get_db_connection()
-        cursor = conn.cursor()
-        # Tablas básicas
-        cursor.execute("CREATE TABLE IF NOT EXISTS usuarios (username TEXT PRIMARY KEY);")
-        cursor.execute("CREATE TABLE IF NOT EXISTS actividades_personales (username TEXT, actividad TEXT, UNIQUE(username, actividad));")
-        cursor.execute("CREATE TABLE IF NOT EXISTS configuracion_usuario (username TEXT, clave TEXT, valor TEXT, PRIMARY KEY (username, clave));")
-        cursor.execute("CREATE TABLE IF NOT EXISTS listas_globales (tipo TEXT, valor TEXT, UNIQUE(tipo, valor));")
-        # Tabla registros (SERIAL reemplaza a AUTOINCREMENT)
-        cursor.execute("""
-            CREATE TABLE IF NOT EXISTS registros (
-                id SERIAL PRIMARY KEY,
-                usuario TEXT, tipo_actividad TEXT, fecha TIMESTAMP, dependencia TEXT,
-                solicitante TEXT, tipo_solicitud TEXT, medio_solicitud TEXT,
-                descripcion TEXT, cumplido TEXT, fecha_atencion TEXT, observaciones TEXT
-            );
-        """)
-        conn.commit()
-        conn.close()
-    except Exception as e:
-        logger.error(f"Error inicializando tablas Postgres: {e}")
 
 # =============================================================================
 # FUNCIONES DE INICIALIZACIÓN (Stub para compatibilidad)
 # =============================================================================
 
 def inicializar_usuarios():
-    # En Render, aseguramos que las tablas existan al inicio
-    if DATABASE_URL:
-        inicializar_tablas_postgres()
+    pass
 
 def inicializar_config():
     pass
@@ -104,7 +44,7 @@ def cargar_usuarios():
     """Carga usuarios y sus configuraciones/actividades desde SQLite"""
     try:
         conn = get_db_connection()
-        cursor = get_cursor(conn)
+        cursor = conn.cursor()
         
         # Cargar usuarios
         cursor.execute("SELECT username FROM usuarios")
@@ -145,45 +85,27 @@ def cargar_usuarios():
 @medir_tiempo
 def guardar_usuarios(data):
     """
-    Sincroniza la lista de usuarios en la base de datos con la lista proporcionada.
-    Agrega usuarios nuevos y elimina los que ya no están en la lista (excepto admin).
+    Guarda usuarios. Nota: En la versión SQL, esto es más complejo porque 'data' 
+    es todo el JSON gigante. Lo ideal sería refactorizar para no guardar TODO.
+    Por compatibilidad, implementamos algo básico o asumimos que se llaman a funciones específicas.
     """
+    # En esta arquitectura migrada, guardar_usuarios se usa poco directamente,
+    # más bien se usa agregar_usuario, etc. 
+    # Si se usa para agregar un usuario nuevo:
     try:
         conn = get_db_connection()
-        cursor = get_cursor(conn)
+        cursor = conn.cursor()
         
-        new_users_set = set(data.get("usuarios", []))
-        if "admin" not in new_users_set:
-            new_users_set.add("admin") # Asegurar admin
-
-        # 1. Obtener usuarios actuales en DB
-        cursor.execute("SELECT username FROM usuarios")
-        current_db_users = set(row['username'] for row in cursor.fetchall())
-
-        # 2. Identificar a agregar y eliminar
-        to_add = new_users_set - current_db_users
-        to_remove = current_db_users - new_users_set
-
-        # 3. Eliminar
-        for user in to_remove:
-            if user != 'admin': # Seguridad extra
-                cursor.execute(fix_query("DELETE FROM usuarios WHERE username = ?"), (user,))
-
-        # 4. Agregar
-        for user in to_add:
-            if DATABASE_URL:
-                # Postgres: ON CONFLICT
-                cursor.execute("INSERT INTO usuarios (username) VALUES (%s) ON CONFLICT DO NOTHING", (user,))
-            else:
-                # SQLite
-                cursor.execute("INSERT OR IGNORE INTO usuarios (username) VALUES (?)", (user,))
+        current_users = data.get("usuarios", [])
+        for user in current_users:
+            cursor.execute("INSERT OR IGNORE INTO usuarios (username) VALUES (?)", (user,))
         
         conn.commit()
         conn.close()
         clear_cache()
         return True
     except Exception as e:
-        logger.error(f"Error sincronizando usuarios SQL: {e}")
+        logger.error(f"Error guardando usuarios SQL: {e}")
         return False
 
 @medir_tiempo
@@ -205,7 +127,7 @@ def obtener_configuracion_usuario(usuario):
             "datos_contrato": {"objeto": "", "nro": "", "nombre": "", "cedula": "", "supervisor": ""}
         }
 
-        cursor.execute(fix_query("SELECT clave, valor FROM configuracion_usuario WHERE username = ?"), (usuario,))
+        cursor.execute("SELECT clave, valor FROM configuracion_usuario WHERE username = ?", (usuario,))
         rows = cursor.fetchall()
         for row in rows:
             try:
@@ -224,15 +146,15 @@ def guardar_configuracion_usuario(usuario, config):
     """Guarda la configuración personalizada"""
     try:
         conn = get_db_connection()
-        cursor = get_cursor(conn)
+        cursor = conn.cursor()
         
         for key, value in config.items():
             val_str = json.dumps(value, ensure_ascii=False)
-            cursor.execute(fix_query('''
+            cursor.execute('''
                 INSERT INTO configuracion_usuario (username, clave, valor) 
                 VALUES (?, ?, ?)
                 ON CONFLICT(username, clave) DO UPDATE SET valor=excluded.valor
-            ''', (usuario, key, val_str)))
+            ''', (usuario, key, val_str))
             
         conn.commit()
         conn.close()
@@ -243,50 +165,14 @@ def guardar_configuracion_usuario(usuario, config):
         return False
 
 # =============================================================================
-# GESTIÓN DIRECTA DE ACTIVIDADES PERSONALES (SQL)
-# =============================================================================
-
-def agregar_actividad_personal_db(usuario, actividad):
-    """Agrega una actividad personal verificando duplicados"""
-    try:
-        conn = get_db_connection()
-        cursor = get_cursor(conn)
-        
-        # Verificar si ya existe
-        cursor.execute(fix_query("SELECT 1 FROM actividades_personales WHERE username = ? AND actividad = ?"), (usuario, actividad))
-        if cursor.fetchone():
-            conn.close()
-            return False # Ya existe
-            
-        cursor.execute(fix_query("INSERT INTO actividades_personales (username, actividad) VALUES (?, ?)"), (usuario, actividad))
-        conn.commit()
-        conn.close()
-        return True
-    except Exception as e:
-        logger.error(f"Error agregando actividad personal DB: {e}")
-        return False
-
-def eliminar_actividad_personal_db(usuario, actividad):
-    try:
-        conn = get_db_connection()
-        cursor = get_cursor(conn)
-        cursor.execute(fix_query("DELETE FROM actividades_personales WHERE username = ? AND actividad = ?"), (usuario, actividad))
-        conn.commit()
-        conn.close()
-        return True
-    except Exception as e:
-        logger.error(f"Error eliminando actividad personal DB: {e}")
-        return False
-
-# =============================================================================
 # CARGA DE CONFIGURACIÓN (Listas de opciones)
 # =============================================================================
 
 def _cargar_lista_global(tipo, default):
     try:
         conn = get_db_connection()
-        cursor = get_cursor(conn)
-        cursor.execute(fix_query("SELECT valor FROM listas_globales WHERE tipo = ?"), (tipo,))
+        cursor = conn.cursor()
+        cursor.execute("SELECT valor FROM listas_globales WHERE tipo = ?", (tipo,))
         resultado = [row['valor'] for row in cursor.fetchall()]
         conn.close()
         return resultado if resultado else default
@@ -296,12 +182,12 @@ def _cargar_lista_global(tipo, default):
 def _guardar_lista_global(tipo, lista):
     try:
         conn = get_db_connection()
-        cursor = get_cursor(conn)
+        cursor = conn.cursor()
         # Transacción: borrar previos del tipo e insertar nuevos 
         # (para mantener consistencia con la lógica de "guardar lista completa")
-        cursor.execute(fix_query("DELETE FROM listas_globales WHERE tipo = ?"), (tipo,))
+        cursor.execute("DELETE FROM listas_globales WHERE tipo = ?", (tipo,))
         for item in lista:
-            cursor.execute(fix_query("INSERT INTO listas_globales (tipo, valor) VALUES (?, ?)"), (tipo, item))
+            cursor.execute("INSERT INTO listas_globales (tipo, valor) VALUES (?, ?)", (tipo, item))
         conn.commit()
         conn.close()
         clear_cache()
@@ -323,8 +209,8 @@ def cargar_actividades(usuario=None):
         personales = []
         if usuario:
             conn = get_db_connection()
-            cursor = get_cursor(conn)
-            cursor.execute(fix_query("SELECT actividad FROM actividades_personales WHERE username = ?"), (usuario,))
+            cursor = conn.cursor()
+            cursor.execute("SELECT actividad FROM actividades_personales WHERE username = ?", (usuario,))
             personales = [row['actividad'] for row in cursor.fetchall()]
             conn.close()
         return sorted(list(set(globales + personales)))
@@ -377,9 +263,6 @@ def cargar_registros(usuario=None):
             query += " WHERE usuario = ?"
             params.append(usuario)
             
-        if DATABASE_URL:
-            query = query.replace('?', '%s')
-            
         df = pd.read_sql_query(query, conn, params=params)
         conn.close()
         
@@ -413,9 +296,9 @@ def cargar_registros(usuario=None):
 def guardar_registro(data):
     try:
         conn = get_db_connection()
-        cursor = get_cursor(conn)
+        cursor = conn.cursor()
         
-        query = '''
+        cursor.execute('''
             INSERT INTO registros (
                 usuario, tipo_actividad, fecha, dependencia, solicitante,
                 tipo_solicitud, medio_solicitud, descripcion, cumplido,
@@ -433,18 +316,9 @@ def guardar_registro(data):
             data.get("CUMPLIDO"),
             data.get("FECHA ATENCIÓN"),
             data.get("OBSERVACIONES")
-        )
+        ))
         
-        if DATABASE_URL:
-            # Postgres requiere RETURNING id para obtener el ID insertado
-            query_pg = query[0].replace('?', '%s') + " RETURNING id"
-            cursor.execute(query_pg, query[1])
-            nuevo_id = cursor.fetchone()['id']
-        else:
-            # SQLite usa lastrowid
-            cursor.execute(query[0], query[1])
-            nuevo_id = cursor.lastrowid
-            
+        nuevo_id = cursor.lastrowid
         conn.commit()
         conn.close()
         return nuevo_id
@@ -456,17 +330,17 @@ def guardar_registro(data):
 def eliminar_registro(id_registro, usuario):
     try:
         conn = get_db_connection()
-        cursor = get_cursor(conn)
+        cursor = conn.cursor()
         
         # Verificar propiedad
         if usuario != "admin":
-            cursor.execute(fix_query("SELECT usuario FROM registros WHERE id = ?"), (id_registro,))
+            cursor.execute("SELECT usuario FROM registros WHERE id = ?", (id_registro,))
             row = cursor.fetchone()
             if not row or row['usuario'] != usuario:
                 conn.close()
                 return False
 
-        cursor.execute(fix_query("DELETE FROM registros WHERE id = ?"), (id_registro,))
+        cursor.execute("DELETE FROM registros WHERE id = ?", (id_registro,))
         conn.commit()
         conn.close()
         return True
@@ -478,10 +352,10 @@ def eliminar_registro(id_registro, usuario):
 def actualizar_registro(id_registro, data, usuario):
     try:
         conn = get_db_connection()
-        cursor = get_cursor(conn)
+        cursor = conn.cursor()
         
         # Verificar propiedad
-        cursor.execute(fix_query("SELECT usuario FROM registros WHERE id = ?"), (id_registro,))
+        cursor.execute("SELECT usuario FROM registros WHERE id = ?", (id_registro,))
         row = cursor.fetchone()
         if not row:
             conn.close()
@@ -522,8 +396,7 @@ def actualizar_registro(id_registro, data, usuario):
             
         values.append(id_registro)
         query = f"UPDATE registros SET {', '.join(fields)} WHERE id = ?"
-        query = fix_query(query)
-
+        
         cursor.execute(query, values)
         conn.commit()
         conn.close()
