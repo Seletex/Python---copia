@@ -1,7 +1,10 @@
 {
     "usuarios": [
         "admin",
-        "Alejandro"
+        "Alejandro",
+        "Manolo",
+        "Freddy",
+        "JuanB"
     ],
     "actividades": {
         "admin": [],
@@ -17,7 +20,10 @@
             "Apoyar en la documentación técnica del área, incluyendo la organización y archivo de documentos, informes de soporte y demás registros, de acuerdo con las directrices internas y del Sistema de Gestión de Calidad.",
             "Colaborar en la implementación y seguimiento de medidas básicas de seguridad informática, tales como el monitoreo de alertas básicas, cierre adecuado de sesiones y cumplimiento de rutinas establecidas para el uso seguro de los recursos tecnológicos.",
             "Apoyar en otras actividades de carácter técnico-operativo o administrativo relacionadas con la gestión de las tecnologías de la información, que le sean asignadas por el supervisor del contrato o del ordenador del gasto, en concordancia con el objeto contractual."
-        ]
+        ],
+        "Manolo": [],
+        "Freddy": [],
+        "JuanB": []
     },
     "configuraciones": {
         "admin": {
