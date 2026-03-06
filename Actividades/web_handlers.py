@@ -183,19 +183,28 @@ class GestionHandler(BaseRoute):
         elif 'error' in params:
             alertas = '<div class="alert alert-danger alert-dismissible fade show">❌ Error en la operación<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>'
         
-        gestion_actividades = generar_gestion_actividades_globales() if self.usuario_actual == "admin" else ""
         gestion_usuarios = generar_gestion_usuarios(self.usuario_actual) if self.usuario_actual == "admin" else ""
         gestion_ubicaciones = generar_gestion_ubicaciones() if self.usuario_actual == "admin" else ""
         gestion_tipos = generar_gestion_tipos_solicitud() if self.usuario_actual == "admin" else ""
         gestion_medios = generar_gestion_medios_solicitud() if self.usuario_actual == "admin" else ""
         gestion_personal = generar_gestion_actividades_personales(self.usuario_actual)
         
+        # Cargar datos de contrato para el formulario
+        from database import obtener_configuracion_usuario
+        config = obtener_configuracion_usuario(self.usuario_actual)
+        dc = config.get("datos_contrato", {})
+        
         html = GESTION_TEMPLATE.format(
             usuario_actual=self.usuario_actual,
-            gestion_actividades=f"{gestion_actividades}{gestion_ubicaciones}{gestion_tipos}{gestion_medios}",
+            gestion_actividades=f"{gestion_ubicaciones}{gestion_tipos}{gestion_medios}",
             gestion_usuarios=gestion_usuarios,
             gestion_personal=gestion_personal,
-            alertas=alertas
+            alertas=alertas,
+            datos_nro=dc.get('nro', ''),
+            datos_objeto=dc.get('objeto', ''),
+            datos_nombre=dc.get('nombre', ''),
+            datos_cedula=dc.get('cedula', ''),
+            datos_supervisor=dc.get('supervisor', '')
         )
         self.render_html(html)
 
@@ -626,6 +635,31 @@ class ConfigAdminHandler(BaseRoute):
         
         self.redirect('/gestion')
 
+
+class GuardarDatosContratoHandler(BaseRoute):
+    """Guarda los datos del contrato del usuario"""
+    def post(self, params, post_data):
+        if not self._require_auth():
+            return
+            
+        data = parse_qs(post_data)
+        contrato_data = {
+            'objeto': data.get('objeto', [''])[0].strip(),
+            'nro': data.get('nro', [''])[0].strip(),
+            'nombre': data.get('nombre', [''])[0].strip(),
+            'cedula': data.get('cedula', [''])[0].strip(),
+            'supervisor': data.get('supervisor', [''])[0].strip()
+        }
+        
+        from database import obtener_configuracion_usuario, guardar_configuracion_usuario
+        config = obtener_configuracion_usuario(self.usuario_actual)
+        config["datos_contrato"] = contrato_data
+        
+        if guardar_configuracion_usuario(self.usuario_actual, config):
+            self.redirect('/gestion?msg=Datos del contrato guardados')
+        else:
+            self.redirect('/gestion?error=1')
+
 # =============================================================================
 # HANDLERS DE API Y ARCHIVOS ESTÁTICOS
 # =============================================================================
@@ -686,6 +720,7 @@ ROUTE_MAP = {
     '/eliminar_tipo_solicitud': ConfigAdminHandler,
     '/agregar_medio_solicitud': ConfigAdminHandler,
     '/eliminar_medio_solicitud': ConfigAdminHandler,
+    '/guardar_datos_contrato': GuardarDatosContratoHandler,
     '/api/actividades': APIHandler,
     '/api/estadisticas_exportacion': APIHandler,
     '/descargar_excel': StaticHandler,

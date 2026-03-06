@@ -284,6 +284,39 @@ GESTION_TEMPLATE = """
                                 </div>
                             </div>
 
+                                <div class="card mt-3">
+                                    <div class="card-header">
+                                        <h5><i class="fas fa-file-signature text-primary me-2"></i> Datos del Contrato</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <form action="/guardar_datos_contrato" method="POST">
+                                            <div class="mb-2">
+                                                <label class="form-label small">Número de Contrato</label>
+                                                <input type="text" name="nro" value="{datos_nro}" class="form-control">
+                                            </div>
+                                            <div class="mb-2">
+                                                <label class="form-label small">Objeto</label>
+                                                <input type="text" name="objeto" value="{datos_objeto}" class="form-control">
+                                            </div>
+                                            <div class="mb-2">
+                                                <label class="form-label small">Nombre Contratista</label>
+                                                <input type="text" name="nombre" value="{datos_nombre}" class="form-control">
+                                            </div>
+                                            <div class="mb-2">
+                                                <label class="form-label small">Cédula</label>
+                                                <input type="text" name="cedula" value="{datos_cedula}" class="form-control">
+                                            </div>
+                                            <div class="mb-2">
+                                                <label class="form-label small">Supervisor</label>
+                                                <input type="text" name="supervisor" value="{datos_supervisor}" class="form-control">
+                                            </div>
+                                            <div class="d-grid mt-3">
+                                                <button class="btn btn-primary">Guardar Datos del Contrato</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+
                             <div class="card bg-gradient-primary text-white" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
                                 <div class="card-body text-center py-4">
                                     <i class="fas fa-info-circle fa-3x mb-3 opacity-50"></i>

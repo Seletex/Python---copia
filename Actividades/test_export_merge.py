@@ -42,7 +42,7 @@ try:
         
         rows_found = 0
         for r in sorted(list(ranges), key=lambda x: x.min_row):
-            if r.min_col == 2 and r.max_col == 8:
+            if r.min_col == 2 and r.max_col == 10:
                 cell_val = ws.cell(row=r.min_row, column=1).value
                 count_val = ws.cell(row=r.min_row, column=2).value
                 print(f" - Fila {r.min_row:02d}: {r} | C1: '{cell_val}' | C2: '{count_val}'")

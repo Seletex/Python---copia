@@ -5,7 +5,9 @@ Las plantillas HTML están en templates.py
 """
 
 import os
+import sys
 import json
+import shutil
 import logging
 from logging.handlers import RotatingFileHandler
 
@@ -17,16 +19,94 @@ from logging.handlers import RotatingFileHandler
 # CONSTANTES DE CONFIGURACIÓN
 # =============================================================================
 
+# =============================================================================
+# CONFIGURACIÓN DE LOGGING (Inicializado temprano para traza de inicio)
+# =============================================================================
+
+def setup_logging():
+    """Configura el sistema de logging para monitoreo de rendimiento"""
+    # Encontrar BASE_DIR para los logs
+    _base = os.path.dirname(os.path.abspath(__file__))
+    log_dir = os.path.join(_base, "logs")
+    if not os.path.exists(log_dir):
+        try:
+            os.makedirs(log_dir, exist_ok=True)
+        except:
+            pass
+    
+    logging.basicConfig(
+        level=logging.INFO,
+        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+        handlers=[
+            RotatingFileHandler(
+                os.path.join(log_dir, 'rendimiento.log') if os.path.exists(log_dir) else 'rendimiento.log',
+                maxBytes=10*1024*1024,
+                backupCount=5
+            ),
+            logging.StreamHandler()
+        ]
+    )
+    return logging.getLogger(__name__)
+
+# Inicializar logger de inmediato
+try:
+    logger = setup_logging()
+    logger.info("--- INICIO DE CONFIGURACIÓN ---")
+except Exception as e:
+    print(f"Error configurando logging inicial: {e}")
+    logger = logging.getLogger(__name__)
+
+# =============================================================================
+# CONSTANTES DE CONFIGURACIÓN
+# =============================================================================
+
 # Directorio base absoluto (donde está este archivo config.py)
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-CONFIG_FILE = os.path.join(BASE_DIR, "config_actividades.json")
-USERS_FILE = os.path.join(BASE_DIR, "usuarios.json")
-EXCEL_FILE = os.path.join(BASE_DIR, "actividades.xlsx")
-# Usar nombres de archivo relativos, asumiendo que están en la misma carpeta o subcarpetas
-TEMPLATE_EXCEL = os.path.join(BASE_DIR, "INFORME DE ACTIVIDADES - copia.xlsx")
-TEMPLATE_INFORME_FINAL = os.path.join(BASE_DIR, "InformeFinal.XLSX")
-DB_FILE = os.path.join(BASE_DIR, "actividades.db") # Definir ruta de DB aquí también
+if getattr(sys, 'frozen', False):
+    DEFAULT_DATA_DIR = os.path.dirname(sys.executable)
+else:
+    DEFAULT_DATA_DIR = BASE_DIR
+
+def buscar_archivo(nombre, directorios_prioridad):
+    """Busca un archivo en varios directorios y devuelve la ruta absoluta del primero que exista."""
+    for d in directorios_prioridad:
+        if not d: continue
+        ruta = os.path.normpath(os.path.join(d, nombre))
+        if os.path.exists(ruta):
+            logger.info(f"Archivo '{nombre}' encontrado en: {ruta}")
+            return ruta
+    
+    # Si no se encuentra, devolver la ruta en el primer directorio por defecto
+    ruta_defecto = os.path.normpath(os.path.join(directorios_prioridad[0], nombre))
+    logger.warning(f"Archivo '{nombre}' NO ENCONTRADO. Usando ruta por defecto: {ruta_defecto}")
+    return ruta_defecto
+
+# Directorios donde buscar (Data dir, Parent dir, Base dir del script)
+DIRS_SEARCH = [DEFAULT_DATA_DIR, os.path.dirname(DEFAULT_DATA_DIR), BASE_DIR]
+
+CONFIG_FILE = os.path.join(DEFAULT_DATA_DIR, "config_actividades.json")
+USERS_FILE = os.path.join(DEFAULT_DATA_DIR, "usuarios.json")
+EXCEL_FILE = os.path.join(DEFAULT_DATA_DIR, "actividades.xlsx")
+DB_FILE = os.path.join(DEFAULT_DATA_DIR, "actividades.db")
+
+# Plantillas con búsqueda robusta
+TEMPLATE_EXCEL = buscar_archivo("INFORME DE ACTIVIDADES - copia.xlsx", DIRS_SEARCH)
+TEMPLATE_INFORME_FINAL = buscar_archivo("InformeFinal.XLSX", DIRS_SEARCH)
+
+# =============================================================================
+# MANTENIMIENTO DE PLANTILLAS Y OTROS
+# =============================================================================
+
+# Si en desarrollo existe una plantilla en el repo, copiarla a la carpeta
+# de datos la primera vez si no existe allí.
+_repo_template = os.path.join(BASE_DIR, "INFORME DE ACTIVIDADES - copia.xlsx")
+try:
+    if os.path.exists(_repo_template) and not os.path.exists(os.path.join(DEFAULT_DATA_DIR, "INFORME DE ACTIVIDADES - copia.xlsx")):
+        shutil.copy2(_repo_template, os.path.join(DEFAULT_DATA_DIR, "INFORME DE ACTIVIDADES - copia.xlsx"))
+except Exception:
+    pass
+
 DATABASE_URL = os.environ.get("DATABASE_URL") # URL de base de datos para Render (PostgreSQL)
 
 # Columnas del Excel
@@ -64,7 +144,7 @@ UBICACIONES_DEFAULT = [
 
 TIPOS_SOLICITUD_DEFAULT = [
     "MANTENIMIENTO PREVENTIVO",
-    "MANTENIMIENTO CORRECTIVO",
+    "MANTENIMIENTO CORRECTIVE",
     "ASESORIA Y ASISTENCIA",
     "CAPACITACIÓN",
     "APOYO TECNOLÓGICO",
@@ -89,35 +169,3 @@ DEFAULT_USERS = {
 _CACHE = {}
 _CACHE_TIMEOUT = 30  # segundos
 
-# =============================================================================
-# CONFIGURACIÓN DE LOGGING
-# =============================================================================
-
-def setup_logging():
-    """Configura el sistema de logging para monitoreo de rendimiento"""
-    log_dir = os.path.join(BASE_DIR, "logs")
-    if not os.path.exists(log_dir):
-        os.makedirs(log_dir)
-    
-    logging.basicConfig(
-        level=logging.INFO,
-        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-        handlers=[
-            RotatingFileHandler(
-                os.path.join(log_dir, 'rendimiento.log'),
-                maxBytes=10*1024*1024,
-                backupCount=5
-            ),
-            logging.StreamHandler()
-        ]
-    )
-    
-    return logging.getLogger(__name__)
-
-# Inicializar logger
-try:
-    logger = setup_logging()
-    logger.info("Sistema de logging inicializado correctamente")
-except Exception as e:
-    print(f"Error configurando logging: {e}")
-    logger = logging.getLogger(__name__)

@@ -9,11 +9,12 @@ import json
 import sqlite3
 import pandas as pd
 from config import (
-    COLUMNAS, logger, ACTIVIDADES_DEFAULT, UBICACIONES_DEFAULT,
-    TIPOS_SOLICITUD_DEFAULT, MEDIOS_SOLICITUD_DEFAULT,
-    EXCEL_FILE, USERS_FILE, CONFIG_FILE, DB_FILE, DATABASE_URL
+    EXCEL_FILE, USERS_FILE, CONFIG_FILE, DB_FILE, DATABASE_URL, COLUMNAS, 
+    ACTIVIDADES_DEFAULT, UBICACIONES_DEFAULT, TIPOS_SOLICITUD_DEFAULT, MEDIOS_SOLICITUD_DEFAULT,
+    logger
 )
 from utils import cache_decorator, medir_tiempo, clear_cache
+from contextlib import contextmanager
 
 # Intentar importar psycopg2 para PostgreSQL (Render)
 try:
@@ -47,46 +48,177 @@ def get_cursor(conn):
         return conn.cursor(cursor_factory=RealDictCursor)
     return conn.cursor()
 
+@contextmanager
+def db_session():
+    """Context manager para asegurar que las conexiones se cierren siempre"""
+    conn = get_db_connection()
+    try:
+        yield conn
+        conn.commit()
+    except Exception as e:
+        conn.rollback()
+        raise e
+    finally:
+        conn.close()
+
 def fix_query(query):
     """Adapta la sintaxis de la consulta de SQLite (?) a Postgres (%s)"""
     if DATABASE_URL and psycopg2:
         return query.replace('?', '%s').replace('INSERT OR IGNORE', 'INSERT').replace('AUTOINCREMENT', '')
     return query
 
-def inicializar_tablas_postgres():
-    """Crea las tablas en Postgres si no existen (para el primer despliegue)"""
-    if not DATABASE_URL or not psycopg2:
-        return
+def inicializar_tablas():
+    """Crea todas las tablas necesarias si no existen (SQLite y Postgres)"""
     try:
         conn = get_db_connection()
-        cursor = conn.cursor()
-        # Tablas básicas
-        cursor.execute("CREATE TABLE IF NOT EXISTS usuarios (username TEXT PRIMARY KEY);")
-        cursor.execute("CREATE TABLE IF NOT EXISTS actividades_personales (username TEXT, actividad TEXT, UNIQUE(username, actividad));")
-        cursor.execute("CREATE TABLE IF NOT EXISTS configuracion_usuario (username TEXT, clave TEXT, valor TEXT, PRIMARY KEY (username, clave));")
-        cursor.execute("CREATE TABLE IF NOT EXISTS listas_globales (tipo TEXT, valor TEXT, UNIQUE(tipo, valor));")
-        # Tabla registros (SERIAL reemplaza a AUTOINCREMENT)
-        cursor.execute("""
+        cursor = get_cursor(conn)
+        
+        # 1. Crear tabla de usuarios
+        cursor.execute(fix_query("CREATE TABLE IF NOT EXISTS usuarios (username TEXT PRIMARY KEY)"))
+        
+        # 2. Crear tabla de actividades personales
+        cursor.execute(fix_query("CREATE TABLE IF NOT EXISTS actividades_personales (username TEXT, actividad TEXT, UNIQUE(username, actividad))"))
+        
+        # 3. Crear tabla de configuración de usuario
+        cursor.execute(fix_query("CREATE TABLE IF NOT EXISTS configuracion_usuario (username TEXT, clave TEXT, valor TEXT, PRIMARY KEY (username, clave))"))
+        
+        # 4. Crear tabla de listas globales (ubicaciones, tipos, medios, actividades globales)
+        cursor.execute(fix_query("CREATE TABLE IF NOT EXISTS listas_globales (tipo TEXT, valor TEXT, UNIQUE(tipo, valor))"))
+        
+        # 5. Crear tabla de registros
+        query_registros = """
             CREATE TABLE IF NOT EXISTS registros (
                 id SERIAL PRIMARY KEY,
                 usuario TEXT, tipo_actividad TEXT, fecha TIMESTAMP, dependencia TEXT,
                 solicitante TEXT, tipo_solicitud TEXT, medio_solicitud TEXT,
                 descripcion TEXT, cumplido TEXT, fecha_atencion TEXT, observaciones TEXT
-            );
-        """)
+            )
+        """
+        # Adaptar SERIAL para SQLite
+        if not DATABASE_URL:
+            query_registros = query_registros.replace('SERIAL PRIMARY KEY', 'INTEGER PRIMARY KEY AUTOINCREMENT')
+        
+        cursor.execute(fix_query(query_registros))
+        
+        # 6. Asegurar usuario admin
+        if DATABASE_URL:
+            cursor.execute("INSERT INTO usuarios (username) VALUES (%s) ON CONFLICT DO NOTHING", ('admin',))
+        else:
+            cursor.execute("INSERT OR IGNORE INTO usuarios (username) VALUES (?)", ('admin',))
+            
+        # 7. Migración única desde JSON si la tabla está vacía
+        cursor.execute("SELECT COUNT(*) as count FROM usuarios")
+        count = cursor.fetchone()['count']
+        if count <= 1 and os.path.exists(USERS_FILE):
+             try:
+                 logger.info(f"Iniciando migración desde {USERS_FILE}...")
+                 with open(USERS_FILE, 'r', encoding='utf-8') as f:
+                     data = json.load(f)
+                 
+                 # Migrar usuarios
+                 for u in data.get("usuarios", []):
+                     if u.lower() != 'admin':
+                         if DATABASE_URL:
+                             cursor.execute("INSERT INTO usuarios (username) VALUES (%s) ON CONFLICT DO NOTHING", (u,))
+                         else:
+                             cursor.execute("INSERT OR IGNORE INTO usuarios (username) VALUES (?)", (u,))
+                 
+                 # Migrar actividades personales
+                 act_dict = data.get("actividades", {})
+                 for user, acts in act_dict.items():
+                     for act in acts:
+                         if DATABASE_URL:
+                             cursor.execute("INSERT INTO actividades_personales (username, actividad) VALUES (%s, %s) ON CONFLICT DO NOTHING", (user, act))
+                         else:
+                             cursor.execute("INSERT OR IGNORE INTO actividades_personales (username, actividad) VALUES (?, ?)", (user, act))
+                 
+                 # Migrar configuraciones (incluyendo datos_contrato)
+                 conf_dict = data.get("configuraciones", {})
+                 for user, conf in conf_dict.items():
+                     for key, val in conf.items():
+                         val_str = json.dumps(val, ensure_ascii=False)
+                         if DATABASE_URL:
+                             cursor.execute("INSERT INTO configuracion_usuario (username, clave, valor) VALUES (%s, %s, %s) ON CONFLICT (username, clave) DO UPDATE SET valor=EXCLUDED.valor", (user, key, val_str))
+                         else:
+                             cursor.execute("INSERT INTO configuracion_usuario (username, clave, valor) VALUES (?, ?, ?) ON CONFLICT(username, clave) DO UPDATE SET valor=excluded.valor", (user, key, val_str))
+                 
+                 logger.info("Migración desde JSON completada con éxito.")
+             except Exception as me:
+                 logger.error(f"Error durante la migración: {me}")
+        
+        # 8. Migración desde Excel si la tabla registros está vacía
+        cursor.execute("SELECT COUNT(*) as count FROM registros")
+        reg_count = cursor.fetchone()['count']
+        if reg_count == 0 and os.path.exists(EXCEL_FILE):
+            try:
+                logger.info(f"Iniciando migración desde {EXCEL_FILE}...")
+                # Leer excel, forzar string para evitar problemas de tipos
+                df_excel = pd.read_excel(EXCEL_FILE)
+                
+                # Mapeo inverso de columnas de Excel a SQL
+                inv_col_map = {
+                    "USUARIO": "usuario",
+                    "TIPO DE ACTIVIDAD": "tipo_actividad",
+                    "FECHA": "fecha",
+                    "DEPENDENCIA": "dependencia",
+                    "SOLICITANTE": "solicitante",
+                    "TIPO DE SOLICITUD": "tipo_solicitud",
+                    "MEDIO DE SOLICITUD": "medio_solicitud",
+                    "DESCRIPCIÓN": "descripcion",
+                    "CUMPLIDO": "cumplido",
+                    "FECHA ATENCIÓN": "fecha_atencion",
+                    "OBSERVACIONES": "observaciones"
+                }
+                
+                for _, row in df_excel.iterrows():
+                    vals = []
+                    cols = []
+                    for excel_col, sql_col in inv_col_map.items():
+                        if excel_col in df_excel.columns:
+                            val = row[excel_col]
+                            # Manejar fechas de Pandas
+                            if excel_col == "FECHA" and pd.notnull(val):
+                                try:
+                                    val = pd.to_datetime(val).strftime('%Y-%m-%d %H:%M:%S')
+                                except:
+                                    val = str(val)
+                            else:
+                                val = str(val) if pd.notnull(val) else ""
+                            
+                            vals.append(val)
+                            cols.append(sql_col)
+                    
+                    if vals:
+                        placeholders = ", ".join(["?"] * len(vals))
+                        columnas_str = ", ".join(cols)
+                        q = f"INSERT INTO registros ({columnas_str}) VALUES ({placeholders})"
+                        cursor.execute(fix_query(q), tuple(vals))
+                
+                logger.info(f"Migración desde Excel completada. {len(df_excel)} registros importados.")
+            except Exception as e_excel:
+                logger.error(f"Error migrando Excel: {e_excel}")
+
         conn.commit()
         conn.close()
+        logger.info("Base de datos inicializada correctamente.")
     except Exception as e:
-        logger.error(f"Error inicializando tablas Postgres: {e}")
+        logger.error(f"Error crítico inicializando base de datos: {e}")
+
+def inicializar_tablas_postgres():
+    """Stub para compatibilidad, redirige a inicializar_tablas"""
+    inicializar_tablas()
 
 # =============================================================================
 # FUNCIONES DE INICIALIZACIÓN (Stub para compatibilidad)
 # =============================================================================
 
+@medir_tiempo
 def inicializar_usuarios():
-    # En Render, aseguramos que las tablas existan al inicio
-    if DATABASE_URL:
-        inicializar_tablas_postgres()
+    """Punto de entrada para inicialización desde app_web.py"""
+    inicializar_tablas()
+    
+    # En Render, aseguramos que las tablas existan al inicio (ya manejado en inicializar_tablas)
+    pass
 
 def inicializar_config():
     pass
@@ -228,11 +360,13 @@ def guardar_configuracion_usuario(usuario, config):
         
         for key, value in config.items():
             val_str = json.dumps(value, ensure_ascii=False)
-            cursor.execute(fix_query('''
+            query = '''
                 INSERT INTO configuracion_usuario (username, clave, valor) 
                 VALUES (?, ?, ?)
                 ON CONFLICT(username, clave) DO UPDATE SET valor=excluded.valor
-            ''', (usuario, key, val_str)))
+            '''
+            query = fix_query(query)
+            cursor.execute(query, (usuario, key, val_str))
             
         conn.commit()
         conn.close()
@@ -284,26 +418,22 @@ def eliminar_actividad_personal_db(usuario, actividad):
 
 def _cargar_lista_global(tipo, default):
     try:
-        conn = get_db_connection()
-        cursor = get_cursor(conn)
-        cursor.execute(fix_query("SELECT valor FROM listas_globales WHERE tipo = ?"), (tipo,))
-        resultado = [row['valor'] for row in cursor.fetchall()]
-        conn.close()
-        return resultado if resultado else default
-    except Exception:
+        with db_session() as conn:
+            cursor = get_cursor(conn)
+            cursor.execute(fix_query("SELECT valor FROM listas_globales WHERE tipo = ?"), (tipo,))
+            rows = cursor.fetchall()
+            return [row['valor'] for row in rows] if rows else default
+    except Exception as e:
+        logger.error(f"Error cargando lista {tipo}: {e}")
         return default
 
 def _guardar_lista_global(tipo, lista):
     try:
-        conn = get_db_connection()
-        cursor = get_cursor(conn)
-        # Transacción: borrar previos del tipo e insertar nuevos 
-        # (para mantener consistencia con la lógica de "guardar lista completa")
-        cursor.execute(fix_query("DELETE FROM listas_globales WHERE tipo = ?"), (tipo,))
-        for item in lista:
-            cursor.execute(fix_query("INSERT INTO listas_globales (tipo, valor) VALUES (?, ?)"), (tipo, item))
-        conn.commit()
-        conn.close()
+        with db_session() as conn:
+            cursor = get_cursor(conn)
+            cursor.execute(fix_query("DELETE FROM listas_globales WHERE tipo = ?"), (tipo,))
+            for val in lista:
+                cursor.execute(fix_query("INSERT OR IGNORE INTO listas_globales (tipo, valor) VALUES (?, ?)"), (tipo, val))
         clear_cache()
         return True
     except Exception as e:
@@ -321,7 +451,7 @@ def cargar_actividades(usuario=None):
     try:
         globales = cargar_actividades_globales()
         personales = []
-        if usuario:
+        if usuario and usuario != "admin":
             conn = get_db_connection()
             cursor = get_cursor(conn)
             cursor.execute(fix_query("SELECT actividad FROM actividades_personales WHERE username = ?"), (usuario,))
@@ -365,6 +495,39 @@ def guardar_medios_solicitud(medios):
 # =============================================================================
 # CRUD DE REGISTROS
 # =============================================================================
+
+def sincronizar_excel():
+    """Exporta todos los registros de la BD al archivo Excel para respaldo"""
+    try:
+        df = cargar_registros()
+        # Eliminar columna ID si existe para que Excel se vea igual que antes
+        if 'ID' in df.columns:
+            df_export = df.drop(columns=['ID'])
+        else:
+            df_export = df
+            
+        # Reordenar columnas para que coincidan exactamente con la constante COLUMNAS (menos ID)
+        cols_final = [c for c in COLUMNAS if c != 'ID']
+        df_export = df_export[cols_final]
+        
+        # Intento de escritura resiliente
+        intentos = 3
+        while intentos > 0:
+            try:
+                df_export.to_excel(EXCEL_FILE, index=False)
+                logger.info(f"Sincronización con Excel exitosa: {EXCEL_FILE}")
+                break
+            except PermissionError:
+                intentos -= 1
+                if intentos == 0:
+                    logger.warning(f"No se pudo sincronizar Excel {EXCEL_FILE}: El archivo está abierto por otro programa.")
+                import time
+                time.sleep(0.5)
+            except Exception as ex:
+                logger.error(f"Error inesperado sincronizando Excel {EXCEL_FILE}: {ex}")
+                break
+    except Exception as e:
+        logger.error(f"Error crítico en sincronizar_excel: {e}")
 
 @medir_tiempo
 def cargar_registros(usuario=None):
@@ -412,41 +575,43 @@ def cargar_registros(usuario=None):
 @medir_tiempo
 def guardar_registro(data):
     try:
-        conn = get_db_connection()
-        cursor = get_cursor(conn)
-        
-        query = '''
-            INSERT INTO registros (
-                usuario, tipo_actividad, fecha, dependencia, solicitante,
-                tipo_solicitud, medio_solicitud, descripcion, cumplido,
-                fecha_atencion, observaciones
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        ''', (
-            data.get("USUARIO"),
-            data.get("TIPO DE ACTIVIDAD"),
-            data.get("FECHA"),
-            data.get("DEPENDENCIA"),
-            data.get("SOLICITANTE"),
-            data.get("TIPO DE SOLICITUD"),
-            data.get("MEDIO DE SOLICITUD"),
-            data.get("DESCRIPCIÓN"),
-            data.get("CUMPLIDO"),
-            data.get("FECHA ATENCIÓN"),
-            data.get("OBSERVACIONES")
-        )
-        
-        if DATABASE_URL:
-            # Postgres requiere RETURNING id para obtener el ID insertado
-            query_pg = query[0].replace('?', '%s') + " RETURNING id"
-            cursor.execute(query_pg, query[1])
-            nuevo_id = cursor.fetchone()['id']
-        else:
-            # SQLite usa lastrowid
-            cursor.execute(query[0], query[1])
-            nuevo_id = cursor.lastrowid
+        with db_session() as conn:
+            cursor = get_cursor(conn)
             
-        conn.commit()
-        conn.close()
+            query = '''
+                INSERT INTO registros (
+                    usuario, tipo_actividad, fecha, dependencia, solicitante,
+                    tipo_solicitud, medio_solicitud, descripcion, cumplido,
+                    fecha_atencion, observaciones
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            '''
+            
+            insert_values = (
+                data.get("USUARIO"),
+                data.get("TIPO DE ACTIVIDAD"),
+                data.get("FECHA"),
+                data.get("DEPENDENCIA"),
+                data.get("SOLICITANTE"),
+                data.get("TIPO DE SOLICITUD"),
+                data.get("MEDIO DE SOLICITUD"),
+                data.get("DESCRIPCIÓN"),
+                data.get("CUMPLIDO"),
+                data.get("FECHA ATENCIÓN"),
+                data.get("OBSERVACIONES")
+            )
+            
+            if DATABASE_URL:
+                # Postgres requiere RETURNING id para obtener el ID insertado
+                query_pg = query.replace('?', '%s') + " RETURNING id"
+                cursor.execute(query_pg, insert_values)
+                nuevo_id = cursor.fetchone()['id']
+            else:
+                # SQLite usa lastrowid
+                cursor.execute(query, insert_values)
+                nuevo_id = cursor.lastrowid
+                
+        # Sincronizar con Excel después de guardar (fuera del bloque with para no bloquear la BD)
+        sincronizar_excel()
         return nuevo_id
     except Exception as e:
         logger.error(f"Error guardando registro SQL: {e}")
@@ -455,20 +620,20 @@ def guardar_registro(data):
 @medir_tiempo
 def eliminar_registro(id_registro, usuario):
     try:
-        conn = get_db_connection()
-        cursor = get_cursor(conn)
-        
-        # Verificar propiedad
-        if usuario != "admin":
-            cursor.execute(fix_query("SELECT usuario FROM registros WHERE id = ?"), (id_registro,))
-            row = cursor.fetchone()
-            if not row or row['usuario'] != usuario:
-                conn.close()
-                return False
+        with db_session() as conn:
+            cursor = get_cursor(conn)
+            
+            # Verificar propiedad
+            if usuario != "admin":
+                cursor.execute(fix_query("SELECT usuario FROM registros WHERE id = ?"), (id_registro,))
+                row = cursor.fetchone()
+                if not row or row['usuario'] != usuario:
+                    return False
 
-        cursor.execute(fix_query("DELETE FROM registros WHERE id = ?"), (id_registro,))
-        conn.commit()
-        conn.close()
+            cursor.execute(fix_query("DELETE FROM registros WHERE id = ?"), (id_registro,))
+
+        # Sincronizar con Excel después de eliminar
+        sincronizar_excel()
         return True
     except Exception as e:
         logger.error(f"Error eliminando registro SQL: {e}")
@@ -477,56 +642,53 @@ def eliminar_registro(id_registro, usuario):
 @medir_tiempo
 def actualizar_registro(id_registro, data, usuario):
     try:
-        conn = get_db_connection()
-        cursor = get_cursor(conn)
-        
-        # Verificar propiedad
-        cursor.execute(fix_query("SELECT usuario FROM registros WHERE id = ?"), (id_registro,))
-        row = cursor.fetchone()
-        if not row:
-            conn.close()
-            return False
+        with db_session() as conn:
+            cursor = get_cursor(conn)
             
-        if usuario != "admin" and row['usuario'] != usuario:
-            conn.close()
-            return False
+            # Verificar propiedad
+            cursor.execute(fix_query("SELECT usuario FROM registros WHERE id = ?"), (id_registro,))
+            row = cursor.fetchone()
+            if not row:
+                return False
+                
+            if usuario != "admin" and row['usuario'] != usuario:
+                return False
+                
+            # Construir UPDATE dinámico
+            inv_col_map = {
+                "USUARIO": "usuario",
+                "TIPO DE ACTIVIDAD": "tipo_actividad",
+                "FECHA": "fecha",
+                "DEPENDENCIA": "dependencia",
+                "SOLICITANTE": "solicitante",
+                "TIPO DE SOLICITUD": "tipo_solicitud",
+                "MEDIO DE SOLICITUD": "medio_solicitud",
+                "DESCRIPCIÓN": "descripcion",
+                "CUMPLIDO": "cumplido",
+                "FECHA ATENCIÓN": "fecha_atencion",
+                "OBSERVACIONES": "observaciones"
+            }
             
-        # Construir UPDATE dinámico
-        # Mapeo inverso de Excel a SQL
-        inv_col_map = {
-            "USUARIO": "usuario",
-            "TIPO DE ACTIVIDAD": "tipo_actividad",
-            "FECHA": "fecha",
-            "DEPENDENCIA": "dependencia",
-            "SOLICITANTE": "solicitante",
-            "TIPO DE SOLICITUD": "tipo_solicitud",
-            "MEDIO DE SOLICITUD": "medio_solicitud",
-            "DESCRIPCIÓN": "descripcion",
-            "CUMPLIDO": "cumplido",
-            "FECHA ATENCIÓN": "fecha_atencion",
-            "OBSERVACIONES": "observaciones"
-        }
-        
-        fields = []
-        values = []
-        for key, value in data.items():
-            if key in inv_col_map:
-                if key == 'USUARIO' and usuario != 'admin':
-                    continue
-                fields.append(f"{inv_col_map[key]} = ?")
-                values.append(value)
-        
-        if not fields:
-            conn.close()
-            return True
+            fields = []
+            values = []
+            for key, value in data.items():
+                if key in inv_col_map:
+                    if key == 'USUARIO' and usuario != 'admin':
+                        continue
+                    fields.append(f"{inv_col_map[key]} = ?")
+                    values.append(value)
             
-        values.append(id_registro)
-        query = f"UPDATE registros SET {', '.join(fields)} WHERE id = ?"
-        query = fix_query(query)
+            if not fields:
+                return True
+                
+            values.append(id_registro)
+            query = f"UPDATE registros SET {', '.join(fields)} WHERE id = ?"
+            query = fix_query(query)
 
-        cursor.execute(query, values)
-        conn.commit()
-        conn.close()
+            cursor.execute(query, values)
+            
+        # Sincronizar con Excel después de actualizar
+        sincronizar_excel()
         return True
     except Exception as e:
         logger.error(f"Error actualizando registro SQL: {e}")

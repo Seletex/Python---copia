@@ -200,9 +200,18 @@ def generar_informe_template(df, output_path, contrato_data=None):
     try:
         import openpyxl
         from config import TEMPLATE_EXCEL
-        logger.info(f"DEBUG: generar_informe_template usando plantilla IMPORTADA: {TEMPLATE_EXCEL}")
+        # Si no se pasaron datos de contrato, intentar obtenerlos de la
+        # configuración global guardada en la base de datos bajo 'admin'.
+        if contrato_data is None:
+            try:
+                from database import obtener_configuracion_usuario
+                cfg = obtener_configuracion_usuario('admin') or {}
+                contrato_data = cfg.get('datos_contrato', {}) if isinstance(cfg, dict) else {}
+            except Exception:
+                contrato_data = {}
+        from config import logger, TEMPLATE_EXCEL
         if not os.path.exists(TEMPLATE_EXCEL):
-            logger.error(f"Plantilla no encontrada: {TEMPLATE_EXCEL}")
+            logger.error(f"Plantilla no encontrada - Se intentó cargar desde: {TEMPLATE_EXCEL}")
             return False
             
         try:
@@ -212,31 +221,106 @@ def generar_informe_template(df, output_path, contrato_data=None):
         except Exception as e:
             logger.error(f"Error al cargar el libro de Excel: {e}")
             return False
-        
-        # Encabezados: Datos del Contrato (Filas 2-5, Columna 3)
-        if contrato_data:
-            if contrato_data.get('nro'):
-                ws.cell(row=2, column=3, value=contrato_data['nro'].upper())
-            if contrato_data.get('objeto'):
-                ws.cell(row=3, column=3, value=contrato_data['objeto'].upper())
-            
-            # El nombre se pone en la fila 4 por defecto si no hay contrato_data['nombre']
-            nombre_contratista = contrato_data.get('nombre', '').upper()
-            if not nombre_contratista:
-                usuarios = df['USUARIO'].unique() if 'USUARIO' in df.columns else []
-                nombre_contratista = usuarios[0].upper() if len(usuarios) == 1 else "VARIOS"
-            
-            ws.cell(row=4, column=3, value=nombre_contratista)
-            
-            if contrato_data.get('cedula'):
-                ws.cell(row=5, column=3, value=contrato_data['cedula'])
+        # Reemplazo de placeholders en la plantilla para mayor flexibilidad.
+        # Soportamos: {{NRO_CONTRATO}}, {{OBJETO}}, {{NOMBRE_CONTRATISTA}}, {{CEDULA}}, {{SUPERVISOR}}, {{RANGO_FECHAS}}
+        def _build_contrato_values(df, contrato_data):
+            vals = {}
+            nro = (contrato_data.get('nro') if contrato_data else '') or ''
+            objeto = (contrato_data.get('objeto') if contrato_data else '') or ''
+            nombre = (contrato_data.get('nombre') if contrato_data else '') or ''
+            cedula = (contrato_data.get('cedula') if contrato_data else '') or ''
+            supervisor = (contrato_data.get('supervisor') if contrato_data else '') or ''
 
-        # Rango de fechas (Fila 6)
+            # Si no tenemos nombre en contrato_data, intentar obtenerlo de columnas del DataFrame
+            if not nombre:
+                candidate_cols = [
+                    'NOMBRE CONTRATISTA', 'CONTRATISTA', 'NOMBRE',
+                    'NOMBRE_COMPLETO', 'NOMBRE_USUARIO', 'NOMBRE DEL CONTRATISTA'
+                ]
+                found = None
+                for c in candidate_cols:
+                    if c in df.columns:
+                        found = c
+                        break
+                if found:
+                    vals_list = df[found].dropna().unique().tolist()
+                    if len(vals_list) == 1:
+                        nombre = str(vals_list[0])
+                    elif len(vals_list) > 1:
+                        preview = [str(v).strip() for v in vals_list[:3]]
+                        nombre = ', '.join(preview) + ('...' if len(vals_list) > 3 else '')
+                else:
+                    if 'USUARIO' in df.columns:
+                        usuarios = df['USUARIO'].dropna().unique().tolist()
+                        if len(usuarios) == 1:
+                            nombre = str(usuarios[0])
+                        else:
+                            nombre = 'VARIOS'
+
+            # Rango de fechas
+            rango = ''
+            try:
+                if not df.empty and 'FECHA' in df.columns:
+                    fechas_dt = pd.to_datetime(df['FECHA'], errors='coerce').dropna()
+                    if not fechas_dt.empty:
+                        rango = f"{fechas_dt.min().strftime('%d/%m/%Y')} al {fechas_dt.max().strftime('%d/%m/%Y')}"
+            except Exception:
+                rango = ''
+
+            vals['NRO_CONTRATO'] = str(nro).upper() if nro else ''
+            vals['OBJETO'] = str(objeto).upper() if objeto else ''
+            vals['NOMBRE_CONTRATISTA'] = str(nombre).upper() if nombre else 'N/D'
+            vals['CEDULA'] = str(cedula) if cedula else ''
+            vals['SUPERVISOR'] = str(supervisor).upper() if supervisor else ''
+            vals['RANGO_FECHAS'] = rango
+            return vals
+
+        def _replace_placeholders_in_sheet(sheet, values_map):
+            # Iterar por todo el rango usado de la hoja
+            for row in sheet.iter_rows(min_row=1, max_row=sheet.max_row, min_col=1, max_col=sheet.max_column):
+                for cell in row:
+                    if isinstance(cell.value, str) and '{{' in cell.value and '}}' in cell.value:
+                        new_val = cell.value
+                        for k, v in values_map.items():
+                            placeholder = '{{' + k + '}}'
+                            if placeholder in new_val:
+                                new_val = new_val.replace(placeholder, v)
+                        cell.value = new_val
+
+        contrato_values = _build_contrato_values(df, contrato_data)
+        # Reemplazar en todas las hojas por seguridad; si no hay placeholders
+        # presentes hacemos fallback a las celdas fijas para mantener
+        # compatibilidad con plantillas antiguas.
+        replaced_any = False
+        for sht in wb.worksheets:
+            # marcar antes del cambio para detectar si se reemplazó algo
+            before_has = False
+            for row in sht.iter_rows(min_row=1, max_row=sht.max_row, min_col=1, max_col=sht.max_column):
+                for cell in row:
+                    if isinstance(cell.value, str) and '{{' in cell.value and '}}' in cell.value:
+                        before_has = True
+                        break
+                if before_has:
+                    break
+
+            if before_has:
+                _replace_placeholders_in_sheet(sht, contrato_values)
+                replaced_any = True
+
+        # Fallback a ubicación fija cuando NO HAY placeholders en la plantilla
+        # (Se mantiene desactivado por ahora para favorecer el final dinámico, 
+        # pero se deja la lógica de placeholders arriba que es la preferida)
+        if not replaced_any:
+            # Ya no escribimos en celdas fijas 2,3,4,5 por petición del usuario
+            pass
+
+        # Rango de fechas (Fila 6) - Mantener si es necesario o mover al final
         if not df.empty and 'FECHA' in df.columns:
             fechas_dt = pd.to_datetime(df['FECHA'], errors='coerce').dropna()
             if not fechas_dt.empty:
                 ws.cell(row=6, column=3,
                         value=f"{fechas_dt.min().strftime('%d/%m/%Y')} al {fechas_dt.max().strftime('%d/%m/%Y')}")
+                ws.merge_cells(start_row=6, start_column=3, end_row=6, end_column=10) # Unificar ancho de fechas
         
         # Guardar estilos base de fila 8
         base_styles = []
@@ -257,30 +341,37 @@ def generar_informe_template(df, output_path, contrato_data=None):
         mes_actual = meses[ahora.month - 1]
         anio_actual = ahora.year
 
-        # Limpiar filas 8 en adelante (hasta 200 para seguridad)
-        for row_idx in range(8, 200):
-            for col_idx in range(1, 11):
-                ws.cell(row=row_idx, column=col_idx, value=None)
-        
-        # Desenlazar celdas desde la fila 8 en adelante
+        # ------------------------------------------------------------------
+        # FIX CORRUPCIÓN EXCEL: Primero descombinamos celdas existentes 
+        # en la zona de trabajo para evitar conflictos al insertar/combinar.
+        # ------------------------------------------------------------------
         merged_ranges = list(ws.merged_cells.ranges)
-        for merged_range in merged_ranges:
-            if merged_range.min_row >= 8:
+        for m_range in merged_ranges:
+            if m_range.min_row >= 7:
                 try:
-                    ws.unmerge_cells(str(merged_range))
-                except Exception:
-                    pass
-        
+                    ws.unmerge_cells(str(m_range))
+                except Exception: pass
+
+        # Calcular cuántas filas necesitamos exactamente
+        df_reporte = df.copy()
+        if 'TIPO DE ACTIVIDAD' in df_reporte.columns:
+            df_reporte = df_reporte.sort_values(by=['TIPO DE ACTIVIDAD', 'FECHA'])
+            resumen_counts = df_reporte['TIPO DE ACTIVIDAD'].value_counts().to_dict()
+            num_grupos = len(resumen_counts)
+        else:
+            resumen_counts = {}
+            num_grupos = 0
+
+        # Filas: datos + subtotales + total + resumen + contrato + firmas + espaciado
+        rows_needed = len(df_reporte) + num_grupos + 1 + len(resumen_counts) + 25
+        start_row = 8
+        ws.insert_rows(start_row, amount=rows_needed)
+
         # Escribir datos con cortes por actividad
         current_row = 8
         ultima_actividad = None
         conteo_actividad = 0
         total_general = 0
-        
-        # Asegurar ordenamiento para el reporte
-        df_reporte = df.copy()
-        if 'TIPO DE ACTIVIDAD' in df_reporte.columns:
-            df_reporte = df_reporte.sort_values(by=['TIPO DE ACTIVIDAD', 'FECHA'])
 
         for _, row in df_reporte.iterrows():
             actividad_actual = row.get('TIPO DE ACTIVIDAD', '')
@@ -288,9 +379,8 @@ def generar_informe_template(df, output_path, contrato_data=None):
             # Si cambia la actividad, mostrar subtotal de la anterior
             if ultima_actividad is not None and actividad_actual != ultima_actividad:
                 ws.cell(row=current_row, column=1, value="ACTIVIDADES: ")
-                # Fusionar celdas de columna 2 a 8 para el conteo
                 ws.cell(row=current_row, column=2, value=conteo_actividad).font = openpyxl.styles.Font(bold=True)
-                ws.merge_cells(start_row=current_row, start_column=2, end_row=current_row, end_column=9)
+                ws.merge_cells(start_row=current_row, start_column=2, end_row=current_row, end_column=10)
                 ws.cell(row=current_row, column=2).alignment = openpyxl.styles.Alignment(horizontal='left', vertical='center')
                 
                 for c in range(1, 10):
@@ -310,8 +400,8 @@ def generar_informe_template(df, output_path, contrato_data=None):
                 actividad_actual, fecha,
                 row.get('DEPENDENCIA', ''), row.get('SOLICITANTE', ''),
                 row.get('TIPO DE SOLICITUD', ''), row.get('MEDIO DE SOLICITUD', ''),
-                row.get('CUMPLIDO', 'Sí'), fecha_atencion,
-                row.get('OBSERVACIONES', '')
+                row.get('CUMPLIDO'), fecha_atencion,
+                row.get('OBSERVACIONES')
             ]
             
             for col_idx, valor in enumerate(valores, start=1):
@@ -329,61 +419,44 @@ def generar_informe_template(df, output_path, contrato_data=None):
             total_general += 1
             current_row += 1
             
-            if current_row > 2000: break # Limite de seguridad
-            
         # Último subtotal y Gran Total
         if ultima_actividad:
             ws.cell(row=current_row, column=1, value="ACTIVIDADES: ")
             ws.cell(row=current_row, column=2, value=conteo_actividad).font = openpyxl.styles.Font(bold=True)
-            ws.merge_cells(start_row=current_row, start_column=2, end_row=current_row, end_column=9)
+            ws.merge_cells(start_row=current_row, start_column=2, end_row=current_row, end_column=10)
             ws.cell(row=current_row, column=2).alignment = openpyxl.styles.Alignment(horizontal='left', vertical='center')
-            
-            for c in range(1, 10):
-                ws.cell(row=current_row, column=c).border = copy.copy(base_styles[c-1]['border'])
-
+            for c in range(1, 10): ws.cell(row=current_row, column=c).border = copy.copy(base_styles[c-1]['border'])
             current_row += 1
             
             ws.cell(row=current_row, column=1, value="TOTAL GENERAL").font = openpyxl.styles.Font(bold=True, size=11)
             ws.cell(row=current_row, column=2, value=total_general).font = openpyxl.styles.Font(bold=True, size=11)
-            ws.merge_cells(start_row=current_row, start_column=2, end_row=current_row, end_column=9)
+            ws.merge_cells(start_row=current_row, start_column=2, end_row=current_row, end_column=10)
             ws.cell(row=current_row, column=2).alignment = openpyxl.styles.Alignment(horizontal='left', vertical='center')
-            
-            for c in range(1, 10):
-                ws.cell(row=current_row, column=c).border = copy.copy(base_styles[c-1]['border'])
-
+            for c in range(1, 10): ws.cell(row=current_row, column=c).border = copy.copy(base_styles[c-1]['border'])
             current_row += 1
+
+        #current_row += 1 # Espacio
+
         # Fecha de informe
         ws.cell(row=current_row, column=1, value="Fecha de informe:").font = openpyxl.styles.Font(bold=True)
         ws.cell(row=current_row, column=2, value=f"{mes_actual} de {anio_actual}")
-        ws.merge_cells(start_row=current_row, start_column=2, end_row=current_row, end_column=9)
-        ws.cell(row=current_row, column=2).alignment = openpyxl.styles.Alignment(horizontal='left', vertical='center')
+        ws.merge_cells(start_row=current_row, start_column=2, end_row=current_row, end_column=10)
         current_row += 1
-        # Sección de firmas / Datos finales
 
+        # Datos de contrato al final (Dinamico)
         if contrato_data:
-            if contrato_data.get('nombre'):
-                ws.cell(row=current_row, column=1, value="Elaborado por:").font = openpyxl.styles.Font(bold=True)
-                ws.cell(row=current_row, column=2, value=contrato_data['nombre'].upper())
-                ws.merge_cells(start_row=current_row, start_column=2, end_row=current_row, end_column=9)
-                ws.cell(row=current_row, column=2).alignment = openpyxl.styles.Alignment(horizontal='left', vertical='center')
+            fields = [
+                ("Elaborado por:", contrato_data.get('nombre', '')),
+                ("CONTRATISTA", ""),
+                ("Vo.Bo:", contrato_data.get('supervisor', '')),
+                ("SUPERVISOR", ""),
+            ]
+            for label, value in fields:
+                ws.cell(row=current_row, column=1, value=label).font = openpyxl.styles.Font(bold=True)
+                if value:
+                    ws.cell(row=current_row, column=2, value=str(value).upper())
+                    ws.merge_cells(start_row=current_row, start_column=2, end_row=current_row, end_column=10)
                 current_row += 1
-                ws.cell(row=current_row, column=1, value="CONTRATISTA:").font = openpyxl.styles.Font(bold=True)
-                ws.merge_cells(start_row=current_row, start_column=2, end_row=current_row, end_column=9)
-                ws.cell(row=current_row, column=2).alignment = openpyxl.styles.Alignment(horizontal='left', vertical='center')
-                current_row += 1                
-            if contrato_data.get('supervisor'):
-                ws.cell(row=current_row, column=1, value="Vo.Bo:").font = openpyxl.styles.Font(bold=True)
-                ws.cell(row=current_row, column=2, value=contrato_data['supervisor'].upper())
-                ws.merge_cells(start_row=current_row, start_column=2, end_row=current_row, end_column=9)
-                ws.cell(row=current_row, column=2).alignment = openpyxl.styles.Alignment(horizontal='left', vertical='center')
-                current_row += 1
-                ws.cell(row=current_row, column=1, value="SUPERVISOR:").font = openpyxl.styles.Font(bold=True)
-                ws.merge_cells(start_row=current_row, start_column=2, end_row=current_row, end_column=9)
-                ws.cell(row=current_row, column=2).alignment = openpyxl.styles.Alignment(horizontal='left', vertical='center')
-                current_row += 1
-            
-            current_row += 1
-
 
         try:
             wb.save(output_path)

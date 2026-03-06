@@ -171,12 +171,25 @@ def gestion():
     gestion_medios = generar_gestion_medios_solicitud() if es_admin else ""
     gestion_personal = generar_gestion_actividades_personales(usuario_actual)
     
+    # Obtener datos de contrato guardados (admin)
+    contrato_vals = {}
+    try:
+        cfg = obtener_configuracion_usuario('admin')
+        contrato_vals = cfg.get('datos_contrato', {}) if cfg else {}
+    except Exception:
+        contrato_vals = {}
+
     return render_template_string(GESTION_TEMPLATE.format(
         usuario_actual=usuario_actual,
         gestion_actividades=f"{gestion_actividades}{gestion_ubicaciones}{gestion_tipos}{gestion_medios}",
         gestion_usuarios=gestion_usuarios,
         gestion_personal=gestion_personal,
-        alertas=alertas
+        alertas=alertas,
+        datos_nro=contrato_vals.get('nro', ''),
+        datos_objeto=contrato_vals.get('objeto', ''),
+        datos_nombre=contrato_vals.get('nombre', ''),
+        datos_cedula=contrato_vals.get('cedula', ''),
+        datos_supervisor=contrato_vals.get('supervisor', '')
     ))
 
 # --- ACCIONES ADMINISTRATIVAS ---
@@ -197,6 +210,34 @@ def agregar_usuario():
             return redirect(url_for('gestion', msg='Usuario agregado'))
             
     return redirect(url_for('gestion', error='Error al agregar usuario'))
+
+
+@app.route('/guardar_datos_contrato', methods=['POST'])
+def guardar_datos_contrato():
+    # Solo admin puede guardar los datos globales del contrato
+    if session.get('usuario') != 'admin':
+        return redirect(url_for('gestion', error='No autorizado'))
+
+    nro = request.form.get('nro', '').strip()
+    objeto = request.form.get('objeto', '').strip()
+    nombre = request.form.get('nombre', '').strip()
+    cedula = request.form.get('cedula', '').strip()
+    supervisor = request.form.get('supervisor', '').strip()
+
+    datos = {
+        'nro': nro,
+        'objeto': objeto,
+        'nombre': nombre,
+        'cedula': cedula,
+        'supervisor': supervisor
+    }
+
+    try:
+        # Guardar bajo el usuario 'admin' la clave 'datos_contrato'
+        guardar_configuracion_usuario('admin', {'datos_contrato': datos})
+        return redirect(url_for('gestion', msg='Datos de contrato guardados'))
+    except Exception:
+        return redirect(url_for('gestion', error='Error al guardar'))
 
 @app.route('/eliminar_usuario', methods=['POST'])
 def eliminar_usuario():

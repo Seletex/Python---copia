@@ -41,16 +41,41 @@ class RequestHandler(BaseHTTPRequestHandler):
         path = parsed_path.path
         params = parse_qs(parsed_path.query)
 
-        handler_class = ROUTE_MAP.get(path)
-        
-        if handler_class:
-            handler = handler_class(self)
-            if method == 'get':
-                handler.get(params)
+        try:
+            handler_class = ROUTE_MAP.get(path)
+            
+            if handler_class:
+                handler = handler_class(self)
+                if method == 'get':
+                    handler.get(params)
+                else:
+                    handler.post(params, post_data)
             else:
-                handler.post(params, post_data)
-        else:
-            self.send_error(404, "Página no encontrada")
+                self.send_error(404, "Página no encontrada")
+        except Exception as e:
+            import traceback
+            error_details = traceback.format_exc()
+            logger.error(f"Error catastrófico procesando {method.upper()} {path}: {e}\n{error_details}")
+            
+            # Intentar enviar una respuesta de error amigable al cliente
+            try:
+                self.send_response(500)
+                self.send_header('Content-type', 'text/html; charset=utf-8')
+                self.end_headers()
+                error_html = f"""
+                <html>
+                <body style="font-family: sans-serif; text-align: center; padding: 50px;">
+                    <h1 style="color: #dc3545;">⚠️ Ups! Algo salió mal</h1>
+                    <p>Ha ocurrido un error interno en el servidor.</p>
+                    <p style="color: #6c757d;">El error ha sido registrado y estamos trabajando para solucionarlo.</p>
+                    <a href="/" style="display: inline-block; margin-top: 20px; padding: 10px 20px; background: #007bff; color: white; text-decoration: none; border-radius: 5px;">Volver al inicio</a>
+                </body>
+                </html>
+                """
+                self.wfile.write(error_html.encode('utf-8'))
+            except:
+                # Si esto también falla, al menos el logger ya registró el error original
+                pass
 
     def log_message(self, format, *args):
         """Silenciar logs estándar, usamos logger personalizado"""
@@ -65,11 +90,11 @@ if __name__ == "__main__":
     PORT = 8000
     
     print("=" * 60)
-    print("📋 GESTOR DE ACTIVIDADES - VERSIÓN MODULAR")
+    print("GESTORES DE ACTIVIDADES - VERSION MODULAR")
     print("=" * 60)
-    print(f"\n✅ Servidor iniciado en: http://localhost:{PORT}")
-    print("\n🌐 Abre tu navegador y ve a: http://localhost:8000")
-    print("\n⚠️  Presiona Ctrl+C para detener el servidor\n")
+    print(f"\nServidor iniciado en: http://localhost:{PORT}")
+    print("\nAbre tu navegador y ve a: http://localhost:8000")
+    print("\nPresiona Ctrl+C para detener el servidor\n")
     print("=" * 60)
     
     server = HTTPServer(('localhost', PORT), RequestHandler)
