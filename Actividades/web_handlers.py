@@ -379,7 +379,7 @@ class ExportarHandler(BaseRoute):
                 generado = False
                 if tipo_reporte == 'final':
                     from export_final_service import generar_informe_final_resumen
-                    generado = generar_informe_final_resumen(df, tmp_path, contrato_data=contrato_data)
+                    generado = generar_informe_final_resumen(df, tmp_path, contrato_data=contrato_data, usuario=usuario_filtro)
                 else:
                     generado = generar_informe_template(df, tmp_path, contrato_data=contrato_data)
                 

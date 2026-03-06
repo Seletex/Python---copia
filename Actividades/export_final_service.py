@@ -7,12 +7,34 @@ from config import TEMPLATE_INFORME_FINAL, logger
 from utils import medir_tiempo
 
 @medir_tiempo
-def generar_informe_final_resumen(df, output_path, contrato_data=None):
+def generar_informe_final_resumen(df, output_path, contrato_data=None, usuario=None):
     """
-    Genera un informe concentrado con soporte de placeholders, smart fill y replicación de diseño.
+    Versión v6.7: Genera el Informe Final con filtro por usuario y precisión absoluta.
+    df: DataFrame con todos los registros (será filtrado por usuario)
+    contrato_data: dict con info del contrato
+    usuario: El usuario dueño del reporte (para filtrar actividades admin)
     """
     try:
-        logger.info(f"Generando Informe Final Concentrado. Registros: {len(df)}")
+        import openpyxl
+        from config import TEMPLATE_INFORME_FINAL, logger
+
+        logger.info(f"Generando Informe Final Concentrado. Registros iniciales: {len(df)}")
+
+        if df.empty:
+            logger.warning("Generar Informe Final: DataFrame vacío")
+            return False
+
+        # --- FILTRO POR USUARIO (v6.7) ---
+        if usuario:
+            # Si el usuario NO es admin, solo ver sus registros.
+            # Si es admin, puede ver todo o se filtra por un usuario específico pasado aquí.
+            df = df[df['USUARIO'] == usuario].copy()
+            logger.info(f"Reporte Final: Filtrado para usuario '{usuario}'. Registros: {len(df)}")
+        
+        if df.empty:
+            logger.warning(f"Reporte Final: No hay registros para el usuario '{usuario}' después de filtrar.")
+            return False
+
         if not os.path.exists(TEMPLATE_INFORME_FINAL):
             logger.error(f"Plantilla no encontrada: {TEMPLATE_INFORME_FINAL}")
             return False
@@ -43,12 +65,12 @@ def generar_informe_final_resumen(df, output_path, contrato_data=None):
                     return sheet.cell(row=m_range.min_row, column=m_range.min_col)
             return cell
 
-        def _build_contrato_values(df, contrato_data):
+        def _build_contrato_values(df, contrato_data, usuario=None):
             vals = {}
             n_ = lambda x: (contrato_data.get(x) or '').upper() if contrato_data else ''
             vals['NRO_CONTRATO'] = n_('nro')
             vals['OBJETO'] = n_('objeto')
-            vals['NOMBRE_CONTRATISTA'] = n_('nombre')
+            vals['NOMBRE_CONTRATISTA'] = n_('nombre') or (usuario.upper() if usuario else '')
             vals['CEDULA'] = n_('cedula')
             vals['SUPERVISOR'] = n_('supervisor')
             
@@ -66,7 +88,7 @@ def generar_informe_final_resumen(df, output_path, contrato_data=None):
             vals['RANGO_FECHAS'] = rango
             return vals
 
-        contrato_values = _build_contrato_values(df, contrato_data)
+        contrato_values = _build_contrato_values(df, contrato_data, usuario)
         
         # Mapa de etiquetas preciso (v6.6)
         label_map = {

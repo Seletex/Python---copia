@@ -448,17 +448,27 @@ def cargar_actividades_globales():
 @cache_decorator
 @medir_tiempo
 def cargar_actividades(usuario=None):
+    """
+    Carga actividades disponibles.
+    v6.8: Los usuarios normales NO ven las actividades personales de admin.
+    """
     try:
         globales = cargar_actividades_globales()
         personales = []
-        if usuario and usuario != "admin":
+        
+        # Si hay un usuario específico, cargar sus actividades personales
+        if usuario:
             conn = get_db_connection()
             cursor = get_cursor(conn)
             cursor.execute(fix_query("SELECT actividad FROM actividades_personales WHERE username = ?"), (usuario,))
             personales = [row['actividad'] for row in cursor.fetchall()]
             conn.close()
+            
+        # Retornar la unión de globales + personales del usuario actual
+        # Esto previene que otros usuarios vean las actividades de 'admin' que no sean globales.
         return sorted(list(set(globales + personales)))
-    except Exception:
+    except Exception as e:
+        logger.error(f"Error cargando actividades para {usuario}: {e}")
         return ACTIVIDADES_DEFAULT
 
 @cache_decorator
