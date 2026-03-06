@@ -209,7 +209,7 @@ def generar_gestion_usuarios(usuario_actual):
 @medir_tiempo
 def generar_gestion_actividades_personales(usuario_actual):
     """Genera HTML para gestión de actividades personales"""
-    if not usuario_actual or usuario_actual == "admin":
+    if not usuario_actual:
         return ""
     
     try:

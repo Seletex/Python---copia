@@ -395,6 +395,7 @@ def agregar_actividad_personal_db(usuario, actividad):
         cursor.execute(fix_query("INSERT INTO actividades_personales (username, actividad) VALUES (?, ?)"), (usuario, actividad))
         conn.commit()
         conn.close()
+        clear_cache()
         return True
     except Exception as e:
         logger.error(f"Error agregando actividad personal DB: {e}")
@@ -407,6 +408,7 @@ def eliminar_actividad_personal_db(usuario, actividad):
         cursor.execute(fix_query("DELETE FROM actividades_personales WHERE username = ? AND actividad = ?"), (usuario, actividad))
         conn.commit()
         conn.close()
+        clear_cache()
         return True
     except Exception as e:
         logger.error(f"Error eliminando actividad personal DB: {e}")
@@ -546,7 +548,8 @@ def cargar_registros(usuario=None):
         query = "SELECT * FROM registros"
         params = []
         
-        if usuario and usuario != "admin":
+        # v6.9: Filtro estricto por usuario para la tabla principal
+        if usuario:
             query += " WHERE usuario = ?"
             params.append(usuario)
             
