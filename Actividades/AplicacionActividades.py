@@ -184,10 +184,11 @@ class AplicacionActividades:
         self.notebook = ttk.Notebook(self.root)
         self.notebook.pack(fill="both", expand=True, padx=10, pady=10)
         
-        # Pestaña 1: Registro
-        self.frame_registro = ttk.Frame(self.notebook)
-        self.notebook.add(self.frame_registro, text="📝 Nuevo Registro")
-        self.crear_formulario_registro()
+        # Pestaña 1: Registro (Solo para usuarios no-admin)
+        if self.usuario_actual != 'admin':
+            self.frame_registro = ttk.Frame(self.notebook)
+            self.notebook.add(self.frame_registro, text="📝 Nuevo Registro")
+            self.crear_formulario_registro()
         
         # Pestaña 2: Ver Registros
         self.frame_ver = ttk.Frame(self.notebook)
@@ -523,8 +524,14 @@ class AplicacionActividades:
         config = cargar_config()
         self.opciones_tipo_solicitud = config.get("tipos_solicitud", DEFAULTS["tipos_solicitud"])
         self.opciones_medio_solicitud = config.get("medios_solicitud", DEFAULTS["medios_solicitud"])
-        self.opciones_tipo_actividad = config.get("tipos_actividad", DEFAULTS["tipos_actividad"])
+        
+        # Cargar actividades personales exclusivas del usuario
+        usuarios_data = cargar_usuarios()
+        mis_actividades = usuarios_data.get("actividades", {}).get(self.usuario_actual, [])
+        self.opciones_tipo_actividad = sorted(mis_actividades) if mis_actividades else ["Sin actividades configuradas"]
+        
         self.opciones_dependencias = config.get("dependencias", DEFAULTS["dependencias"])
+
 
     def actualizar_componentes_config(self):
         """Recarga las opciones y actualiza todos los componentes de la UI."""
@@ -584,8 +591,15 @@ class AplicacionActividades:
         if not self.validar_campos():
             return
         
+        fecha_ingresada = self.entry_fecha_cumplimiento.get().strip()
+        if not fecha_ingresada:
+            fecha_ingresada = datetime.now().strftime("%Y-%m-%d")
+        
+        hora_actual = datetime.now().strftime("%H:%M:%S")
+        fecha_con_hora = f"{fecha_ingresada} {hora_actual}"
+        
         data = {
-            "FECHA": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            "FECHA": fecha_con_hora,
             "USUARIO": self.usuario_actual,
             "DEPENDENCIA": self.entry_lugar.get().strip(),
             "SOLICITANTE": self.entry_solicitante.get().strip(),
@@ -594,7 +608,7 @@ class AplicacionActividades:
             "TIPO DE ACTIVIDAD": self.combo_tipo_actividad.get(),
             "DESCRIPCIÓN": self.text_descripcion.get("1.0", "end").strip(),
             "CUMPLIDO": self.combo_cumplida.get(),
-            "FECHA ATENCIÓN": self.entry_fecha_cumplimiento.get().strip(),
+            "FECHA ATENCIÓN": fecha_ingresada,
             "OBSERVACIONES": self.text_observaciones.get("1.0", "end").strip(),
         }
 

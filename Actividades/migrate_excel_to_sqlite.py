@@ -3,9 +3,87 @@ import sqlite3
 import pandas as pd
 import json
 import os
+import shutil
+from datetime import datetime
 from config import (
-    CONFIG_FILE, USERS_FILE, EXCEL_FILE, logger, DB_FILE
+    CONFIG_FILE, USERS_FILE, EXCEL_FILE, logger, DB_FILE, COLUMNAS
 )
+
+def _insert_rows_from_df(cursor, df):
+    # Normalizar nombres de columnas
+    df.columns = [c.upper().strip() for c in df.columns]
+    # Asegurar columnas esperadas para evitar KeyError
+    for col in COLUMNAS:
+        if col not in df.columns:
+            df[col] = ""
+    registros_count = 0
+    for _, row in df.iterrows():
+        try:
+            fecha = str(row.get('FECHA', ''))
+            fecha_atencion = str(row.get('FECHA ATENCIÓN', ''))
+            values = (
+                row.get('USUARIO', 'admin'),
+                row.get('TIPO DE ACTIVIDAD', ''),
+                fecha,
+                row.get('DEPENDENCIA', ''),
+                row.get('SOLICITANTE', ''),
+                row.get('TIPO DE SOLICITUD', ''),
+                row.get('MEDIO DE SOLICITUD', ''),
+                row.get('DESCRIPCIÓN', ''),
+                row.get('CUMPLIDO', ''),
+                fecha_atencion,
+                row.get('OBSERVACIONES', '')
+            )
+            # Comprobación de duplicado no destructiva (sin índices únicos)
+            cursor.execute('''
+                SELECT 1 FROM registros
+                WHERE usuario=? AND tipo_actividad=? AND fecha=? AND dependencia=? AND solicitante=?
+                  AND tipo_solicitud=? AND medio_solicitud=? AND descripcion=? AND cumplido=?
+                  AND fecha_atencion=? AND observaciones=?
+                LIMIT 1
+            ''', values)
+            if cursor.fetchone():
+                continue
+            cursor.execute('''
+                INSERT INTO registros (
+                    usuario, tipo_actividad, fecha, dependencia, solicitante,
+                    tipo_solicitud, medio_solicitud, descripcion, cumplido,
+                    fecha_atencion, observaciones
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ''', values)
+            registros_count += 1
+        except Exception as e:
+            print(f"Error insertando fila: {e}")
+    return registros_count
+
+def import_from_excel(excel_path):
+    if not os.path.exists(DB_FILE):
+        raise RuntimeError(f"La base de datos {DB_FILE} no existe.")
+    if not os.path.exists(excel_path):
+        raise FileNotFoundError(f"No se encontró el archivo: {excel_path}")
+    conn = sqlite3.connect(DB_FILE)
+    cursor = conn.cursor()
+    try:
+        # Respaldo previo no destructivo
+        try:
+            backup_dir = os.path.join(os.path.dirname(DB_FILE), "backups")
+            os.makedirs(backup_dir, exist_ok=True)
+            ts = datetime.now().strftime("%Y%m%d_%H%M%S")
+            backup_path = os.path.join(backup_dir, f"actividades_{ts}.db")
+            shutil.copy2(DB_FILE, backup_path)
+            print(f"Backup creado: {backup_path}")
+        except Exception as _e:
+            print(f"Advertencia: no se pudo crear backup previo ({_e}). Continuando...")
+        df = pd.read_excel(excel_path, engine='openpyxl')
+        count = _insert_rows_from_df(cursor, df)
+        conn.commit()
+        print(f"✅ Importación desde {excel_path} completada. Agregadas {count} filas.")
+        return count
+    except Exception as e:
+        conn.rollback()
+        raise
+    finally:
+        conn.close()
 
 def migrate_data():
     if not os.path.exists(DB_FILE):
@@ -16,6 +94,17 @@ def migrate_data():
     cursor = conn.cursor()
 
     try:
+        # Respaldo previo no destructivo
+        try:
+            backup_dir = os.path.join(os.path.dirname(DB_FILE), "backups")
+            os.makedirs(backup_dir, exist_ok=True)
+            ts = datetime.now().strftime("%Y%m%d_%H%M%S")
+            backup_path = os.path.join(backup_dir, f"actividades_{ts}.db")
+            shutil.copy2(DB_FILE, backup_path)
+            print(f"Backup creado: {backup_path}")
+        except Exception as _e:
+            print(f"Advertencia: no se pudo crear backup previo ({_e}). Continuando...")
+
         # 1. Migrar Usuarios y Actividades Personales
         print("Migrando usuarios y configuraciones...")
         if os.path.exists(USERS_FILE):
@@ -61,39 +150,7 @@ def migrate_data():
         print("Migrando registros desde Excel...")
         if os.path.exists(EXCEL_FILE):
             df = pd.read_excel(EXCEL_FILE, engine='openpyxl')
-            
-            # Normalizar nombres de columnas
-            df.columns = [c.upper().strip() for c in df.columns]
-            
-            registros_count = 0
-            for _, row in df.iterrows():
-                try:
-                    fecha = str(row.get('FECHA', ''))
-                    fecha_atencion = str(row.get('FECHA ATENCIÓN', ''))
-                    
-                    cursor.execute('''
-                        INSERT INTO registros (
-                            usuario, tipo_actividad, fecha, dependencia, solicitante,
-                            tipo_solicitud, medio_solicitud, descripcion, cumplido,
-                            fecha_atencion, observaciones
-                        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                    ''', (
-                        row.get('USUARIO', 'admin'), # Default to admin if missing
-                        row.get('TIPO DE ACTIVIDAD', ''),
-                        fecha,
-                        row.get('DEPENDENCIA', ''),
-                        row.get('SOLICITANTE', ''),
-                        row.get('TIPO DE SOLICITUD', ''),
-                        row.get('MEDIO DE SOLICITUD', ''),
-                        row.get('DESCRIPCIÓN', ''),
-                        row.get('CUMPLIDO', ''),
-                        fecha_atencion,
-                        row.get('OBSERVACIONES', '')
-                    ))
-                    registros_count += 1
-                except Exception as e:
-                    print(f"Error insertando fila: {e}")
-
+            registros_count = _insert_rows_from_df(cursor, df)
             print(f"Propagados {registros_count} registros.")
 
         conn.commit()

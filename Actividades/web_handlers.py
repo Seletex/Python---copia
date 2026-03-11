@@ -11,7 +11,7 @@ from urllib.parse import parse_qs, unquote
 
 from templates import (
     LOGIN_TEMPLATE, MAIN_TEMPLATE, GESTION_TEMPLATE,
-    EXPORTAR_TEMPLATE, ESTADISTICAS_TEMPLATE
+    EXPORTAR_TEMPLATE, ESTADISTICAS_TEMPLATE, FORMULARIO_REGISTRO
 )
 from database import (
     cargar_actividades, cargar_actividades_globales,
@@ -27,6 +27,7 @@ from export_service import (
     exportar_registros_filtrados, obtener_estadisticas_exportacion,
     generar_informe_template
 )
+from migrate_excel_to_sqlite import import_from_excel
 from html_utils import (
     generar_opciones_actividades, generar_opciones_ubicaciones,
     generar_opciones_tipos_solicitud, generar_opciones_medios_solicitud,
@@ -117,17 +118,24 @@ class IndexHandler(BaseRoute):
             alertas = '<div class="alert alert-info alert-dismissible fade show">🗑️ Registro eliminado<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>'
         
         # Cargar registros para la tabla
-        df = cargar_registros(self.usuario_actual)
+        df = cargar_registros(None if self.usuario_actual == 'admin' else self.usuario_actual)
         tabla_html = generar_tabla_registros_recientes(df, self.usuario_actual)
+
+        # Generar sección de registro solo si no es admin
+        seccion_registro = ""
+        if self.usuario_actual != 'admin':
+            seccion_registro = FORMULARIO_REGISTRO.format(
+                opciones_actividades=generar_opciones_actividades(self.usuario_actual),
+                opciones_ubicaciones=generar_opciones_ubicaciones(),
+                opciones_tipos=generar_opciones_tipos_solicitud(),
+                opciones_medios=generar_opciones_medios_solicitud(),
+                fecha_hoy=datetime.now().strftime('%Y-%m-%d')
+            )
 
         html = MAIN_TEMPLATE.format(
             usuario_actual=self.usuario_actual,
-            opciones_actividades=generar_opciones_actividades(self.usuario_actual),
-            opciones_ubicaciones=generar_opciones_ubicaciones(),
-            opciones_tipos=generar_opciones_tipos_solicitud(),
-            opciones_medios=generar_opciones_medios_solicitud(),
+            seccion_registro=seccion_registro,
             alertas=alertas,
-            fecha_hoy=datetime.now().strftime('%Y-%m-%d'),
             tabla_registros=tabla_html
         )
         self.render_html(html)
@@ -138,6 +146,7 @@ class LoginHandler(BaseRoute):
     def post(self, params, post_data):
         data = parse_qs(post_data)
         usuario = data.get('usuario', [''])[0].strip()
+        clave = data.get('clave', [''])[0].strip()
         
         if usuario:
             # Verificar que el usuario existe
@@ -146,6 +155,12 @@ class LoginHandler(BaseRoute):
             encontrado = next((u for u in usuarios if u.lower() == usuario.lower()), None)
             
             if encontrado:
+                if encontrado.lower() == 'admin':
+                    import os
+                    admin_secret = os.environ.get('ADMIN_SECRET')
+                    if admin_secret and clave != admin_secret:
+                        self.redirect('/?error=1')
+                        return
                 self.request.send_response(303)
                 self.request.send_header('Location', '/')
                 self.request.send_header('Set-Cookie', f'usuario={encontrado}; Path=/; Max-Age=3600')
@@ -187,7 +202,7 @@ class GestionHandler(BaseRoute):
         gestion_ubicaciones = generar_gestion_ubicaciones() if self.usuario_actual == "admin" else ""
         gestion_tipos = generar_gestion_tipos_solicitud() if self.usuario_actual == "admin" else ""
         gestion_medios = generar_gestion_medios_solicitud() if self.usuario_actual == "admin" else ""
-        gestion_personal = generar_gestion_actividades_personales(self.usuario_actual)
+        gestion_personal = generar_gestion_actividades_personales(self.usuario_actual) if self.usuario_actual != "admin" else ""
         
         # Cargar datos de contrato para el formulario
         from database import obtener_configuracion_usuario
@@ -282,6 +297,16 @@ class ExportarHandler(BaseRoute):
         from database import obtener_configuracion_usuario
         config = obtener_configuracion_usuario(self.usuario_actual)
         dc = config.get("datos_contrato", {})
+        
+        # Fallback: si el usuario no tiene datos de contrato, usar los del admin
+        if not any(dc.get(k) for k in ['objeto', 'nro', 'nombre', 'cedula', 'supervisor']):
+            try:
+                admin_config = obtener_configuracion_usuario('admin')
+                admin_dc = admin_config.get("datos_contrato", {}) if isinstance(admin_config, dict) else {}
+                if any(admin_dc.get(k) for k in ['objeto', 'nro', 'nombre', 'cedula', 'supervisor']):
+                    dc = admin_dc
+            except Exception:
+                pass
 
         # Filtro de usuario solo para admin
         filtro_usuario_html = ""
@@ -292,17 +317,42 @@ class ExportarHandler(BaseRoute):
                 <div class="mb-3">
                     <label class="form-label">Filtrar por Usuario</label>
                     <select class="form-select" name="usuario_filtro">
-                        <option value="Todos">Todos los usuarios</option>
+                        <option value="Todos" selected>Todos los usuarios</option>
                         {opciones_u}
                     </select>
                 </div>
             </div>
             """
+            importar_html = """
+            <div class="card mb-4">
+              <div class="card-header">
+                <h5><i class="fas fa-file-import"></i> Importar desde Excel (no destructivo)</h5>
+              </div>
+              <div class="card-body">
+                <form method="POST" action="/importar_excel">
+                  <div class="row">
+                    <div class="col-md-8">
+                      <label class="form-label">Ruta del archivo .xlsx</label>
+                      <input type="text" class="form-control" name="excel_path" placeholder="C:\\ruta\\archivo.xlsx" required>
+                      <div class="form-text">Hace respaldo automático y evita duplicados exactos.</div>
+                    </div>
+                    <div class="col-md-4 d-flex align-items-end">
+                      <button type="submit" class="btn btn-success">
+                        <i class="fas fa-upload"></i> Importar
+                      </button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+            """
+        else:
+            importar_html = ""
 
-        # Opciones de actividades para el filtro
-        globales = cargar_actividades_globales()
+        # Opciones de actividades para el filtro: solo actividades personales actuales
+        # (Si se quisieran ver históricas, habría que consultar DISTINCT tipo_actividad en registros)
         personales = cargar_actividades(self.usuario_actual)
-        todas = sorted(set(globales + personales))
+        todas = sorted(set(personales))
         opciones = "\n".join(f'<option value="{a}">{a}</option>' for a in todas)
         
         html = EXPORTAR_TEMPLATE.format(
@@ -315,6 +365,7 @@ class ExportarHandler(BaseRoute):
             total_tipos_actividad=stats.get('total_tipos_actividad', 0),
             ultima_exportacion=stats.get('ultima_exportacion', 'Nunca'),
             filtro_usuario_html=filtro_usuario_html,
+            importar_html=importar_html,
             val_contrato_objeto=dc.get('objeto', ''),
             val_contrato_nro=dc.get('nro', ''),
             val_contrato_nombre=dc.get('nombre', ''),
@@ -345,6 +396,17 @@ class ExportarHandler(BaseRoute):
             'cedula': data.get('contrato_cedula', [''])[0].strip(),
             'supervisor': data.get('contrato_supervisor', [''])[0].strip()
         }
+
+        # Fallback: si todos los campos están vacíos, usar datos del admin
+        if not any(contrato_data.values()):
+            try:
+                from database import obtener_configuracion_usuario as _ocu
+                admin_cfg = _ocu('admin')
+                admin_dc = admin_cfg.get('datos_contrato', {}) if isinstance(admin_cfg, dict) else {}
+                if any(admin_dc.values()):
+                    contrato_data = admin_dc
+            except Exception:
+                pass
 
         # Guardar estos datos para la próxima vez
         from database import obtener_configuracion_usuario, guardar_configuracion_usuario
@@ -389,8 +451,8 @@ class ExportarHandler(BaseRoute):
                 content_type = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
                 filename = f"Informe_{tipo_reporte}_{self.usuario_actual}_{datetime.now().strftime('%Y%m%d')}.xlsx"
             else:
-                df.to_csv(tmp_path, index=False, encoding='utf-8')
-                content_type = 'text/csv'
+                df.to_csv(tmp_path, index=False, encoding='utf-8-sig')
+                content_type = 'text/csv; charset=utf-8-sig'
                 filename = f"exportacion_{self.usuario_actual}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv"
             
             with open(tmp_path, 'rb') as f:
@@ -415,6 +477,28 @@ class ExportarHandler(BaseRoute):
         self.request.end_headers()
         self.request.wfile.write(file_data)
 
+class ImportarExcelHandler(BaseRoute):
+    """Importa registros desde un archivo Excel, solo admin"""
+    def get(self, params):
+        self.redirect('/exportar')
+    def post(self, params, post_data):
+        if not self._require_admin():
+            return
+        data = parse_qs(post_data)
+        excel_path = data.get('excel_path', [''])[0].strip()
+        if not excel_path:
+            self.redirect('/exportar?error=Ruta de Excel vacía')
+            return
+        try:
+            count = import_from_excel(excel_path)
+            self.redirect(f'/exportar?success=Importados {count} registros desde Excel')
+        except FileNotFoundError:
+            self.redirect('/exportar?error=No se encontró el archivo Excel')
+        except Exception as e:
+            from config import logger
+            logger.exception(f"Error en importación desde Excel: {e}")
+            self.redirect('/exportar?error=Error al importar. Revisa el log.')
+
 # =============================================================================
 # HANDLERS DE ACCIONES (POST)
 # =============================================================================
@@ -431,16 +515,22 @@ class GuardarRegistroHandler(BaseRoute):
         
         logger.info(f"Recibida solicitud de registro para usuario: {self.usuario_actual}")
         
+        fecha_ingresada = data.get('fecha_atencion', [ahora.strftime('%Y-%m-%d')])[0].strip()
+        if not fecha_ingresada:
+            fecha_ingresada = ahora.strftime('%Y-%m-%d')
+            
+        fecha_con_hora = f"{fecha_ingresada} {ahora.strftime('%H:%M:%S')}"
+        
         registro = {
             'USUARIO': self.usuario_actual,
-            'FECHA': ahora.strftime('%Y-%m-%d %H:%M:%S'),
+            'FECHA': fecha_con_hora,
             'TIPO DE ACTIVIDAD': data.get('actividad', [''])[0],
             'DEPENDENCIA': data.get('ubicacion', [''])[0],
             'SOLICITANTE': data.get('solicitante', [''])[0],
             'TIPO DE SOLICITUD': data.get('tipo_solicitud', [''])[0],
             'MEDIO DE SOLICITUD': data.get('medio_solicitud', [''])[0],
             'CUMPLIDO': data.get('cumplido', ['Sí'])[0],
-            'FECHA ATENCIÓN': data.get('fecha_atencion', [ahora.strftime('%Y-%m-%d')])[0],
+            'FECHA ATENCIÓN': fecha_ingresada,
             'DESCRIPCIÓN': data.get('descripcion', data.get('observaciones', ['']))[0],
             'OBSERVACIONES': data.get('observaciones', [''])[0]
         }
@@ -721,6 +811,7 @@ ROUTE_MAP = {
     '/agregar_medio_solicitud': ConfigAdminHandler,
     '/eliminar_medio_solicitud': ConfigAdminHandler,
     '/guardar_datos_contrato': GuardarDatosContratoHandler,
+    '/importar_excel': ImportarExcelHandler,
     '/api/actividades': APIHandler,
     '/api/estadisticas_exportacion': APIHandler,
     '/descargar_excel': StaticHandler,

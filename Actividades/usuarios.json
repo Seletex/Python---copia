@@ -1,81 +1,47 @@
 {
     "usuarios": [
         "admin",
-        "usuario1",
-        "usuario2",
-        "usuario3"
+        "Alejandro",
+        "Manolo",
+        "JuanB",
+        "Freddy"
     ],
     "actividades": {
-        "admin": [
-            "Gestión de usuarios",
-            "Configuración del sistema",
-            "Reportes administrativos"
+        "admin": [],
+        "Alejandro": [
+            "1.\tBrindar apoyo en la atención de requerimientos técnicos de primer nivel a los usuarios de la Administración Municipal, atendiendo incidentes relacionados con el funcionamiento de equipos de cómputo, impresoras, configuración de software y otros periféricos.",
+            "2.\tApoyar en el mantenimiento preventivo básico de equipos tecnológicos, realizando tareas como limpieza, revisión de cables, conectores y periféricos, con el objetivo de mantener en condiciones óptimas los recursos informáticos de la entidad.",
+            "3.\tColaborar en el control y actualización del inventario de activos tecnológicos, incluyendo equipos de cómputo, dispositivos de red, periféricos y demás recursos asignados a las dependencias, según los procedimientos establecidos por la oficina de sistemas.",
+            "4.\tApoyar en tareas logísticas relacionadas con la infraestructura tecnológica, tales como instalación, traslado o reubicación de equipos de cómputo, dispositivos de red y demás componentes tecnológicos, bajo supervisión del personal del área.",
+            "5.\tRealizar seguimiento a solicitudes y requerimientos tecnológicos de los usuarios, documentando novedades, avances y necesidades adicionales, y comunicándolas oportunamente a los responsables correspondientes.",
+            "6.\tApoyar en la documentación técnica del área, incluyendo la organización y archivo de documentos, informes de soporte y demás registros, de acuerdo con las directrices internas y del Sistema de Gestión de Calidad.",
+            "7.\tColaborar en la implementación y seguimiento de medidas básicas de seguridad informática, tales como el monitoreo de alertas básicas, cierre adecuado de sesiones, y cumplimiento de rutinas establecidas para el uso seguro de los recursos tecnológicos.",
+            "8.\tApoyar en otras actividades de carácter técnico-operativo o administrativo relacionadas con la gestión de tecnologías de la información, que le sean asignadas por el supervisor del contrato o el Ordenador del Gasto, en concordancia con el objeto contractual."
         ],
-        "usuario1": [
-            "Capacitación a usuarios",
-            "Soporte especializado",
-            "Documentación técnica"
-        ],
-        "usuario2": [
-            "Mantenimiento de servidores",
-            "Backup de datos",
-            "Monitoreo de red"
-        ],
-        "usuario3": [
-            "Desarrollo de aplicaciones",
-            "Base de datos",
-            "Testing de software"
-        ]
+        "Manolo": [],
+        "JuanB": [],
+        "Freddy": []
     },
     "configuraciones": {
-        "admin": {
-            "tema": "oscuro",
-            "columnas_visibles": [
-                "TIPO DE ACTIVIDAD",
-                "FECHA",
-                "DEPENDENCIA",
-                "SOLICITANTE",
-                "DESCRIPCIÓN",
-                "CUMPLIDO"
-            ],
-            "orden_por": "FECHA",
-            "orden_direccion": "desc"
-        },
-        "usuario1": {
-            "tema": "claro",
-            "columnas_visibles": [
-                "TIPO DE ACTIVIDAD",
-                "FECHA",
-                "DEPENDENCIA",
-                "DESCRIPCIÓN",
-                "CUMPLIDO"
-            ],
-            "orden_por": "FECHA",
-            "orden_direccion": "asc"
-        },
-        "usuario2": {
-            "tema": "oscuro",
-            "columnas_visibles": [
-                "TIPO DE ACTIVIDAD",
-                "FECHA",
-                "SOLICITANTE",
-                "DESCRIPCIÓN",
-                "CUMPLIDO"
-            ],
-            "orden_por": "TIPO DE ACTIVIDAD",
-            "orden_direccion": "asc"
-        },
-        "usuario3": {
+        "Alejandro": {
             "tema": "claro",
             "columnas_visibles": [
                 "TIPO DE ACTIVIDAD",
                 "FECHA",
                 "DEPENDENCIA",
                 "SOLICITANTE",
+                "DESCRIPCIÓN",
                 "CUMPLIDO"
             ],
             "orden_por": "FECHA",
-            "orden_direccion": "desc"
+            "orden_direccion": "desc",
+            "datos_contrato": {
+                "objeto": "",
+                "nro": "",
+                "nombre": "",
+                "cedula": "",
+                "supervisor": ""
+            }
         }
     }
 }

@@ -30,6 +30,10 @@ LOGIN_TEMPLATE = """
                     <label class="form-label">Usuario:</label>
                     <input type="text" name="usuario" class="form-control" required>
                 </div>
+                <div class="mb-3">
+                    <label class="form-label">Clave (solo admin):</label>
+                    <input type="password" name="clave" class="form-control" placeholder="Requerida si ingresas como admin">
+                </div>
                 <button type="submit" class="btn btn-primary w-100">🚀 Ingresar</button>
             </form>
             <div class="mt-3 text-center">
@@ -100,35 +104,10 @@ _NAVBAR_TEMPLATE = """
 """
 
 # =============================================================================
-# PLANTILLA: PÁGINA PRINCIPAL
+# BLOQUES DE CONTENIDO
 # =============================================================================
 
-MAIN_TEMPLATE = """
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema de Actividades</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <style>
-        """ + _SHARED_STYLES + """
-        .btn-small {{ padding: 0.25rem 0.5rem; font-size: 0.875rem; }}
-        .stat-card {{ background: white; border-radius: 10px; padding: 20px; margin: 10px 0; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }}
-    </style>
-</head>
-<body>
-    """ + _NAVBAR_TEMPLATE.replace("{icono}", "tasks").replace("{titulo}", "Sistema de Actividades") + """
-
-    <div class="container-fluid p-0">
-        <div class="row g-0">
-            """ + _SIDEBAR_TEMPLATE.format(active_inicio="active", active_gestion="", active_estadisticas="", active_exportar="") + """
-
-            <div class="col-md-10 main-content">
-                <div class="container-fluid">
-                    {alertas}
-
+FORMULARIO_REGISTRO = """
                     <h2 class="mb-4"><i class="fas fa-plus-circle"></i> Nuevo Registro</h2>
                     
                     <form action="/agregar_registro" method="POST">
@@ -195,6 +174,42 @@ MAIN_TEMPLATE = """
                             <i class="fas fa-save"></i> Guardar Registro
                         </button>
                     </form>
+"""
+
+# =============================================================================
+# PLANTILLA: PÁGINA PRINCIPAL
+# =============================================================================
+
+MAIN_TEMPLATE = """
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Actividades</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Select2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" rel="stylesheet" />
+    <style>
+        """ + _SHARED_STYLES + """
+        .btn-small {{ padding: 0.25rem 0.5rem; font-size: 0.875rem; }}
+        .stat-card {{ background: white; border-radius: 10px; padding: 20px; margin: 10px 0; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }}
+    </style>
+</head>
+<body>
+    """ + _NAVBAR_TEMPLATE.replace("{icono}", "tasks").replace("{titulo}", "Sistema de Actividades") + """
+
+    <div class="container-fluid p-0">
+        <div class="row g-0">
+            """ + _SIDEBAR_TEMPLATE.format(active_inicio="active", active_gestion="", active_estadisticas="", active_exportar="") + """
+
+            <div class="col-md-10 main-content">
+                <div class="container-fluid">
+                    {alertas}
+
+                    {seccion_registro}
                     
                     <hr class="my-5">
                     
@@ -222,7 +237,23 @@ MAIN_TEMPLATE = """
         </div>
     </div>
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/i18n/es.js"></script>
+    <script>
+        $(document).ready(function() {{
+            $('select.form-select').each(function() {{
+                if ($(this).find('option').length > 3) {{
+                    $(this).select2({{
+                        theme: 'bootstrap-5',
+                        width: '100%',
+                        language: 'es'
+                    }});
+                }}
+            }});
+        }});
+    </script>
 </body>
 </html>
 """
@@ -240,6 +271,9 @@ GESTION_TEMPLATE = """
     <title>Gestión - Sistema de Actividades</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Select2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" rel="stylesheet" />
     <style>
         """ + _SHARED_STYLES + """
         .list-group-item {{ border: none; border-bottom: 1px solid #f8f9fa; padding: 15px 20px; transition: background 0.2s; }}
@@ -331,7 +365,23 @@ GESTION_TEMPLATE = """
         </div>
     </div>
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/i18n/es.js"></script>
+    <script>
+        $(document).ready(function() {{
+            $('select.form-select').each(function() {{
+                if ($(this).find('option').length > 3) {{
+                    $(this).select2({{
+                        theme: 'bootstrap-5',
+                        width: '100%',
+                        language: 'es'
+                    }});
+                }}
+            }});
+        }});
+    </script>
 </body>
 </html>
 """
@@ -349,6 +399,9 @@ ESTADISTICAS_TEMPLATE = """
     <title>Estadísticas - Sistema de Actividades</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Select2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         """ + _SHARED_STYLES + """
@@ -525,6 +578,9 @@ EXPORTAR_TEMPLATE = """
     <title>Exportar - Sistema de Actividades</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Select2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" rel="stylesheet" />
     <style>
         """ + _SHARED_STYLES + """
         .stats-card {{ border-left: 4px solid #007bff; }}
@@ -587,8 +643,8 @@ EXPORTAR_TEMPLATE = """
                                     <div class="mb-3">
                                         <label class="form-label">Tipo de Reporte</label>
                                         <select class="form-select" name="tipo_reporte">
+                                            <option value="final" selected>Informe Final (Concentrado)</option>
                                             <option value="detallado">Detallado (Plantilla Base)</option>
-                                            <option value="final">Informe Final (Concentrado)</option>
                                         </select>
                                     </div>
                                 </div>
@@ -638,10 +694,13 @@ EXPORTAR_TEMPLATE = """
                     </div>
                 </div>
 
+                
+                {importar_html}
                 <div class="row mb-4">
                     <div class="col-md-3">
                         <div class="card stats-card">
                             <div class="card-body text-center">
+                                <i class="fas fa-calendar fa-2x text-primary mb-2"></i>
                                 <i class="fas fa-calendar fa-2x text-primary mb-2"></i>
                                 <h5>Rango de Fechas</h5>
                                 <p class="text-muted">{fecha_min} - {fecha_max}</p>
@@ -692,7 +751,23 @@ EXPORTAR_TEMPLATE = """
         </div>
     </div>
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/i18n/es.js"></script>
+    <script>
+        $(document).ready(function() {{
+            $('select.form-select').each(function() {{
+                if ($(this).find('option').length > 3) {{
+                    $(this).select2({{
+                        theme: 'bootstrap-5',
+                        width: '100%',
+                        language: 'es'
+                    }});
+                }}
+            }});
+        }});
+    </script>
 </body>
 </html>
 """

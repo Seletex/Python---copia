@@ -7,11 +7,13 @@ Implementa la misma interfaz que database.py pero usando SQLite.
 import os
 import json
 import sqlite3
+import time
+import random
 import pandas as pd
 from config import (
     EXCEL_FILE, USERS_FILE, CONFIG_FILE, DB_FILE, DATABASE_URL, COLUMNAS, 
     ACTIVIDADES_DEFAULT, UBICACIONES_DEFAULT, TIPOS_SOLICITUD_DEFAULT, MEDIOS_SOLICITUD_DEFAULT,
-    logger
+    logger, DIRS_SEARCH
 )
 from utils import cache_decorator, medir_tiempo, clear_cache
 from contextlib import contextmanager
@@ -25,6 +27,24 @@ except ImportError:
 
 # DB_NAME eliminado, usamos DB_FILE de config
 
+def retry_operation(max_retries=5, base_delay=0.5):
+    """Decorador para reintentar operaciones de BD en caso de bloqueo o I/O error"""
+    def decorator(func):
+        def wrapper(*args, **kwargs):
+            last_exception = None
+            for attempt in range(max_retries):
+                try:
+                    return func(*args, **kwargs)
+                except (sqlite3.OperationalError, sqlite3.DatabaseError, OSError, PermissionError) as e:
+                    last_exception = e
+                    sleep_time = base_delay * (2 ** attempt) + random.uniform(0, 0.5)
+                    logger.warning(f"⚠️ Reintento {attempt + 1}/{max_retries} en {func.__name__} por: {e}. Esperando {sleep_time:.2f}s")
+                    time.sleep(sleep_time)
+            logger.error(f"❌ Fallo crítico en {func.__name__} después de {max_retries} intentos.")
+            raise last_exception
+        return wrapper
+    return decorator
+
 def get_db_connection():
     """Obtiene conexión a BD (PostgreSQL si hay URL, sino SQLite)"""
     if DATABASE_URL and psycopg2:
@@ -34,12 +54,21 @@ def get_db_connection():
         except Exception as e:
             logger.error(f"Error conectando a Postgres: {e}")
             # Fallback a SQLite si falla Postgres (opcional)
-            
-    # Timeout aumentado para evitar bloqueos en cargas pesadas
-    conn = sqlite3.connect(DB_FILE, timeout=20)
-    conn.row_factory = sqlite3.Row
-    # Habilitar Write-Ahead Logging para mejor concurrencia
-    conn.execute("PRAGMA journal_mode=WAL")
+    
+    # Resiliencia para SQLite en red
+    conn = None
+    try:
+        # Timeout aumentado considerablemente para redes lentas
+        conn = sqlite3.connect(DB_FILE, timeout=30)
+        conn.row_factory = sqlite3.Row
+        # Habilitar Write-Ahead Logging (WAL) mejora concurrencia, 
+        # pero NORMAL es más seguro en red inestable que WAL puro a veces
+        conn.execute("PRAGMA journal_mode=TRUNCATE") # TRUNCATE suele ser más estable en red que WAL si hay desconexiones
+        conn.execute("PRAGMA synchronous=FULL")      # Máxima seguridad de datos
+    except Exception as e:
+        logger.error(f"Error fatal conectando a SQLite: {e}")
+        raise e
+        
     return conn
 
 def get_cursor(conn):
@@ -67,6 +96,7 @@ def fix_query(query):
         return query.replace('?', '%s').replace('INSERT OR IGNORE', 'INSERT').replace('AUTOINCREMENT', '')
     return query
 
+@retry_operation(max_retries=5, base_delay=1.0)
 def inicializar_tablas():
     """Crea todas las tablas necesarias si no existen (SQLite y Postgres)"""
     try:
@@ -153,7 +183,7 @@ def inicializar_tablas():
             try:
                 logger.info(f"Iniciando migración desde {EXCEL_FILE}...")
                 # Leer excel, forzar string para evitar problemas de tipos
-                df_excel = pd.read_excel(EXCEL_FILE)
+                df_excel = pd.read_excel(EXCEL_FILE, engine='openpyxl')
                 
                 # Mapeo inverso de columnas de Excel a SQL
                 inv_col_map = {
@@ -299,6 +329,9 @@ def guardar_usuarios(data):
         # 3. Eliminar
         for user in to_remove:
             if user != 'admin': # Seguridad extra
+                # Eliminar datos asociados para evitar huérfanos
+                cursor.execute(fix_query("DELETE FROM actividades_personales WHERE username = ?"), (user,))
+                cursor.execute(fix_query("DELETE FROM configuracion_usuario WHERE username = ?"), (user,))
                 cursor.execute(fix_query("DELETE FROM usuarios WHERE username = ?"), (user,))
 
         # 4. Agregar
@@ -346,6 +379,53 @@ def obtener_configuracion_usuario(usuario):
                 pass
                 
         conn.close()
+        try:
+            dc = config.get("datos_contrato", {}) or {}
+            keys = ['objeto','nro','nombre','cedula','supervisor']
+            if not any(dc.get(k) for k in keys):
+                candidates = []
+                for d in DIRS_SEARCH:
+                    p = os.path.join(d, "usuarios.json")
+                    if os.path.exists(p):
+                        candidates.append(p)
+                candidates.insert(0, USERS_FILE)
+                seen = []
+                uniq = [x for x in candidates if not (x in seen or seen.append(x))]
+                found = None
+                found_user = usuario
+                for p in uniq:
+                    try:
+                        with open(p, 'r', encoding='utf-8') as f:
+                            data = json.load(f)
+                        for who in [usuario, 'admin']:
+                            user_cfg = data.get('configuraciones', {}).get(who, {})
+                            dc2 = user_cfg.get('datos_contrato')
+                            if isinstance(dc2, dict) and any(dc2.get(k) for k in keys):
+                                found = dc2
+                                found_user = who
+                                break
+                        if found:
+                            break
+                    except Exception:
+                        continue
+                if isinstance(found, dict):
+                    config['datos_contrato'] = found
+                    try:
+                        conn2 = get_db_connection()
+                        cur2 = get_cursor(conn2)
+                        val_str = json.dumps(found, ensure_ascii=False)
+                        q = fix_query('''
+                            INSERT INTO configuracion_usuario (username, clave, valor)
+                            VALUES (?, ?, ?)
+                            ON CONFLICT(username, clave) DO UPDATE SET valor=excluded.valor
+                        ''')
+                        cur2.execute(q, (usuario, 'datos_contrato', val_str))
+                        conn2.commit()
+                        conn2.close()
+                    except Exception:
+                        pass
+        except Exception:
+            pass
         return config
     except Exception as e:
         logger.error(f"Error obteniendo config usuario {usuario}: {e}")
@@ -452,10 +532,9 @@ def cargar_actividades_globales():
 def cargar_actividades(usuario=None):
     """
     Carga actividades disponibles.
-    v6.8: Los usuarios normales NO ven las actividades personales de admin.
+    Solo retorna actividades personales del usuario.
     """
     try:
-        globales = cargar_actividades_globales()
         personales = []
         
         # Si hay un usuario específico, cargar sus actividades personales
@@ -466,12 +545,10 @@ def cargar_actividades(usuario=None):
             personales = [row['actividad'] for row in cursor.fetchall()]
             conn.close()
             
-        # Retornar la unión de globales + personales del usuario actual
-        # Esto previene que otros usuarios vean las actividades de 'admin' que no sean globales.
-        return sorted(list(set(globales + personales)))
+        return sorted(list(set(personales)))
     except Exception as e:
         logger.error(f"Error cargando actividades para {usuario}: {e}")
-        return ACTIVIDADES_DEFAULT
+        return []
 
 @cache_decorator
 @medir_tiempo
@@ -508,6 +585,7 @@ def guardar_medios_solicitud(medios):
 # CRUD DE REGISTROS
 # =============================================================================
 
+@retry_operation(max_retries=3, base_delay=0.5)
 def sincronizar_excel():
     """Exporta todos los registros de la BD al archivo Excel para respaldo"""
     try:
@@ -526,7 +604,8 @@ def sincronizar_excel():
         intentos = 3
         while intentos > 0:
             try:
-                df_export.to_excel(EXCEL_FILE, index=False)
+                # engine='openpyxl' es vital para la codificación correcta de tildes en xlsx
+                df_export.to_excel(EXCEL_FILE, index=False, engine='openpyxl')
                 logger.info(f"Sincronización con Excel exitosa: {EXCEL_FILE}")
                 break
             except PermissionError:
@@ -541,6 +620,7 @@ def sincronizar_excel():
     except Exception as e:
         logger.error(f"Error crítico en sincronizar_excel: {e}")
 
+@retry_operation(max_retries=3)
 @medir_tiempo
 def cargar_registros(usuario=None):
     try:
@@ -585,6 +665,7 @@ def cargar_registros(usuario=None):
         logger.error(f"Error cargando registros SQL: {e}")
         return pd.DataFrame(columns=COLUMNAS)
 
+@retry_operation(max_retries=3)
 @medir_tiempo
 def guardar_registro(data):
     try:
@@ -630,6 +711,7 @@ def guardar_registro(data):
         logger.error(f"Error guardando registro SQL: {e}")
         return None
 
+@retry_operation(max_retries=3)
 @medir_tiempo
 def eliminar_registro(id_registro, usuario):
     try:
@@ -652,6 +734,7 @@ def eliminar_registro(id_registro, usuario):
         logger.error(f"Error eliminando registro SQL: {e}")
         return False
 
+@retry_operation(max_retries=3)
 @medir_tiempo
 def actualizar_registro(id_registro, data, usuario):
     try:

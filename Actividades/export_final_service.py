@@ -157,10 +157,10 @@ def generar_informe_final_resumen(df, output_path, contrato_data=None, usuario=N
         row7_merges = []
         for col in range(1, 11):
             c = ws.cell(row=7, column=col)
-            header_styles.append({
-                'font': copy.copy(c.font), 'border': copy.copy(c.border),
-                'fill': copy.copy(c.fill), 'alignment': copy.copy(c.alignment)
-            })
+            if hasattr(c, '_style'):
+                header_styles.append(c._style)
+            else:
+                header_styles.append(None)
         for m_range in list(ws.merged_cells.ranges):
             if m_range.min_row == 7 and m_range.max_row == 7:
                 row7_merges.append((m_range.min_col, m_range.max_col))
@@ -189,23 +189,28 @@ def generar_informe_final_resumen(df, output_path, contrato_data=None, usuario=N
                     except Exception: pass
             for c in range(1, 11):
                 cell = ws.cell(row=current_row, column=c)
-                cell.border = header_styles[c-1]['border']
-                cell.alignment = header_styles[c-1]['alignment']
+                style_id = header_styles[c-1]
+                if style_id is not None:
+                    cell._style = style_id
                 if c >= 8: cell.alignment = openpyxl.styles.Alignment(horizontal='center', vertical='center')
             current_row += 1
             
         # 7. Total General
-        ws.cell(row=current_row, column=1, value="TOTAL GENERAL DE ACTIVIDADES:").font = openpyxl.styles.Font(bold=True)
-        ws.cell(row=current_row, column=8, value=resumen['Cantidad'].sum()).font = openpyxl.styles.Font(bold=True)
+        ws.cell(row=current_row, column=1, value="TOTAL GENERAL DE ACTIVIDADES:")
+        ws.cell(row=current_row, column=8, value=resumen['Cantidad'].sum())
         for min_c, max_c in row7_merges:
             if min_c != max_c:
                 try: ws.merge_cells(start_row=current_row, start_column=min_c, end_row=current_row, end_column=max_c)
                 except Exception: pass
         for c in range(1, 11):
             cell = ws.cell(row=current_row, column=c)
-            cell.border = header_styles[c-1]['border']
-            cell.alignment = header_styles[c-1]['alignment']
+            style_id = header_styles[c-1]
+            if style_id is not None:
+                cell._style = style_id
             if c >= 8: cell.alignment = openpyxl.styles.Alignment(horizontal='center', vertical='center')
+            
+        ws.cell(row=current_row, column=1).font = openpyxl.styles.Font(bold=True)
+        ws.cell(row=current_row, column=8).font = openpyxl.styles.Font(bold=True)
 
         wb.save(output_path)
         return True

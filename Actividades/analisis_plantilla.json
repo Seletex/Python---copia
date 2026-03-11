@@ -1,0 +1,68 @@
+{
+  "template": "c:\\Users\\apoyosistemas\\Desktop\\ACTIVIDADES\\Actividades\\INFORME DE ACTIVIDADES - copia.xlsx",
+  "found": {
+    "NRO_CONTRATO": {
+      "label_cell": {
+        "row": 2,
+        "col": 1
+      },
+      "value_cell": {
+        "row": 2,
+        "col": 2
+      },
+      "expected_value": "2"
+    },
+    "OBJETO": {
+      "label_cell": {
+        "row": 3,
+        "col": 1
+      },
+      "value_cell": {
+        "row": 3,
+        "col": 2
+      },
+      "expected_value": "1"
+    },
+    "NOMBRE_CONTRATISTA": {
+      "label_cell": {
+        "row": 4,
+        "col": 1
+      },
+      "value_cell": {
+        "row": 4,
+        "col": 2
+      },
+      "expected_value": "3"
+    },
+    "CEDULA": {
+      "label_cell": {
+        "row": 5,
+        "col": 1
+      },
+      "value_cell": {
+        "row": 5,
+        "col": 2
+      },
+      "expected_value": "4"
+    },
+    "RANGO_FECHAS": {
+      "label_cell": {
+        "row": 6,
+        "col": 1
+      },
+      "value_cell": {
+        "row": 6,
+        "col": 2
+      },
+      "expected_value": "09/03/2026 al 23/03/2026"
+    }
+  },
+  "values": {
+    "NRO_CONTRATO": "2",
+    "OBJETO": "1",
+    "NOMBRE_CONTRATISTA": "3",
+    "CEDULA": "4",
+    "SUPERVISOR": "Mario Alfonso Henao Lopez",
+    "RANGO_FECHAS": "09/03/2026 al 23/03/2026"
+  }
+}
