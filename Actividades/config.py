@@ -66,12 +66,16 @@ def _is_writable_dir(path):
     except Exception:
         return False
 
+MASTER_DIR = None
+
 def _resolve_data_dir():
+    global MASTER_DIR
     env_dir = os.environ.get("ACTIVIDADES_DATA_DIR")
     if env_dir and os.path.isdir(env_dir):
         return env_dir
     candidate = DEFAULT_DATA_DIR
     if candidate.startswith("\\\\") or not _is_writable_dir(candidate):
+        MASTER_DIR = candidate
         alt = os.environ.get("LOCALAPPDATA") or os.path.expanduser("~")
         candidate = os.path.join(alt, "ActividadesData")
         try:

@@ -23,6 +23,16 @@ def _generar_opciones(items, truncar=False, max_len=80):
     return opciones
 
 @medir_tiempo
+def generar_opciones_con_seleccion(items, seleccionado, truncar=False, max_len=80):
+    """Genera opciones para un select con un valor pre-seleccionado"""
+    opciones = ""
+    for item in items:
+        display = item if not truncar or len(item) <= max_len else item[:max_len-3] + "..."
+        selected = 'selected' if str(item) == str(seleccionado) else ''
+        opciones += f'<option value="{item}" title="{item}" {selected}>{display}</option>\n'
+    return opciones
+
+@medir_tiempo
 def generar_opciones_actividades(usuario=None):
     """Genera opciones para el select de actividades"""
     return _generar_opciones(cargar_actividades(usuario), truncar=True)
@@ -288,12 +298,16 @@ def generar_tabla_registros_recientes(df, usuario_actual):
         html += f"""
         <tr>
             <td>{str(row.get('FECHA', ''))[:10]}</td>
-            <td>{str(row.get('FECHA', ''))[11:16]}</td>
             <td title="{row.get('TIPO DE ACTIVIDAD', '')}">{str(row.get('TIPO DE ACTIVIDAD', ''))[:40]}...</td>
             <td>{row.get('DEPENDENCIA', '')}</td>
             <td>{row.get('TIPO DE SOLICITUD', '')}</td>
             <td>{row.get('CUMPLIDO', '')}</td>
-            <td class="text-end">{acciones}</td>
+            <td class="text-end">
+                <a href="/editar_registro?id_registro={id_reg}" class="btn btn-sm btn-outline-primary border-0">
+                    <i class="fas fa-edit"></i>
+                </a>
+                {acciones}
+            </td>
         </tr>
         """
     return html

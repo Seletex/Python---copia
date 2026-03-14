@@ -3,7 +3,7 @@ import os
 
 from templates import (
     LOGIN_TEMPLATE, MAIN_TEMPLATE, GESTION_TEMPLATE, EXPORTAR_TEMPLATE,
-    ESTADISTICAS_TEMPLATE, FORMULARIO_REGISTRO
+    ESTADISTICAS_TEMPLATE, FORMULARIO_REGISTRO, EDIT_REGISTRO_TEMPLATE
 )
 
 def test_template(name, template, **kwargs):
@@ -33,4 +33,9 @@ test_template("EXPORTAR_TEMPLATE", EXPORTAR_TEMPLATE,
             fecha_min="1", fecha_max="1", total_registros=1,
             total_tipos_actividad=1, ultima_exportacion="", filtro_usuario_html="",
             val_contrato_objeto="", val_contrato_nro="", val_contrato_nombre="",
-            val_contrato_cedula="", val_contrato_supervisor="")
+            val_contrato_cedula="", val_contrato_supervisor="", importar_html="")
+test_template("EDIT_REGISTRO_TEMPLATE", EDIT_REGISTRO_TEMPLATE,
+            usuario_actual="u", id_reg="1", opciones_actividades="",
+            opciones_ubicaciones="", opciones_tipos="", opciones_medios="",
+            val_solicitante="", sel_cumplido_si="", sel_cumplido_no="",
+            val_fecha_atencion="", val_observaciones="")

@@ -13,7 +13,7 @@ import pandas as pd
 from config import (
     EXCEL_FILE, USERS_FILE, CONFIG_FILE, DB_FILE, DATABASE_URL, COLUMNAS, 
     ACTIVIDADES_DEFAULT, UBICACIONES_DEFAULT, TIPOS_SOLICITUD_DEFAULT, MEDIOS_SOLICITUD_DEFAULT,
-    logger, DIRS_SEARCH
+    logger, DIRS_SEARCH, MASTER_DIR
 )
 from utils import cache_decorator, medir_tiempo, clear_cache
 from contextlib import contextmanager
@@ -346,6 +346,7 @@ def guardar_usuarios(data):
         conn.commit()
         conn.close()
         clear_cache()
+        sincronizar_db_a_master()
         return True
     except Exception as e:
         logger.error(f"Error sincronizando usuarios SQL: {e}")
@@ -451,6 +452,7 @@ def guardar_configuracion_usuario(usuario, config):
         conn.commit()
         conn.close()
         clear_cache()
+        sincronizar_db_a_master()
         return True
     except Exception as e:
         logger.error(f"Error guardando config usuario {usuario}: {e}")
@@ -476,6 +478,7 @@ def agregar_actividad_personal_db(usuario, actividad):
         conn.commit()
         conn.close()
         clear_cache()
+        sincronizar_db_a_master()
         return True
     except Exception as e:
         logger.error(f"Error agregando actividad personal DB: {e}")
@@ -489,6 +492,7 @@ def eliminar_actividad_personal_db(usuario, actividad):
         conn.commit()
         conn.close()
         clear_cache()
+        sincronizar_db_a_master()
         return True
     except Exception as e:
         logger.error(f"Error eliminando actividad personal DB: {e}")
@@ -517,6 +521,7 @@ def _guardar_lista_global(tipo, lista):
             for val in lista:
                 cursor.execute(fix_query("INSERT OR IGNORE INTO listas_globales (tipo, valor) VALUES (?, ?)"), (tipo, val))
         clear_cache()
+        sincronizar_db_a_master()
         return True
     except Exception as e:
         logger.error(f"Error guardando lista {tipo}: {e}")
@@ -586,15 +591,30 @@ def guardar_medios_solicitud(medios):
 # =============================================================================
 
 @retry_operation(max_retries=3, base_delay=0.5)
+def sincronizar_db_a_master():
+    """Copia la base de datos local de vuelta a la carpeta de red (si existe) para que otros la vean"""
+    if not MASTER_DIR or not os.path.exists(MASTER_DIR):
+        return False
+    
+    import shutil
+    try:
+        dest = os.path.join(MASTER_DIR, os.path.basename(DB_FILE))
+        # Solo copiar si el destino es diferente y escribible
+        if os.path.abspath(DB_FILE) != os.path.abspath(dest):
+            shutil.copy2(DB_FILE, dest)
+            logger.info(f"✅ Sincronización exitosa: BD copiada a red: {dest}")
+            return True
+    except Exception as e:
+        logger.error(f"❌ Error sincronizando DB a master: {e}")
+    return False
+
+@retry_operation(max_retries=3, base_delay=0.5)
 def sincronizar_excel():
     """Exporta todos los registros de la BD al archivo Excel para respaldo"""
     try:
         df = cargar_registros()
         # Eliminar columna ID si existe para que Excel se vea igual que antes
-        if 'ID' in df.columns:
-            df_export = df.drop(columns=['ID'])
-        else:
-            df_export = df
+        df_export = df.drop(columns=['ID']) if 'ID' in df.columns else df
             
         # Reordenar columnas para que coincidan exactamente con la constante COLUMNAS (menos ID)
         cols_final = [c for c in COLUMNAS if c != 'ID']
@@ -602,23 +622,30 @@ def sincronizar_excel():
         
         # Intento de escritura resiliente
         intentos = 3
+        exito = False
         while intentos > 0:
             try:
                 # engine='openpyxl' es vital para la codificación correcta de tildes en xlsx
                 df_export.to_excel(EXCEL_FILE, index=False, engine='openpyxl')
-                logger.info(f"Sincronización con Excel exitosa: {EXCEL_FILE}")
+                logger.info(f"✅ Sincronización con Excel exitosa: {EXCEL_FILE}")
+                exito = True
                 break
             except PermissionError:
                 intentos -= 1
                 if intentos == 0:
-                    logger.warning(f"No se pudo sincronizar Excel {EXCEL_FILE}: El archivo está abierto por otro programa.")
-                import time
+                    logger.warning(f"⚠️ No se pudo sincronizar Excel {EXCEL_FILE}: El archivo está abierto.")
                 time.sleep(0.5)
             except Exception as ex:
-                logger.error(f"Error inesperado sincronizando Excel {EXCEL_FILE}: {ex}")
+                logger.error(f"❌ Error inesperado sincronizando Excel: {ex}")
                 break
+        
+        # v7.0: También sincronizar la DB a la red si estamos en modo local fallback
+        sincronizar_db_a_master()
+        
+        return exito
     except Exception as e:
-        logger.error(f"Error crítico en sincronizar_excel: {e}")
+        logger.error(f"❌ Error crítico en sincronizar_excel: {e}")
+        return False
 
 @retry_operation(max_retries=3)
 @medir_tiempo

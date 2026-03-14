@@ -113,7 +113,7 @@ class IndexHandler(BaseRoute):
         if 'success' in params:
             alertas = '<div class="alert alert-success alert-dismissible fade show">✅ Registro guardado<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>'
         elif 'error' in params:
-            alertas = '<div class="alert alert-danger alert-dismissible fade show">❌ Error en la operación<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>'
+            alertas = f'<div class="alert alert-danger alert-dismissible fade show">❌ {params.get("error", ["Error"])[0]}<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>'
         elif 'deleted' in params:
             alertas = '<div class="alert alert-info alert-dismissible fade show">🗑️ Registro eliminado<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>'
         
@@ -333,7 +333,7 @@ class ExportarHandler(BaseRoute):
                   <div class="row">
                     <div class="col-md-8">
                       <label class="form-label">Ruta del archivo .xlsx</label>
-                      <input type="text" class="form-control" name="excel_path" placeholder="C:\\ruta\\archivo.xlsx" required>
+                      <input type="text" class="form-control" name="excel_path" placeholder="C:\\\\ruta\\\\archivo.xlsx" required>
                       <div class="form-text">Hace respaldo automático y evita duplicados exactos.</div>
                     </div>
                     <div class="col-md-4 d-flex align-items-end">
@@ -349,8 +349,7 @@ class ExportarHandler(BaseRoute):
         else:
             importar_html = ""
 
-        # Opciones de actividades para el filtro: solo actividades personales actuales
-        # (Si se quisieran ver históricas, habría que consultar DISTINCT tipo_actividad en registros)
+        # Opciones de actividades para el filtro
         personales = cargar_actividades(self.usuario_actual)
         todas = sorted(set(personales))
         opciones = "\n".join(f'<option value="{a}">{a}</option>' for a in todas)
@@ -388,7 +387,7 @@ class ExportarHandler(BaseRoute):
         logger.info(f"POST /exportar - tipo_reporte recibido: {tipo_reporte}")
         usuario_filtro = data.get('usuario_filtro', [self.usuario_actual])[0].strip()
         
-        # Datos adicionales del contrato para el reporte
+        # Datos adicionales del contrato
         contrato_data = {
             'objeto': data.get('contrato_objeto', [''])[0].strip(),
             'nro': data.get('contrato_nro', [''])[0].strip(),
@@ -397,7 +396,7 @@ class ExportarHandler(BaseRoute):
             'supervisor': data.get('contrato_supervisor', [''])[0].strip()
         }
 
-        # Fallback: si todos los campos están vacíos, usar datos del admin
+        # Fallback
         if not any(contrato_data.values()):
             try:
                 from database import obtener_configuracion_usuario as _ocu
@@ -408,13 +407,13 @@ class ExportarHandler(BaseRoute):
             except Exception:
                 pass
 
-        # Guardar estos datos para la próxima vez
+        # Guardar estos datos
         from database import obtener_configuracion_usuario, guardar_configuracion_usuario
         config = obtener_configuracion_usuario(self.usuario_actual)
         config["datos_contrato"] = contrato_data
         guardar_configuracion_usuario(self.usuario_actual, config)
         
-        # Admin puede elegir "Todos", usuario normal solo puede verse a sí mismo
+        # Admin puede elegir "Todos"
         if self.usuario_actual != "admin":
             usuario_filtro = self.usuario_actual
         elif usuario_filtro == "Todos":
@@ -432,8 +431,6 @@ class ExportarHandler(BaseRoute):
         tmp_path = None
         try:
             suffix = '.xlsx' if formato == 'excel' else '.csv'
-            # En Windows, NamedTemporaryFile mantiene el archivo abierto y bloqueado.
-            # mkstemp nos da la ruta y cerramos el descriptor inmediatamente para liberar el bloqueo.
             fd, tmp_path = tempfile.mkstemp(suffix=suffix)
             os.close(fd)
             
@@ -750,6 +747,88 @@ class GuardarDatosContratoHandler(BaseRoute):
         else:
             self.redirect('/gestion?error=1')
 
+
+class EditarRegistroHandler(BaseRoute):
+    """Muestra el formulario para editar un registro existente"""
+    def get(self, params):
+        if not self._require_auth():
+            return
+            
+        id_reg = params.get('id_registro', [''])[0].strip()
+        if not id_reg:
+            self.redirect('/?error=ID de registro no proporcionado')
+            return
+            
+        try:
+            # Cargar todos los registros del usuario (o todos si es admin)
+            df = cargar_registros(None if self.usuario_actual == 'admin' else self.usuario_actual)
+            # Buscar el registro por ID
+            registro = df[df['ID'].astype(str) == id_reg]
+            
+            if registro.empty:
+                self.redirect('/?error=Registro no encontrado')
+                return
+                
+            reg_data = registro.iloc[0]
+            
+            # Preparar datos para el template
+            from templates import EDIT_REGISTRO_TEMPLATE
+            from html_utils import (
+                generar_opciones_con_seleccion, cargar_actividades, cargar_ubicaciones,
+                cargar_tipos_solicitud, cargar_medios_solicitud
+            )
+            
+            html = EDIT_REGISTRO_TEMPLATE.format(
+                usuario_actual=self.usuario_actual,
+                id_reg=id_reg,
+                opciones_actividades=generar_opciones_con_seleccion(cargar_actividades(self.usuario_actual), reg_data.get('TIPO DE ACTIVIDAD', '')),
+                opciones_ubicaciones=generar_opciones_con_seleccion(cargar_ubicaciones(), reg_data.get('DEPENDENCIA', '')),
+                opciones_tipos=generar_opciones_con_seleccion(cargar_tipos_solicitud(), reg_data.get('TIPO DE SOLICITUD', '')),
+                opciones_medios=generar_opciones_con_seleccion(cargar_medios_solicitud(), reg_data.get('MEDIO DE SOLICITUD', '')),
+                val_solicitante=reg_data.get('SOLICITANTE', ''),
+                sel_cumplido_si='selected' if reg_data.get('CUMPLIDO', '') == 'Sí' else '',
+                sel_cumplido_no='selected' if reg_data.get('CUMPLIDO', '') == 'No' else '',
+                val_fecha_atencion=reg_data.get('FECHA ATENCIÓN', ''),
+                val_observaciones=reg_data.get('OBSERVACIONES', '')
+            )
+            self.render_html(html)
+        except Exception as e:
+            from config import logger
+            logger.exception(f"Error en EditarRegistroHandler: {e}")
+            self.redirect(f'/?error=Error al cargar edición: {str(e)}')
+
+
+class ActualizarRegistroAccionHandler(BaseRoute):
+    """Procesa la actualización de un registro"""
+    def post(self, params, post_data):
+        if not self._require_auth():
+            return
+            
+        data = parse_qs(post_data)
+        id_reg = data.get('id_registro', [''])[0].strip()
+        
+        if not id_reg:
+            self.redirect('/?error=Falta ID de registro')
+            return
+            
+        registro_update = {
+            'TIPO DE ACTIVIDAD': data.get('actividad', [''])[0],
+            'DEPENDENCIA': data.get('ubicacion', [''])[0],
+            'SOLICITANTE': data.get('solicitante', [''])[0],
+            'TIPO DE SOLICITUD': data.get('tipo_solicitud', [''])[0],
+            'MEDIO DE SOLICITUD': data.get('medio_solicitud', [''])[0],
+            'CUMPLIDO': data.get('cumplido', ['Sí'])[0],
+            'FECHA ATENCIÓN': data.get('fecha_atencion', [''])[0],
+            'OBSERVACIONES': data.get('observaciones', [''])[0],
+            'DESCRIPCIÓN': data.get('observaciones', [''])[0]
+        }
+        
+        from database import actualizar_registro
+        if actualizar_registro(int(id_reg), registro_update, self.usuario_actual):
+            self.redirect('/?success=Registro actualizado correctamente')
+        else:
+            self.redirect('/?error=No se pudo actualizar el registro')
+
 # =============================================================================
 # HANDLERS DE API Y ARCHIVOS ESTÁTICOS
 # =============================================================================
@@ -798,6 +877,8 @@ ROUTE_MAP = {
     '/guardar': GuardarRegistroHandler,
     '/agregar_registro': GuardarRegistroHandler,
     '/eliminar_registro_accion': EliminarRegistroAccionHandler,
+    '/editar_registro': EditarRegistroHandler,
+    '/actualizar_registro_accion': ActualizarRegistroAccionHandler,
     '/agregar_usuario': UserAdminHandler,
     '/eliminar_usuario': UserAdminHandler,
     '/agregar_actividad_global': ConfigAdminHandler,
