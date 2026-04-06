@@ -29,7 +29,8 @@ def setup_logging():
             RotatingFileHandler(
                 os.path.join(log_dir, 'rendimiento.log') if os.path.exists(log_dir) else 'rendimiento.log',
                 maxBytes=10*1024*1024,
-                backupCount=5
+                backupCount=5,
+                encoding='utf-8'
             ),
             logging.StreamHandler()
         ]

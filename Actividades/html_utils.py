@@ -297,13 +297,61 @@ def generar_tabla_registros_recientes(df, usuario_actual):
         
         html += f"""
         <tr>
-            <td>{str(row.get('FECHA', ''))[:10]}</td>
+            <td>{str(row.get('FECHA ATENCIÓN', row.get('FECHA', '')))[:10]}</td>
             <td title="{row.get('TIPO DE ACTIVIDAD', '')}">{str(row.get('TIPO DE ACTIVIDAD', ''))[:40]}...</td>
             <td>{row.get('DEPENDENCIA', '')}</td>
             <td>{row.get('TIPO DE SOLICITUD', '')}</td>
             <td>{row.get('CUMPLIDO', '')}</td>
             <td class="text-end">
                 <a href="/editar_registro?id_registro={id_reg}" class="btn btn-sm btn-outline-primary border-0">
+                    <i class="fas fa-edit"></i>
+                </a>
+                {acciones}
+            </td>
+        </tr>
+        """
+    return html
+
+@medir_tiempo
+def generar_tabla_actividades_completa(df, usuario_actual):
+    """Genera el HTML para la tabla completa de actividades con más detalle y sin límite estricto (cap de 500)"""
+    if df.empty:
+        return '<tr><td colspan="8" class="text-center text-muted">No hay registros para mostrar en las fechas seleccionadas</td></tr>'
+    
+    # Tomar hasta los últimos 500 (por seguridad) e invertir orden (más reciente primero)
+    df_recientes = df.tail(500).iloc[::-1]
+    
+    html = ""
+    for _, row in df_recientes.iterrows():
+        id_reg = row.get('ID', '')
+        es_propietario = (row.get('USUARIO') == usuario_actual) or (usuario_actual == "admin")
+        
+        acciones = ""
+        if es_propietario:
+            acciones = f"""
+                <form action="/eliminar_registro_accion" method="POST" style="display:inline;" onsubmit="return confirm('¿Eliminar este registro?')">
+                    <input type="hidden" name="id_registro" value="{id_reg}">
+                    <button type="submit" class="btn btn-sm btn-outline-danger border-0">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
+                </form>
+            """
+        
+        # Cortar la observación temporalmente si es muy larga para la visualización en tabla
+        obs = str(row.get('OBSERVACIONES', ''))
+        if len(obs) > 40:
+            obs = obs[:37] + "..."
+            
+        html += f"""
+        <tr>
+            <td>{str(row.get('FECHA ATENCIÓN', row.get('FECHA', '')))[:10]}</td>
+            <td title="{row.get('TIPO DE ACTIVIDAD', '')}">{str(row.get('TIPO DE ACTIVIDAD', ''))[:40]}{'...' if len(str(row.get('TIPO DE ACTIVIDAD', ''))) > 40 else ''}</td>
+            <td>{row.get('DEPENDENCIA', '')}</td>
+            <td>{row.get('TIPO DE SOLICITUD', '')}</td>
+            <td>{row.get('CUMPLIDO', '')}</td>
+            <td title="{row.get('OBSERVACIONES', '')}">{obs}</td>
+            <td class="text-end">
+                <a href="/editar_registro?id_registro={id_reg}" class="btn btn-sm btn-outline-primary border-0" title="Editar">
                     <i class="fas fa-edit"></i>
                 </a>
                 {acciones}
