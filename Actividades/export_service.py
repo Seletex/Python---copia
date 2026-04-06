@@ -82,7 +82,7 @@ def _format_fecha(df, func):
 
 
 @medir_tiempo
-def obtener_estadisticas_exportacion(usuario=None, fecha_inicio=None, fecha_fin=None):
+def obtener_estadisticas_exportacion(usuario=None, fecha_inicio=None, fecha_fin=None, **kwargs):
     """Obtiene estadísticas generales y datos para gráficos con soporte de filtros"""
     empty_result = {
         'fecha_min': 'N/A', 'fecha_max': 'N/A',
@@ -98,7 +98,8 @@ def obtener_estadisticas_exportacion(usuario=None, fecha_inicio=None, fecha_fin=
         df, _ = exportar_registros_filtrados(
             fecha_inicio=fecha_inicio, 
             fecha_fin=fecha_fin, 
-            usuario=usuario
+            usuario=usuario,
+            actividad=kwargs.get('actividad')
         )
         if df.empty:
             return empty_result
@@ -197,12 +198,29 @@ def generar_reporte_excel(df, estadisticas, output_path):
 
 @medir_tiempo
 def generar_informe_template(df, output_path, contrato_data=None):
-    """Genera informe usando la plantilla Excel institucional"""
+    """Genera informe usando la plantilla Excel original para preservar el formato profesional"""
     try:
-        import openpyxl
-        from config import TEMPLATE_EXCEL
-        # Si no se pasaron datos de contrato, intentar obtenerlos de la
-        # configuración global guardada en la base de datos bajo 'admin'.
+        import os
+        import pandas as pd
+        from openpyxl import load_workbook
+        from openpyxl.cell.cell import MergedCell
+        from openpyxl.styles import Font, Alignment, PatternFill, Border, Side
+        from config import logger, TEMPLATE_EXCEL
+
+        def _escribir_seguro(ws, r, c, val):
+            """Escribe en una celda, buscando la maestra si está combinada"""
+            cell = ws.cell(row=r, column=c)
+            if isinstance(cell, MergedCell):
+                for m_range in ws.merged_cells.ranges:
+                    if cell.coordinate in m_range:
+                        ws.cell(row=m_range.min_row, column=m_range.min_col, value=val)
+                        return
+            cell.value = val
+
+        if not os.path.exists(TEMPLATE_EXCEL):
+            logger.error(f"No se encontró la plantilla detallada en: {TEMPLATE_EXCEL}")
+            return False
+
         if contrato_data is None:
             try:
                 from database import obtener_configuracion_usuario
@@ -210,406 +228,119 @@ def generar_informe_template(df, output_path, contrato_data=None):
                 contrato_data = cfg.get('datos_contrato', {}) if isinstance(cfg, dict) else {}
             except Exception:
                 contrato_data = {}
-        from config import logger, TEMPLATE_EXCEL, DATA_DIR, BASE_DIR
-        template_path = TEMPLATE_EXCEL
-        if not os.path.exists(template_path):
-            candidates = [
-                os.path.join(DATA_DIR, "INFORME DE ACTIVIDADES - copia.xlsx"),
-                os.path.join(BASE_DIR, "INFORME DE ACTIVIDADES - copia.xlsx"),
-                os.path.join(os.getcwd(), "INFORME DE ACTIVIDADES - copia.xlsx"),
-                os.path.join(os.path.dirname(BASE_DIR), "INFORME DE ACTIVIDADES - copia.xlsx"),
-                os.path.join(os.path.dirname(os.getcwd()), "INFORME DE ACTIVIDADES - copia.xlsx"),
-            ]
-            for cand in candidates:
-                if os.path.exists(cand):
-                    template_path = cand
-                    logger.info(f"Plantilla encontrada por búsqueda alternativa: {template_path}")
-                    break
-        if not os.path.exists(template_path):
-            logger.error(f"Plantilla no encontrada - Se intentó cargar desde: {TEMPLATE_EXCEL}")
-            # Fallback: generar reporte básico sin plantilla
-            try:
-                stats = _calcular_estadisticas(df)
-                return generar_reporte_excel(df, stats, output_path)
-            except Exception:
-                return False
-            
-        try:
-            wb = openpyxl.load_workbook(template_path)
-            ws = wb.active
-            logger.info("Plantilla cargada correctamente")
-        except Exception as e:
-            logger.error(f"Error al cargar el libro de Excel: {e}")
-            return False
-        # Reemplazo de placeholders en la plantilla para mayor flexibilidad.
-        # Soportamos: {{NRO_CONTRATO}}, {{OBJETO}}, {{NOMBRE_CONTRATISTA}}, {{CEDULA}}, {{SUPERVISOR}}, {{RANGO_FECHAS}}
-        def _build_contrato_values(df, contrato_data):
-            vals = {}
-            nro = (contrato_data.get('nro') if contrato_data else '') or ''
-            objeto = (contrato_data.get('objeto') if contrato_data else '') or ''
-            nombre = (contrato_data.get('nombre') if contrato_data else '') or ''
-            cedula = (contrato_data.get('cedula') if contrato_data else '') or ''
-            supervisor = (contrato_data.get('supervisor') if contrato_data else '') or ''
 
-            # Si no tenemos nombre en contrato_data, intentar obtenerlo de columnas del DataFrame
-            if not nombre:
-                candidate_cols = [
-                    'NOMBRE CONTRATISTA', 'CONTRATISTA', 'NOMBRE',
-                    'NOMBRE_COMPLETO', 'NOMBRE_USUARIO', 'NOMBRE DEL CONTRATISTA'
-                ]
-                found = None
-                for c in candidate_cols:
-                    if c in df.columns:
-                        found = c
-                        break
-                if found:
-                    vals_list = df[found].dropna().unique().tolist()
-                    if len(vals_list) == 1:
-                        nombre = str(vals_list[0])
-                    elif len(vals_list) > 1:
-                        preview = [str(v).strip() for v in vals_list[:3]]
-                        nombre = ', '.join(preview) + ('...' if len(vals_list) > 3 else '')
-                else:
-                    if 'USUARIO' in df.columns:
-                        usuarios = df['USUARIO'].dropna().unique().tolist()
-                        if len(usuarios) == 1:
-                            nombre = str(usuarios[0])
-                        else:
-                            nombre = 'VARIOS'
+        wb = load_workbook(TEMPLATE_EXCEL)
+        ws = wb.active
 
-            # Rango de fechas
-            rango = ''
-            try:
-                if not df.empty and 'FECHA' in df.columns:
-                    fechas_dt = pd.to_datetime(df['FECHA'], errors='coerce').dropna()
-                    if not fechas_dt.empty:
-                        rango = f"{fechas_dt.min().strftime('%d/%m/%Y')} al {fechas_dt.max().strftime('%d/%m/%Y')}"
-            except Exception:
-                rango = ''
+        # Datos del contrato a celdas fijas (Basado en análisis de plantilla detallada)
+        nro = (contrato_data.get('nro') if contrato_data else '') or ''
+        objeto = (contrato_data.get('objeto') if contrato_data else '') or ''
+        nombre = (contrato_data.get('nombre') if contrato_data else '') or ''
+        cedula = (contrato_data.get('cedula') if contrato_data else '') or ''
+        supervisor = (contrato_data.get('supervisor') if contrato_data else '') or ''
 
-            vals['NRO_CONTRATO'] = str(nro).upper() if nro else ''
-            vals['OBJETO'] = str(objeto).upper() if objeto else ''
-            vals['NOMBRE_CONTRATISTA'] = str(nombre).upper() if nombre else 'N/D'
-            vals['CEDULA'] = str(cedula) if cedula else ''
-            vals['SUPERVISOR'] = str(supervisor).upper() if supervisor else ''
-            vals['RANGO_FECHAS'] = rango
-            return vals
-
-        def _replace_placeholders_in_sheet(sheet, values_map):
-            # Iterar por todo el rango usado de la hoja
-            for row in sheet.iter_rows(min_row=1, max_row=sheet.max_row, min_col=1, max_col=sheet.max_column):
-                for cell in row:
-                    if isinstance(cell.value, str) and '{{' in cell.value and '}}' in cell.value:
-                        new_val = cell.value
-                        for k, v in values_map.items():
-                            placeholder = '{{' + k + '}}'
-                            if placeholder in new_val:
-                                new_val = new_val.replace(placeholder, v)
-                        cell.value = new_val
-
-        contrato_values = _build_contrato_values(df, contrato_data)
-        # Reemplazar en todas las hojas por seguridad; si no hay placeholders
-        # presentes hacemos fallback a las celdas fijas para mantener
-        # compatibilidad con plantillas antiguas.
-        replaced_any = False
-        for sht in wb.worksheets:
-            # marcar antes del cambio para detectar si se reemplazó algo
-            before_has = False
-            for row in sht.iter_rows(min_row=1, max_row=sht.max_row, min_col=1, max_col=sht.max_column):
-                for cell in row:
-                    if isinstance(cell.value, str) and '{{' in cell.value and '}}' in cell.value:
-                        before_has = True
-                        break
-                if before_has:
-                    break
-
-            if before_has:
-                _replace_placeholders_in_sheet(sht, contrato_values)
-                replaced_any = True
-
-        # Completar cabecera por etiquetas visibles (compatibilidad con plantillas sin placeholders)
-        def _normalize(s):
-            s = str(s).strip().upper().replace(':','')
-            s = ''.join(c for c in unicodedata.normalize('NFD', s) if unicodedata.category(c) != 'Mn')
-            return ''.join(s.split())
-        label_map = {
-            'NRO_CONTRATO': [
-                "NO.CONVENIOOCONTRATO","NOCONVENIOOCONTRATO","N°CONVENIOOCONTRATO","NROCONVENIOOCONTRATO",
-                "NO.CONTRATO","NOCONTRATO","NROCONTRATO","NºCONTRATO"
-            ],
-            'OBJETO': ["OBJETODELCONTRATO","OBJETO"],
-            'NOMBRE_CONTRATISTA': ["NOMBREDELCONTRATISTA","NOMBRECONTRATISTA"],
-            'CEDULA': ["NODEIDENTIFICACIÓN","NODEIDENTIFICACION","CEDULA","CÉDULA","NIT"],
-            'RANGO_FECHAS': ["FECHADEACTIVIDADES","RANGODEFECHAS"]
-        }
-        def _write_next_to_label(sheet, label_keys, value):
-            if not value:
-                return False
-            max_r = min(sheet.max_row, 20)
-            max_c = min(sheet.max_column, 12)
-            target = _normalize(value)
-            for r in range(1, max_r+1):
-                for c in range(1, max_c+1):
-                    cell = sheet.cell(row=r, column=c)
-                    if isinstance(cell.value, str):
-                        norm = _normalize(cell.value)
-                        for key in label_keys:
-                            if key in norm:
-                                try:
-                                    sheet.cell(row=r, column=c+1, value=value)
-                                except Exception:
-                                    return False
-                                return True
-            return False
-        # Intentar escribir en la hoja activa
-        try:
-            _write_next_to_label(ws, label_map['NRO_CONTRATO'], contrato_values.get('NRO_CONTRATO', ''))
-            _write_next_to_label(ws, label_map['OBJETO'], contrato_values.get('OBJETO', ''))
-            _write_next_to_label(ws, label_map['NOMBRE_CONTRATISTA'], contrato_values.get('NOMBRE_CONTRATISTA', ''))
-            _write_next_to_label(ws, label_map['CEDULA'], contrato_values.get('CEDULA', ''))
-            _write_next_to_label(ws, label_map['RANGO_FECHAS'], contrato_values.get('RANGO_FECHAS', ''))
-        except Exception:
-            pass
-
- 
-
-        # Rango de fechas (Fila 6) - Mantener si es necesario o mover al final
+        # Rango fechas
+        rango_fechas = ''
         if not df.empty and 'FECHA' in df.columns:
             fechas_dt = pd.to_datetime(df['FECHA'], errors='coerce').dropna()
             if not fechas_dt.empty:
-                ws.cell(row=6, column=3,
-                        value=f"{fechas_dt.min().strftime('%d/%m/%Y')} al {fechas_dt.max().strftime('%d/%m/%Y')}")
-                ws.merge_cells(start_row=6, start_column=3, end_row=6, end_column=10) # Unificar ancho de fechas
-        
-        # Guardar estilos base de fila 8
-        base_styles = []
-        for col in range(1, 10):
-            cell = ws.cell(row=8, column=col)
-            if hasattr(cell, '_style'):
-                base_styles.append(cell._style)
-            else:
-                base_styles.append(None)
-        
-        # Diccionario de meses en español
-        meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", 
-                 "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"]
-        ahora = datetime.now()
-        mes_actual = meses[ahora.month - 1]
-        anio_actual = ahora.year
+                rango_fechas = f"{fechas_dt.min().strftime('%d/%m/%Y')} al {fechas_dt.max().strftime('%d/%m/%Y')}"
 
-        # ------------------------------------------------------------------
-        # FIX CORRUPCIÓN EXCEL: Primero descombinamos celdas existentes 
-        # en la zona de trabajo para evitar conflictos al insertar/combinar.
-        # ------------------------------------------------------------------
-        merged_ranges = list(ws.merged_cells.ranges)
-        for m_range in merged_ranges:
-            if m_range.min_row >= 7:
-                try:
-                    ws.unmerge_cells(str(m_range))
-                except Exception: pass
+        # Llenado de metadatos (Uso de función segura para celdas combinadas)
+        _escribir_seguro(ws, 2, 3, str(nro).upper())
+        _escribir_seguro(ws, 3, 3, str(objeto).upper())
+        _escribir_seguro(ws, 4, 3, str(nombre).upper())
+        _escribir_seguro(ws, 5, 3, str(cedula))
+        _escribir_seguro(ws, 6, 3, rango_fechas)
 
-        # Calcular cuántas filas necesitamos exactamente
+        # Estilos base para las celdas de datos
+        center_align = Alignment(horizontal="center", vertical="center", wrap_text=True)
+        left_align = Alignment(horizontal="left", vertical="center", wrap_text=True)
+        thin_border = Border(
+            left=Side(style='thin'), right=Side(style='thin'),
+            top=Side(style='thin'), bottom=Side(style='thin')
+        )
+
+        # Iniciar datos en la fila 8 (La fila 7 tiene los encabezados originales)
+        row_idx = 8
+        
+        # Agrupar por tipo de actividad para facilitar lectura
         df_reporte = df.copy()
         if 'TIPO DE ACTIVIDAD' in df_reporte.columns:
             df_reporte = df_reporte.sort_values(by=['TIPO DE ACTIVIDAD', 'FECHA'])
-            resumen_counts = df_reporte['TIPO DE ACTIVIDAD'].value_counts().to_dict()
-            num_grupos = len(resumen_counts)
-        else:
-            resumen_counts = {}
-            num_grupos = 0
 
-        # Filas: datos + subtotales + total + resumen + contrato + firmas + espaciado
-        rows_needed = len(df_reporte) + num_grupos + 1 + len(resumen_counts) + 25
-        start_row = 8
-        ws.insert_rows(start_row, amount=rows_needed)
-
-        # Escribir datos con cortes por actividad
-        current_row = 8
         ultima_actividad = None
-        conteo_actividad = 0
+        subtotal_actividad = 0
         total_general = 0
 
-        for _, row in df_reporte.iterrows():
-            actividad_actual = row.get('TIPO DE ACTIVIDAD', '')
+        def _escribir_subtotal(idx, act, count):
+            ws.cell(row=idx, column=1, value=f"SUBTOTAL {act}:").font = Font(bold=True)
+            ws.cell(row=idx, column=2, value=count).font = Font(bold=True)
+            ws.merge_cells(start_row=idx, start_column=2, end_row=idx, end_column=9)
+            for i in range(1, 10):
+                ws.cell(row=idx, column=i).border = thin_border
+                ws.cell(row=idx, column=i).fill = PatternFill(start_color="F2F2F2", end_color="F2F2F2", fill_type="solid")
+
+        # Columnas mapeadas: TIPO DE ACTIVIDAD(1), FECHA(2), DEPENDENCIA(3), SOLICITANTE(4), 
+        # TIPO DE SOLICITUD(5), MEDIO DE SOL.(6), CUMPLIDO(7), FECHA ATENCIÓN(8), OBSERVACIONES(9)
+        columnas_mapeo = [
+            'TIPO DE ACTIVIDAD', 'FECHA ATENCIÓN', 'DEPENDENCIA', 'SOLICITANTE',
+            'TIPO DE SOLICITUD', 'MEDIO DE SOLICITUD', 'CUMPLIDO', 'FECHA ATENCIÓN', 'OBSERVACIONES'
+        ]
+
+        for _, r in df_reporte.iterrows():
+            act_actual = r.get('TIPO DE ACTIVIDAD', 'SIN TIPO')
             
-            # Si cambia la actividad, mostrar subtotal de la anterior
-            if ultima_actividad is not None and actividad_actual != ultima_actividad:
-                ws.cell(row=current_row, column=1, value="ACTIVIDADES: ")
-                ws.cell(row=current_row, column=2, value=conteo_actividad).font = openpyxl.styles.Font(bold=True)
-                ws.merge_cells(start_row=current_row, start_column=2, end_row=current_row, end_column=10)
-                ws.cell(row=current_row, column=2).alignment = openpyxl.styles.Alignment(horizontal='left', vertical='center')
+            # Escribir registros
+            for col_idx, col_name in enumerate(columnas_mapeo, 1):
+                val = r.get(col_name, '')
+                cell = ws.cell(row=row_idx, column=col_idx, value=str(val) if val is not None else '')
+                cell.border = thin_border
+                cell.alignment = left_align if col_idx in [1, 3, 4, 9] else center_align
                 
-                for c in range(1, 10):
-                    style_id = base_styles[c-1]
-                    if style_id is not None:
-                        # For subtotals we just want to grab the border, but we can't easily merge 
-                        # just the border if we only have the _style ID. Using the whole style is fine 
-                        # and ensures consistency, except it might reset the font to non-bold.
-                        # So let's re-apply bold font if it resets it:
-                        ws.cell(row=current_row, column=c)._style = style_id
-                        
-                ws.cell(row=current_row, column=1).font = openpyxl.styles.Font(bold=True)
-                ws.cell(row=current_row, column=2).font = openpyxl.styles.Font(bold=True)
-                current_row += 1
-                conteo_actividad = 0
-            
-            fecha = row.get('FECHA', '')
-            if hasattr(fecha, 'strftime'):
-                fecha = fecha.strftime('%Y-%m-%d')
-            
-            fecha_atencion = row.get('FECHA ATENCIÓN', '')
-            if hasattr(fecha_atencion, 'strftime'):
-                fecha_atencion = fecha_atencion.strftime('%Y-%m-%d')
-            
-            valores = [
-                actividad_actual, fecha,
-                row.get('DEPENDENCIA', ''), row.get('SOLICITANTE', ''),
-                row.get('TIPO DE SOLICITUD', ''), row.get('MEDIO DE SOLICITUD', ''),
-                row.get('CUMPLIDO'), fecha_atencion,
-                row.get('OBSERVACIONES')
-            ]
-            
-            for col_idx, valor in enumerate(valores, start=1):
-                cell = ws.cell(row=current_row, column=col_idx, value=valor)
-                if col_idx <= len(base_styles):
-                    style = base_styles[col_idx - 1]
-                    if style is not None:
-                        cell._style = style
-            
-            ultima_actividad = actividad_actual
-            conteo_actividad += 1
             total_general += 1
-            current_row += 1
+            row_idx += 1
+
+        # TOTAL GENERAL
+        row_idx += 1
+        ws.cell(row=row_idx, column=1, value="TOTAL GENERAL DE REGISTROS:").font = Font(bold=True, size=12)
+        ws.cell(row=row_idx, column=2, value=total_general).font = Font(bold=True, size=12)
+        ws.merge_cells(start_row=row_idx, start_column=2, end_row=row_idx, end_column=9)
+        for i in range(1, 10):
+            c = ws.cell(row=row_idx, column=i)
+            c.border = thin_border
+            c.fill = PatternFill(start_color="D9E1F2", end_color="D9E1F2", fill_type="solid")
             
-        # Último subtotal y Gran Total
-        if ultima_actividad:
-            ws.cell(row=current_row, column=1, value="ACTIVIDADES: ")
-            ws.cell(row=current_row, column=2, value=conteo_actividad).font = openpyxl.styles.Font(bold=True)
-            ws.merge_cells(start_row=current_row, start_column=2, end_row=current_row, end_column=10)
-            ws.cell(row=current_row, column=2).alignment = openpyxl.styles.Alignment(horizontal='left', vertical='center')
-            for c in range(1, 10):
-                style_id = base_styles[c-1]
-                if style_id is not None:
-                    ws.cell(row=current_row, column=c)._style = style_id
-            ws.cell(row=current_row, column=1).font = openpyxl.styles.Font(bold=True)
-            ws.cell(row=current_row, column=2).font = openpyxl.styles.Font(bold=True)
-            current_row += 1
-            
-            ws.cell(row=current_row, column=1, value="TOTAL GENERAL").font = openpyxl.styles.Font(bold=True, size=11)
-            ws.cell(row=current_row, column=2, value=total_general).font = openpyxl.styles.Font(bold=True, size=11)
-            ws.merge_cells(start_row=current_row, start_column=2, end_row=current_row, end_column=10)
-            ws.cell(row=current_row, column=2).alignment = openpyxl.styles.Alignment(horizontal='left', vertical='center')
-            for c in range(1, 10): 
-                style_id = base_styles[c-1]
-                if style_id is not None:
-                    ws.cell(row=current_row, column=c)._style = style_id
-            
-            ws.cell(row=current_row, column=1).font = openpyxl.styles.Font(bold=True, size=11)
-            ws.cell(row=current_row, column=2).font = openpyxl.styles.Font(bold=True, size=11)
-            current_row += 1
+        # ------------------
+        # SECCIÓN FIRMAS
+        # ------------------
+        row_idx += 4
+        ws.cell(row=row_idx, column=2, value="_______________________________").alignment = center_align
+        ws.cell(row=row_idx, column=6, value="_______________________________").alignment = center_align
+        row_idx += 1
+        ws.cell(row=row_idx, column=2, value="FIRMA CONTRATISTA").font = Font(bold=True)
+        ws.cell(row=row_idx, column=2).alignment = center_align
+        ws.cell(row=row_idx, column=6, value="FIRMA SUPERVISOR").font = Font(bold=True)
+        ws.cell(row=row_idx, column=6).alignment = center_align
+        
+        row_idx += 1
+        ws.cell(row=row_idx, column=2, value=str(nombre).upper()).alignment = center_align
+        ws.cell(row=row_idx, column=6, value=str(supervisor).upper()).alignment = center_align
+        
+        row_idx += 1
+        ws.cell(row=row_idx, column=2, value=str(cedula)).alignment = center_align
+        
+        wb.save(output_path)
+        logger.info(f"Informe generado limpiamente en: {output_path}")
+        return True
 
-        #current_row += 1 # Espacio
-
-        # Fecha de informe
-        ws.cell(row=current_row, column=1, value="Fecha de informe:").font = openpyxl.styles.Font(bold=True)
-        ws.cell(row=current_row, column=2, value=f"{mes_actual} de {anio_actual}")
-        ws.merge_cells(start_row=current_row, start_column=2, end_row=current_row, end_column=10)
-        current_row += 1
-
-        # Datos de contrato al final (Dinamico)
-        if contrato_data:
-            fields = [
-                ("Elaborado por:", contrato_data.get('nombre', '')),
-                ("CONTRATISTA", ""),
-                ("Vo.Bo:", contrato_data.get('supervisor', '')),
-                ("SUPERVISOR", ""),
-            ]
-            for label, value in fields:
-                ws.cell(row=current_row, column=1, value=label).font = openpyxl.styles.Font(bold=True)
-                if value:
-                    ws.cell(row=current_row, column=2, value=str(value).upper())
-                    ws.merge_cells(start_row=current_row, start_column=2, end_row=current_row, end_column=10)
-                current_row += 1
-
-        try:
-            wb.save(output_path)
-            logger.info(f"Informe guardado exitosamente en: {output_path}")
-            return True
-        except Exception as e:
-            logger.error(f"Error al guardar el archivo de salida {output_path}: {e}")
-            return False
     except Exception as e:
-        logger.exception(f"Excepción no controlada en generar_informe_template: {e}")
+        from config import logger
+        logger.exception(f"Excepción en generar_informe_template: {e}")
         return False
+
 
 @medir_tiempo
 def analizar_plantilla_contrato(df=None, contrato_data=None, output_json_path=None):
-    try:
-        import openpyxl, json
-        from config import TEMPLATE_EXCEL, DATA_DIR
-        if contrato_data is None:
-            try:
-                from database import obtener_configuracion_usuario
-                cfg = obtener_configuracion_usuario('admin') or {}
-                contrato_data = cfg.get('datos_contrato', {}) if isinstance(cfg, dict) else {}
-            except Exception:
-                contrato_data = {}
-        if df is None:
-            df = cargar_registros(None)
-        contrato_values = {
-            'NRO_CONTRATO': (contrato_data.get('nro') or ''),
-            'OBJETO': (contrato_data.get('objeto') or ''),
-            'NOMBRE_CONTRATISTA': (contrato_data.get('nombre') or ''),
-            'CEDULA': (contrato_data.get('cedula') or ''),
-            'SUPERVISOR': (contrato_data.get('supervisor') or ''),
-            'RANGO_FECHAS': ''
-        }
-        try:
-            if not df.empty and 'FECHA' in df.columns:
-                fechas_dt = pd.to_datetime(df['FECHA'], errors='coerce').dropna()
-                if not fechas_dt.empty:
-                    contrato_values['RANGO_FECHAS'] = f"{fechas_dt.min().strftime('%d/%m/%Y')} al {fechas_dt.max().strftime('%d/%m/%Y')}"
-        except Exception:
-            pass
-        wb = openpyxl.load_workbook(TEMPLATE_EXCEL)
-        ws = wb.active
-        def _normalize(s):
-            s = str(s).strip().upper().replace(':','')
-            s = ''.join(c for c in unicodedata.normalize('NFD', s) if unicodedata.category(c) != 'Mn')
-            return ''.join(s.split())
-        label_map = {
-            'NRO_CONTRATO': [
-                "NO.CONVENIOOCONTRATO","NOCONVENIOOCONTRATO","N°CONVENIOOCONTRATO","NROCONVENIOOCONTRATO",
-                "NO.CONTRATO","NOCONTRATO","NROCONTRATO","NºCONTRATO"
-            ],
-            'OBJETO': ["OBJETODELCONTRATO","OBJETO"],
-            'NOMBRE_CONTRATISTA': ["NOMBREDELCONTRATISTA","NOMBRECONTRATISTA"],
-            'CEDULA': ["NODEIDENTIFICACIÓN","NODEIDENTIFICACION","CEDULA","CÉDULA","NIT"],
-            'RANGO_FECHAS': ["FECHADEACTIVIDADES","RANGODEFECHAS"]
-        }
-        found = {}
-        max_r = min(ws.max_row, 30)
-        max_c = min(ws.max_column, 15)
-        for r in range(1, max_r+1):
-            for c in range(1, max_c+1):
-                cell = ws.cell(row=r, column=c)
-                if isinstance(cell.value, str):
-                    norm = _normalize(cell.value)
-                    for key, variants in label_map.items():
-                        for v in variants:
-                            if v in norm and key not in found:
-                                found[key] = {'label_cell': {'row': r, 'col': c}, 'value_cell': {'row': r, 'col': c+1}, 'expected_value': contrato_values.get(key, '')}
-                                break
-        report = {'template': TEMPLATE_EXCEL, 'found': found, 'values': contrato_values}
-        if not output_json_path:
-            output_json_path = os.path.join(DATA_DIR, 'analisis_plantilla.json')
-        try:
-            with open(output_json_path, 'w', encoding='utf-8') as f:
-                json.dump(report, f, ensure_ascii=False, indent=2)
-        except Exception:
-            pass
-        return report
-    except Exception as e:
-        from config import logger
-        logger.error(f"Error analizando plantilla: {e}")
-        return {}
+    """Obsoleta: Retorna vacío ya que no se depende de plantilla física."""
+    return {}

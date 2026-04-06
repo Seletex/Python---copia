@@ -38,9 +38,9 @@ def retry_operation(max_retries=5, base_delay=0.5):
                 except (sqlite3.OperationalError, sqlite3.DatabaseError, OSError, PermissionError) as e:
                     last_exception = e
                     sleep_time = base_delay * (2 ** attempt) + random.uniform(0, 0.5)
-                    logger.warning(f"⚠️ Reintento {attempt + 1}/{max_retries} en {func.__name__} por: {e}. Esperando {sleep_time:.2f}s")
+                    logger.warning(f"[WARNING] Reintento {attempt + 1}/{max_retries} en {func.__name__} por: {e}. Esperando {sleep_time:.2f}s")
                     time.sleep(sleep_time)
-            logger.error(f"❌ Fallo crítico en {func.__name__} después de {max_retries} intentos.")
+            logger.error(f"[ERROR] Fallo crítico en {func.__name__} después de {max_retries} intentos.")
             raise last_exception
         return wrapper
     return decorator
@@ -245,10 +245,15 @@ def inicializar_tablas_postgres():
 @medir_tiempo
 def inicializar_usuarios():
     """Punto de entrada para inicialización desde app_web.py"""
+    # 1. Asegurar tablas
     inicializar_tablas()
     
-    # En Render, aseguramos que las tablas existan al inicio (ya manejado en inicializar_tablas)
-    pass
+    # 2. Sincronización automática de registros desde Excel Compartido (Pull)
+    # Solo si el Excel es externo/maestro o estamos en modo red
+    importar_desde_excel()
+    
+    # 3. Limpiar caché inicial
+    clear_cache()
 
 def inicializar_config():
     pass
@@ -602,7 +607,7 @@ def sincronizar_db_a_master():
         # Solo copiar si el destino es diferente y escribible
         if os.path.abspath(DB_FILE) != os.path.abspath(dest):
             shutil.copy2(DB_FILE, dest)
-            logger.info(f"✅ Sincronización exitosa: BD copiada a red: {dest}")
+            logger.info(f"[OK] Sincronización exitosa: BD copiada a red: {dest}")
             return True
     except Exception as e:
         logger.error(f"❌ Error sincronizando DB a master: {e}")
@@ -633,10 +638,10 @@ def sincronizar_excel():
             except PermissionError:
                 intentos -= 1
                 if intentos == 0:
-                    logger.warning(f"⚠️ No se pudo sincronizar Excel {EXCEL_FILE}: El archivo está abierto.")
+                    logger.warning(f"[WARNING] No se pudo sincronizar Excel {EXCEL_FILE}: El archivo está abierto.")
                 time.sleep(0.5)
             except Exception as ex:
-                logger.error(f"❌ Error inesperado sincronizando Excel: {ex}")
+                logger.error(f"[ERROR] Error inesperado sincronizando Excel: {ex}")
                 break
         
         # v7.0: También sincronizar la DB a la red si estamos en modo local fallback
@@ -644,8 +649,89 @@ def sincronizar_excel():
         
         return exito
     except Exception as e:
-        logger.error(f"❌ Error crítico en sincronizar_excel: {e}")
+        logger.error(f"[ERROR] Error crítico en sincronizar_excel: {e}")
         return False
+
+@retry_operation(max_retries=3)
+def importar_desde_excel(file_path=None):
+    """Importa y combina registros desde un archivo Excel externo (Maestro)"""
+    if not file_path:
+        file_path = EXCEL_FILE
+        
+    if not os.path.exists(file_path):
+        logger.warning(f"[WARNING] No se puede importar: {file_path} no existe.")
+        return 0
+        
+    try:
+        logger.info(f"[RELOAD] Iniciando sincronización desde: {file_path}")
+        df = pd.read_excel(file_path, engine='openpyxl')
+        
+        # Limpieza y Mapeo Flexible de Columnas
+        df.columns = [c.upper().strip() for c in df.columns]
+        mapeo = {
+            'ACTIVIDAD': 'TIPO DE ACTIVIDAD',
+            'TIPO ACTIVIDAD': 'TIPO DE ACTIVIDAD',
+            'UBICACION': 'DEPENDENCIA',
+            'LUGAR': 'DEPENDENCIA',
+            'SOLICITANTE': 'SOLICITANTE',
+            'MEDIO': 'MEDIO DE SOLICITUD'
+        }
+        df = df.rename(columns=mapeo)
+        
+        # Asegurar columnas esperadas
+        for col in COLUMNAS:
+            if col not in df.columns:
+                df[col] = ""
+                
+        count = 0
+        with db_session() as conn:
+            cursor = get_cursor(conn)
+            for _, row in df.iterrows():
+                try:
+                    fecha = str(row.get('FECHA', ''))
+                    fecha_atencion = str(row.get('FECHA ATENCIÓN', ''))
+                    values = (
+                        str(row.get('USUARIO', 'admin')),
+                        str(row.get('TIPO DE ACTIVIDAD', '')),
+                        fecha,
+                        str(row.get('DEPENDENCIA', '')),
+                        str(row.get('SOLICITANTE', '')),
+                        str(row.get('TIPO DE SOLICITUD', '')),
+                        str(row.get('MEDIO DE SOLICITUD', '')),
+                        str(row.get('DESCRIPCIÓN', '')),
+                        str(row.get('CUMPLIDO', '')),
+                        fecha_atencion,
+                        str(row.get('OBSERVACIONES', ''))
+                    )
+                    
+                    # Comprobación de duplicado por clave de negocio
+                    cursor.execute(fix_query('''
+                        SELECT 1 FROM registros 
+                        WHERE usuario=? AND tipo_actividad=? AND fecha=? AND descripcion=? 
+                        LIMIT 1
+                    '''), (values[0], values[1], values[2], values[7]))
+                    
+                    if cursor.fetchone():
+                        continue
+                        
+                    cursor.execute(fix_query('''
+                        INSERT INTO registros (
+                            usuario, tipo_actividad, fecha, dependencia, solicitante,
+                            tipo_solicitud, medio_solicitud, descripcion, cumplido,
+                            fecha_atencion, observaciones
+                        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    '''), values)
+                    count += 1
+                except Exception as e:
+                    logger.error(f"Error importando fila: {e}")
+                    
+        if count > 0:
+            logger.info(f"✅ Sincronización completada: Agregados {count} registros nuevos.")
+            clear_cache()
+        return count
+    except Exception as e:
+        logger.error(f"[ERROR] Error crítico importando desde Excel: {e}")
+        return 0
 
 @retry_operation(max_retries=3)
 @medir_tiempo
@@ -812,6 +898,7 @@ def actualizar_registro(id_registro, data, usuario):
             
         # Sincronizar con Excel después de actualizar
         sincronizar_excel()
+        clear_cache()
         return True
     except Exception as e:
         logger.error(f"Error actualizando registro SQL: {e}")

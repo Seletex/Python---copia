@@ -68,6 +68,9 @@ _SIDEBAR_TEMPLATE = """
                 <a href="/" class="list-group-item list-group-item-action {active_inicio}">
                     <i class="fas fa-home me-2 text-primary"></i> Inicio
                 </a>
+                <a href="/actividades" class="list-group-item list-group-item-action {active_actividades}">
+                    <i class="fas fa-list me-2 text-primary"></i> Actividades
+                </a>
                 <a href="/gestion" class="list-group-item list-group-item-action {active_gestion}">
                     <i class="fas fa-cog me-2 text-primary"></i> Mi Gestión
                 </a>
@@ -76,6 +79,9 @@ _SIDEBAR_TEMPLATE = """
                 </a>
                 <a href="/exportar" class="list-group-item list-group-item-action {active_exportar}">
                     <i class="fas fa-file-export me-2 text-primary"></i> Exportar
+                </a>
+                <a href="/sincronizar" class="list-group-item list-group-item-action">
+                    <i class="fas fa-sync-alt me-2 text-success"></i> Sincronizar Equipos
                 </a>
             </div>
         </div>
@@ -192,6 +198,8 @@ MAIN_TEMPLATE = """
     <!-- Select2 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" rel="stylesheet" />
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css"/>
     <style>
         """ + _SHARED_STYLES + """
         .btn-small {{ padding: 0.25rem 0.5rem; font-size: 0.875rem; }}
@@ -203,7 +211,7 @@ MAIN_TEMPLATE = """
 
     <div class="container-fluid p-0">
         <div class="row g-0">
-            """ + _SIDEBAR_TEMPLATE.format(active_inicio="active", active_gestion="", active_estadisticas="", active_exportar="") + """
+            """ + _SIDEBAR_TEMPLATE.format(active_inicio="active", active_actividades="", active_gestion="", active_estadisticas="", active_exportar="") + """
 
             <div class="col-md-10 main-content">
                 <div class="container-fluid">
@@ -215,7 +223,7 @@ MAIN_TEMPLATE = """
                     
                     <h3 class="mb-3"><i class="fas fa-history"></i> Registros Recientes</h3>
                     <div class="table-responsive">
-                        <table class="table table-hover align-middle">
+                        <table id="tablaInicio" class="table table-hover align-middle">
                             <thead class="table-light">
                                 <tr>
                                     <th>Fecha</th>
@@ -240,8 +248,19 @@ MAIN_TEMPLATE = """
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/i18n/es.js"></script>
+    <!-- DataTables JS -->
+    <script type="text/javascript" src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
     <script>
         $(document).ready(function() {{
+            $('#tablaInicio').DataTable({{
+                "language": {{
+                    "url": "//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json"
+                }},
+                "pageLength": 10,
+                "order": []
+            }});
+
             $('select.form-select').each(function() {{
                 if ($(this).find('option').length > 3) {{
                     $(this).select2({{
@@ -286,7 +305,7 @@ GESTION_TEMPLATE = """
 
     <div class="container-fluid p-0">
         <div class="row g-0">
-            """ + _SIDEBAR_TEMPLATE.format(active_inicio="", active_gestion="active", active_estadisticas="", active_exportar="") + """
+            """ + _SIDEBAR_TEMPLATE.format(active_inicio="", active_actividades="", active_gestion="active", active_estadisticas="", active_exportar="") + """
 
             <div class="col-md-10 main-content">
                 <div class="container-fluid">
@@ -422,7 +441,7 @@ ESTADISTICAS_TEMPLATE = """
 
     <div class="container-fluid p-0">
         <div class="row g-0">
-            """ + _SIDEBAR_TEMPLATE.format(active_inicio="", active_gestion="", active_estadisticas="active", active_exportar="") + """
+            """ + _SIDEBAR_TEMPLATE.format(active_inicio="", active_actividades="", active_gestion="", active_estadisticas="active", active_exportar="") + """
 
             <div class="col-md-10 main-content">
                 <div class="row g-4 mb-4">
@@ -430,13 +449,19 @@ ESTADISTICAS_TEMPLATE = """
                         <div class="card border-0 shadow-sm rounded-4">
                             <div class="card-body p-4">
                                 <form action="/estadisticas" method="GET" class="row align-items-end g-3">
-                                    <div class="col-md-4">
+                                    <div class="col-md-3">
                                         <label class="form-label small fw-bold text-muted">FECHA INICIO</label>
                                         <input type="date" name="fecha_inicio" class="form-control" value="{val_fecha_inicio}">
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-3">
                                         <label class="form-label small fw-bold text-muted">FECHA FIN</label>
                                         <input type="date" name="fecha_fin" class="form-control" value="{val_fecha_fin}">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="form-label small fw-bold text-muted">ACTIVIDAD</label>
+                                        <select name="actividad" class="form-select">
+                                            {opciones_actividades}
+                                        </select>
                                     </div>
                                     <div class="col-md-2">
                                         <button type="submit" class="btn btn-primary w-100 py-2">
@@ -542,16 +567,49 @@ ESTADISTICAS_TEMPLATE = """
         const dataLinea = {data_linea};
         const colors = ['#667eea', '#764ba2', '#38a169', '#3182ce', '#dd6b20', '#805ad5', '#e53e3e', '#319795', '#d69e2e', '#4a5568'];
 
+        // Gráfico de Actividades (Barra horizontal) - Ahora Interactiva
         new Chart(document.getElementById('actividadesChart'), {{
             type: 'bar',
-            data: {{ labels: dataActividades.labels, datasets: [{{ label: 'Registros', data: dataActividades.data, backgroundColor: colors[0], borderRadius: 8 }}] }},
-            options: {{ indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: {{ legend: {{ display: false }} }} }}
+            data: {{ 
+                labels: dataActividades.labels, 
+                datasets: [{{ 
+                    label: 'Registros', 
+                    data: dataActividades.data, 
+                    backgroundColor: colors[0], 
+                    borderRadius: 8 
+                }}] 
+            }},
+            options: {{ 
+                indexAxis: 'y', 
+                responsive: true, 
+                maintainAspectRatio: false, 
+                plugins: {{ legend: {{ display: false }} }},
+                onClick: (e, activeEls) => {{
+                    if (activeEls.length > 0) {{
+                        const index = activeEls[0].index;
+                        const label = dataActividades.labels[index];
+                        window.location.href = `/actividades?actividad=${{encodeURIComponent(label)}}`;
+                    }}
+                }}
+            }}
         }});
 
         new Chart(document.getElementById('cumplimientoChart'), {{
             type: 'doughnut',
             data: {{ labels: dataCumplimiento.labels, datasets: [{{ data: dataCumplimiento.data, backgroundColor: ['#38a169', '#e53e3e', '#dd6b20'] }}] }},
-            options: {{ responsive: true, cutout: '70%', plugins: {{ legend: {{ position: 'bottom' }} }} }}
+            options: {{ 
+                responsive: true, 
+                cutout: '70%', 
+                plugins: {{ legend: {{ position: 'bottom' }} }},
+                onClick: (e, activeEls) => {{
+                    if (activeEls.length > 0) {{
+                        const index = activeEls[0].index;
+                        const label = dataCumplimiento.labels[index];
+                        // Navegar a listado filtrado por cumplimiento si existiera la ruta, por ahora recargamos actividades
+                        window.location.href = `/actividades`;
+                    }}
+                }}
+            }}
         }});
 
         new Chart(document.getElementById('lineaChart'), {{
@@ -593,7 +651,7 @@ EXPORTAR_TEMPLATE = """
 
     <div class="container-fluid p-0">
         <div class="row g-0">
-            """ + _SIDEBAR_TEMPLATE.format(active_inicio="", active_gestion="", active_estadisticas="", active_exportar="active") + """
+            """ + _SIDEBAR_TEMPLATE.format(active_inicio="", active_actividades="", active_gestion="", active_estadisticas="", active_exportar="active") + """
 
             <div class="col-md-10 main-content">
                 <h2 class="mb-4"><i class="fas fa-download"></i> Exportar Datos</h2>
@@ -772,6 +830,115 @@ EXPORTAR_TEMPLATE = """
 """
 
 # =============================================================================
+# PLANTILLA: VER ACTIVIDADES
+# =============================================================================
+
+VER_ACTIVIDADES_TEMPLATE = """
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Actividades - Sistema de Actividades</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css"/>
+    <style>
+        """ + _SHARED_STYLES + """
+    </style>
+</head>
+<body>
+    """ + _NAVBAR_TEMPLATE.replace("{icono}", "list").replace("{titulo}", "Mis Actividades") + """
+
+    <div class="container-fluid p-0">
+        <div class="row g-0">
+            """ + _SIDEBAR_TEMPLATE.format(active_inicio="", active_actividades="active", active_gestion="", active_estadisticas="", active_exportar="") + """
+
+            <div class="col-md-10 main-content">
+                <div class="container-fluid">
+                    <h2 class="mb-4"><i class="fas fa-list-alt text-primary"></i> Historial de Actividades</h2>
+                    
+                    <div class="card mb-4 shadow-sm border-0 rounded-4">
+                        <div class="card-body p-4">
+                            <form action="/actividades" method="GET" class="row align-items-end g-3">
+                                <div class="col-md-4">
+                                    <label class="form-label small fw-bold text-muted">FECHA INICIO</label>
+                                    <input type="date" name="fecha_inicio" class="form-control" value="{val_fecha_inicio}">
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label small fw-bold text-muted">FECHA FIN</label>
+                                    <input type="date" name="fecha_fin" class="form-control" value="{val_fecha_fin}">
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label small fw-bold text-muted">ACTIVIDAD</label>
+                                    <select name="actividad" class="form-select">
+                                        {opciones_actividades}
+                                    </select>
+                                </div>
+                                <div class="col-md-2 mt-3">
+                                    <button type="submit" class="btn btn-primary w-100 py-2">
+                                        <i class="fas fa-filter"></i> Filtrar
+                                    </button>
+                                </div>
+                                <div class="col-md-2">
+                                    <a href="/actividades" class="btn btn-outline-secondary w-100 py-2">
+                                        <i class="fas fa-undo"></i> Limpiar
+                                    </a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="card shadow-sm border-0 rounded-4">
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table id="tablaActividades" class="table table-hover align-middle mb-0">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Fecha</th>
+                                            <th>Actividad</th>
+                                            <th>Ubicación</th>
+                                            <th>Tipo</th>
+                                            <th>Cumplido</th>
+                                            <th>Observaciones</th>
+                                            <th class="text-end">Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {tabla_registros_completa}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- DataTables JS -->
+    <script type="text/javascript" src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    <script>
+        $(document).ready(function() {{
+            $('#tablaActividades').DataTable({{
+                "language": {{
+                    "url": "//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json"
+                }},
+                "pageLength": 10,
+                "order": []
+            }});
+        }});
+    </script>
+</body>
+</html>
+"""
+
+# =============================================================================
 # PLANTILLA: EDITAR REGISTRO
 # =============================================================================
 
@@ -854,8 +1021,12 @@ _EDIT_REG_BASE = """
                                     </div>
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label">📋 Observaciones:</label>
-                                    <textarea name="observaciones" class="form-control" rows="4">{val_observaciones}</textarea>
+                                    <label class="form-label">📋 Descripción (Visible en Reporte):</label>
+                                    <textarea name="descripcion" class="form-control" rows="2">{val_descripcion}</textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">📝 Observaciones Adicionales:</label>
+                                    <textarea name="observaciones" class="form-control" rows="2">{val_observaciones}</textarea>
                                 </div>
                             </div>
                         </div>
@@ -897,6 +1068,6 @@ EDIT_REGISTRO_TEMPLATE = _EDIT_REG_BASE.replace(
 ).replace(
     "{navbar}", _NAVBAR_TEMPLATE.replace("{icono}", "edit").replace("{titulo}", "Editar Registro")
 ).replace(
-    "{sidebar}", _SIDEBAR_TEMPLATE.format(active_inicio="active", active_gestion="", active_estadisticas="", active_exportar="")
+    "{sidebar}", _SIDEBAR_TEMPLATE.format(active_inicio="active", active_actividades="", active_gestion="", active_estadisticas="", active_exportar="")
 )
 

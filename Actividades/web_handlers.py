@@ -11,7 +11,8 @@ from urllib.parse import parse_qs, unquote
 
 from templates import (
     LOGIN_TEMPLATE, MAIN_TEMPLATE, GESTION_TEMPLATE,
-    EXPORTAR_TEMPLATE, ESTADISTICAS_TEMPLATE, FORMULARIO_REGISTRO
+    EXPORTAR_TEMPLATE, ESTADISTICAS_TEMPLATE, FORMULARIO_REGISTRO,
+    VER_ACTIVIDADES_TEMPLATE
 )
 from database import (
     cargar_actividades, cargar_actividades_globales,
@@ -34,7 +35,8 @@ from html_utils import (
     generar_opciones_usuarios, generar_gestion_usuarios,
     generar_gestion_actividades_globales, generar_gestion_actividades_personales,
     generar_gestion_ubicaciones, generar_gestion_tipos_solicitud,
-    generar_gestion_medios_solicitud, generar_tabla_registros_recientes
+    generar_gestion_medios_solicitud, generar_tabla_registros_recientes,
+    generar_tabla_actividades_completa, generar_opciones_con_seleccion
 )
 
 # =============================================================================
@@ -110,10 +112,14 @@ class IndexHandler(BaseRoute):
         
         # Usuario autenticado → mostrar formulario
         alertas = ""
-        if 'success' in params:
-            alertas = '<div class="alert alert-success alert-dismissible fade show">✅ Registro guardado<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>'
+        if 'success_msg' in params:
+            msg = unquote(params.get('success_msg', [''])[0])
+            alertas = f'<div class="alert alert-success alert-dismissible fade show">✅ {msg}<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>'
+        elif 'success' in params:
+            alertas = '<div class="alert alert-success alert-dismissible fade show">✅ Operación exitosa<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>'
         elif 'error' in params:
-            alertas = f'<div class="alert alert-danger alert-dismissible fade show">❌ {params.get("error", ["Error"])[0]}<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>'
+            msg = unquote(params.get('error', ['Error'])[0])
+            alertas = f'<div class="alert alert-danger alert-dismissible fade show">❌ {msg}<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>'
         elif 'deleted' in params:
             alertas = '<div class="alert alert-info alert-dismissible fade show">🗑️ Registro eliminado<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>'
         
@@ -156,10 +162,8 @@ class LoginHandler(BaseRoute):
             
             if encontrado:
                 if encontrado.lower() == 'admin':
-                    import os
-                    admin_secret = os.environ.get('ADMIN_SECRET')
-                    if admin_secret and clave != admin_secret:
-                        self.redirect('/?error=1')
+                    if clave != 'admin':
+                        self.redirect('/?error=Contraseña incorrecta')
                         return
                 self.request.send_response(303)
                 self.request.send_header('Location', '/')
@@ -184,6 +188,38 @@ class LogoutHandler(BaseRoute):
 # =============================================================================
 # HANDLERS DE PÁGINAS
 # =============================================================================
+
+class ActividadesHandler(BaseRoute):
+    """Página de listado completo de actividades del usuario/admin"""
+    def get(self, params):
+        if not self._require_auth():
+            return
+            
+        fecha_inicio = params.get('fecha_inicio', [''])[0].strip() or None
+        fecha_fin = params.get('fecha_fin', [''])[0].strip() or None
+        actividad = params.get('actividad', [''])[0].strip() or None
+        
+        # Filtro de usuario: si no es admin, solo ver sus propias actividades
+        usuario_filtro = None if self.usuario_actual == "admin" else self.usuario_actual
+        
+        # Reutilizamos exportar_registros_filtrados para obtener el DataFrame filtrado
+        from export_service import exportar_registros_filtrados
+        df, _ = exportar_registros_filtrados(
+            fecha_inicio=fecha_inicio, fecha_fin=fecha_fin,
+            usuario=usuario_filtro, actividad=actividad
+        )
+        
+        tabla_html = generar_tabla_actividades_completa(df, self.usuario_actual)
+        
+        html = VER_ACTIVIDADES_TEMPLATE.format(
+            usuario_actual=self.usuario_actual,
+            val_fecha_inicio=fecha_inicio or "",
+            val_fecha_fin=fecha_fin or "",
+            opciones_actividades=generar_opciones_con_seleccion(["Todas"] + sorted(list(set(cargar_actividades(self.usuario_actual)))), actividad or "Todas"),
+            tabla_registros_completa=tabla_html
+        )
+        self.render_html(html)
+
 
 class GestionHandler(BaseRoute):
     """Página de gestión de actividades y usuarios"""
@@ -232,8 +268,9 @@ class EstadisticasHandler(BaseRoute):
         
         fecha_inicio = params.get('fecha_inicio', [''])[0].strip() or None
         fecha_fin = params.get('fecha_fin', [''])[0].strip() or None
+        actividad = params.get('actividad', [''])[0].strip() or None
 
-        stats = obtener_estadisticas_exportacion(self.usuario_actual, fecha_inicio, fecha_fin)
+        stats = obtener_estadisticas_exportacion(self.usuario_actual, fecha_inicio, fecha_fin, actividad=actividad)
         
         # Calcular promedio diario
         total = stats.get('total_registros', 0)
@@ -276,7 +313,8 @@ class EstadisticasHandler(BaseRoute):
             data_linea=json.dumps(stats.get('chart_linea', {'labels': [], 'data': []})),
             tabla_usuarios_stats=tabla_stats,
             val_fecha_inicio=fecha_inicio or "",
-            val_fecha_fin=fecha_fin or ""
+            val_fecha_fin=fecha_fin or "",
+            opciones_actividades=generar_opciones_con_seleccion(["Todas"] + sorted(list(set(cargar_actividades(self.usuario_actual)))), actividad or "Todas")
         )
         self.render_html(html)
 
@@ -789,6 +827,7 @@ class EditarRegistroHandler(BaseRoute):
                 sel_cumplido_si='selected' if reg_data.get('CUMPLIDO', '') == 'Sí' else '',
                 sel_cumplido_no='selected' if reg_data.get('CUMPLIDO', '') == 'No' else '',
                 val_fecha_atencion=reg_data.get('FECHA ATENCIÓN', ''),
+                val_descripcion=reg_data.get('DESCRIPCIÓN', ''),
                 val_observaciones=reg_data.get('OBSERVACIONES', '')
             )
             self.render_html(html)
@@ -820,7 +859,7 @@ class ActualizarRegistroAccionHandler(BaseRoute):
             'CUMPLIDO': data.get('cumplido', ['Sí'])[0],
             'FECHA ATENCIÓN': data.get('fecha_atencion', [''])[0],
             'OBSERVACIONES': data.get('observaciones', [''])[0],
-            'DESCRIPCIÓN': data.get('observaciones', [''])[0]
+            'DESCRIPCIÓN': data.get('descripcion', [''])[0]
         }
         
         from database import actualizar_registro
@@ -844,6 +883,27 @@ class APIHandler(BaseRoute):
             self.send_json(obtener_estadisticas_exportacion(self.usuario_actual))
         else:
             self.request.send_error(404)
+
+
+class SincronizarHandler(BaseRoute):
+    """Maneja la sincronización manual con el Excel compartido"""
+    def get(self, params):
+        if not self._require_auth():
+            return
+            
+        from database import importar_desde_excel, sincronizar_excel
+        
+        # 1. Traer datos de los demás (Pull)
+        nuevos = importar_desde_excel()
+        
+        # 2. Enviar mis datos a los demás (Push)
+        sincronizar_excel()
+        
+        # Redirigir al inicio con mensaje de éxito
+        self.request.send_response(303)
+        msg = f"Sincronización completa. Se agregaron {nuevos} registros nuevos."
+        self.request.send_header('Location', f'/?success_msg={unquote(msg)}')
+        self.request.end_headers()
 
 
 class StaticHandler(BaseRoute):
@@ -871,9 +931,11 @@ ROUTE_MAP = {
     '/': IndexHandler,
     '/login': LoginHandler,
     '/logout': LogoutHandler,
+    '/actividades': ActividadesHandler,
     '/gestion': GestionHandler,
     '/estadisticas': EstadisticasHandler,
     '/exportar': ExportarHandler,
+    '/sincronizar': SincronizarHandler,
     '/guardar': GuardarRegistroHandler,
     '/agregar_registro': GuardarRegistroHandler,
     '/eliminar_registro_accion': EliminarRegistroAccionHandler,
