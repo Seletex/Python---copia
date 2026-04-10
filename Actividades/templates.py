@@ -231,6 +231,7 @@ MAIN_TEMPLATE = """
                                     <th>Ubicación</th>
                                     <th>Tipo</th>
                                     <th>Cumplido</th>
+                                    <th>Observaciones</th>
                                     <th class="text-end">Acciones</th>
                                 </tr>
                             </thead>

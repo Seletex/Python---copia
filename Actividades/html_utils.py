@@ -276,8 +276,8 @@ def generar_tabla_registros_recientes(df, usuario_actual):
     if df.empty:
         return '<tr><td colspan="7" class="text-center text-muted">No hay registros recientes</td></tr>'
     
-    # Tomar los últimos 10
-    df_recientes = df.tail(10).iloc[::-1]
+    # Tomar los últimos 500 por seguridad (antes era 10) y permitir navegación en DataTables
+    df_recientes = df.tail(500).iloc[::-1]
     
     html = ""
     for _, row in df_recientes.iterrows():
@@ -295,13 +295,18 @@ def generar_tabla_registros_recientes(df, usuario_actual):
                 </form>
             """
         
+        # Cortar la observación para la vista previa
+        obs = str(row.get('OBSERVACIONES', ''))
+        obs_display = obs[:37] + "..." if len(obs) > 40 else obs
+
         html += f"""
         <tr>
             <td>{str(row.get('FECHA ATENCIÓN', row.get('FECHA', '')))[:10]}</td>
-            <td title="{row.get('TIPO DE ACTIVIDAD', '')}">{str(row.get('TIPO DE ACTIVIDAD', ''))[:40]}...</td>
+            <td title="{row.get('TIPO DE ACTIVIDAD', '')}">{str(row.get('TIPO DE ACTIVIDAD', ''))[:40]}{'...' if len(str(row.get('TIPO DE ACTIVIDAD', ''))) > 40 else ''}</td>
             <td>{row.get('DEPENDENCIA', '')}</td>
             <td>{row.get('TIPO DE SOLICITUD', '')}</td>
             <td>{row.get('CUMPLIDO', '')}</td>
+            <td title="{obs}">{obs_display}</td>
             <td class="text-end">
                 <a href="/editar_registro?id_registro={id_reg}" class="btn btn-sm btn-outline-primary border-0">
                     <i class="fas fa-edit"></i>

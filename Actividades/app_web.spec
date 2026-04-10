@@ -5,7 +5,14 @@ a = Analysis(
     ['app_web.py'],
     pathex=[],
     binaries=[],
-    datas=[('actividades.xlsx', '.'), ('usuarios.json', '.'), ('config_actividades.json', '.')],
+    datas=[
+        ('actividades.xlsx', '.'),
+        ('usuarios.json', '.'),
+        ('config_actividades.json', '.'),
+        ('actividades.db', '.'),
+        ('INFORME DE ACTIVIDADES - copia.xlsx', '.'),
+        ('InformeFinal.XLSX', '.')
+    ],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},
